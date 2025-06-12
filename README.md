@@ -1,27 +1,56 @@
-# About Me React Project
+# About Me
 
-This is a simple "About Me" website built with React. The project showcases various features of React and web development, demonstrating the ability to create React applications from scratch.
+A modern, responsive portfolio website built with React, TypeScript, and Styled Components. The site showcases an about section, projects, and contact information with a clean, professional design.
 
-## Features
+## 🚀 Live Demo
 
-- **About Section**: Displays information about the individual, including a brief biography and relevant skills.
-- **Contact Section**: Provides contact information and a contact form for visitors to reach out.
-- **Header**: Contains the navigation bar and the title of the website.
-- **Layout**: Serves as a wrapper for the main content, providing a consistent layout structure across different pages.
-- **Projects Section**: Showcases various projects the individual has worked on, including links and descriptions.
+Visit the live site at: [https://artsenius.github.io/about](https://artsenius.github.io/about)
 
-## Getting Started
+## ✨ Features
+
+- Modern React with TypeScript
+- Responsive design that works on all devices
+- Clean and professional UI with Styled Components
+- Dynamic routing with React Router v6
+- Component-based architecture
+- Easy to customize and extend
+
+## 🛠 Tech Stack
+
+- React 18
+- TypeScript
+- Styled Components
+- React Router v6
+- GitHub Pages for hosting
+
+## 📦 Project Structure
+
+```
+src/
+├── components/         # React components
+│   ├── About.tsx      # About section component
+│   ├── Contact.tsx    # Contact form component
+│   ├── Header.tsx     # Navigation header
+│   ├── Layout.tsx     # Main layout wrapper
+│   └── Projects.tsx   # Projects showcase
+├── styles/            # Global styles
+├── types/             # TypeScript type definitions
+├── App.tsx           # Main App component
+└── index.tsx         # Application entry point
+```
+
+## 🚀 Getting Started
 
 To get a local copy up and running, follow these steps:
 
 1. **Clone the repository**:
    ```bash
-   git clone https://github.com/yourusername/about-me-react.git
+   git clone https://github.com/artsenius/about.git
    ```
 
 2. **Navigate to the project directory**:
    ```bash
-   cd about-me-react
+   cd about
    ```
 
 3. **Install dependencies**:
@@ -34,29 +63,28 @@ To get a local copy up and running, follow these steps:
    npm start
    ```
 
-## Deployment
+The application will start in development mode and open in your default browser at [http://localhost:3000](http://localhost:3000).
 
-To deploy the application to GitHub Pages, follow these steps:
+## 📝 Development Notes
 
-1. Add the homepage property in `package.json`:
+- The application uses Node.js legacy OpenSSL provider for compatibility
+- Custom routing configuration for GitHub Pages deployment
+- Responsive design implementation with styled-components
+
+## 🚀 Deployment
+
+To deploy the application to GitHub Pages:
+
+1. Ensure the homepage in `package.json` is set correctly:
    ```json
-   "homepage": "https://yourusername.github.io/about-me-react"
+   "homepage": "https://artsenius.github.io/about"
    ```
 
-2. Build the application:
-   ```bash
-   npm run build
-   ```
-
-3. Deploy to GitHub Pages:
+2. Build and deploy the application:
    ```bash
    npm run deploy
    ```
 
-## Contributing
-
-Contributions are welcome! Please feel free to submit a pull request or open an issue.
-
-## License
+## 📄 License
 
 This project is licensed under the MIT License. See the LICENSE file for details.
