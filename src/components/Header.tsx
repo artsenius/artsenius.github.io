@@ -48,7 +48,6 @@ const Header: React.FC = () => {
             <NavContainer>
                 <NavList>
                     <li><NavLink to="/" $isActive={location.pathname === "/"}>About</NavLink></li>
-                    <li><NavLink to="/projects" $isActive={location.pathname === "/projects"}>Projects</NavLink></li>
                     <li><NavLink to="/contact" $isActive={location.pathname === "/contact"}>Contact</NavLink></li>
                 </NavList>
             </NavContainer>

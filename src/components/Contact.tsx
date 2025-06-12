@@ -2,148 +2,145 @@ import React, { useState } from 'react';
 import styled from 'styled-components';
 
 const ContactSection = styled.section`
-    padding: 2rem 0;
+    padding: 2rem;
+    max-width: 800px;
+    margin: 0 auto;
 `;
 
 const Title = styled.h1`
     color: #2c3e50;
     font-size: 2.5rem;
-    margin-bottom: 1rem;
-`;
-
-const Description = styled.p`
-    color: #6c757d;
-    font-size: 1.1rem;
     margin-bottom: 2rem;
+    text-align: center;
 `;
 
-const Form = styled.form`
-    max-width: 600px;
-    margin: 0 auto;
+const ContactGrid = styled.div`
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 2rem;
+    margin-top: 2rem;
 `;
 
-const FormGroup = styled.div`
-    margin-bottom: 1.5rem;
-`;
-
-const Label = styled.label`
-    display: block;
-    color: #2c3e50;
-    margin-bottom: 0.5rem;
-    font-weight: 500;
-`;
-
-const Input = styled.input`
-    width: 100%;
-    padding: 0.75rem;
-    border: 2px solid #e9ecef;
-    border-radius: 4px;
-    font-size: 1rem;
-    transition: border-color 0.3s ease;
-
-    &:focus {
-        border-color: #3498db;
-        outline: none;
-    }
-`;
-
-const TextArea = styled.textarea`
-    width: 100%;
-    padding: 0.75rem;
-    border: 2px solid #e9ecef;
-    border-radius: 4px;
-    font-size: 1rem;
-    min-height: 150px;
-    transition: border-color 0.3s ease;
-
-    &:focus {
-        border-color: #3498db;
-        outline: none;
-    }
-`;
-
-const Button = styled.button`
-    background-color: #3498db;
-    color: white;
-    padding: 0.75rem 2rem;
-    border: none;
-    border-radius: 4px;
-    font-size: 1rem;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
+const ContactCard = styled.div`
+    background-color: white;
+    padding: 2rem;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    transition: transform 0.2s;
 
     &:hover {
-        background-color: #2980b9;
+        transform: translateY(-5px);
     }
+`;
 
-    &:disabled {
-        background-color: #bdc3c7;
-        cursor: not-allowed;
+const ContactIcon = styled.div`
+    font-size: 2rem;
+    margin-bottom: 1rem;
+    color: #2c3e50;
+`;
+
+const ContactLink = styled.a`
+    color: #2c3e50;
+    text-decoration: none;
+    font-size: 1.1rem;
+    display: block;
+    margin-top: 1rem;
+    transition: color 0.2s;
+
+    &:hover {
+        color: #3498db;
     }
+`;
+
+const ContactLabel = styled.h3`
+    color: #34495e;
+    margin-bottom: 0.5rem;
+`;
+
+const CopyButton = styled.button`
+    background-color: #2c3e50;
+    color: white;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    margin-top: 1rem;
+    cursor: pointer;
+    transition: background-color 0.2s;
+
+    &:hover {
+        background-color: #34495e;
+    }
+`;
+
+const CopyMessage = styled.div<{ visible: boolean }>`
+    color: #27ae60;
+    font-size: 0.9rem;
+    margin-top: 0.5rem;
+    opacity: ${props => props.visible ? 1 : 0};
+    transition: opacity 0.2s;
 `;
 
 const Contact: React.FC = () => {
-    const [formData, setFormData] = useState({
-        name: '',
-        email: '',
-        message: ''
+    const [copyMessages, setCopyMessages] = useState({
+        email: false,
+        phone: false
     });
 
-    const handleSubmit = (e: React.FormEvent) => {
-        e.preventDefault();
-        // Handle form submission logic here
-        console.log('Form submitted:', formData);
+    const contactInfo = {
+        email: 'arthursenko@gmail.com',
+        phone: '(562) 338-9597',
+        linkedin: 'https://www.linkedin.com/in/arthur-senko/'
     };
 
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-        const { name, value } = e.target;
-        setFormData(prev => ({
-            ...prev,
-            [name]: value
-        }));
+    const handleCopy = async (text: string, type: 'email' | 'phone') => {
+        await navigator.clipboard.writeText(text);
+        setCopyMessages(prev => ({ ...prev, [type]: true }));
+        setTimeout(() => {
+            setCopyMessages(prev => ({ ...prev, [type]: false }));
+        }, 2000);
     };
 
     return (
         <ContactSection>
-            <Title>Contact Me</Title>
-            <Description>
-                If you would like to get in touch, feel free to reach out via email or through the contact form below.
-            </Description>
-            <Form onSubmit={handleSubmit}>
-                <FormGroup>
-                    <Label htmlFor="name">Name</Label>
-                    <Input
-                        type="text"
-                        id="name"
-                        name="name"
-                        value={formData.name}
-                        onChange={handleChange}
-                        required
-                    />
-                </FormGroup>
-                <FormGroup>
-                    <Label htmlFor="email">Email</Label>
-                    <Input
-                        type="email"
-                        id="email"
-                        name="email"
-                        value={formData.email}
-                        onChange={handleChange}
-                        required
-                    />
-                </FormGroup>
-                <FormGroup>
-                    <Label htmlFor="message">Message</Label>
-                    <TextArea
-                        id="message"
-                        name="message"
-                        value={formData.message}
-                        onChange={handleChange}
-                        required
-                    />
-                </FormGroup>
-                <Button type="submit">Send Message</Button>
-            </Form>
+            <Title>Get in Touch</Title>
+            <ContactGrid>
+                <ContactCard>
+                    <ContactIcon>📧</ContactIcon>
+                    <ContactLabel>Email</ContactLabel>
+                    <ContactLink href={`mailto:${contactInfo.email}`}>
+                        {contactInfo.email}
+                    </ContactLink>
+                    <CopyButton onClick={() => handleCopy(contactInfo.email, 'email')}>
+                        Copy Email
+                    </CopyButton>
+                    <CopyMessage visible={copyMessages.email}>Copied!</CopyMessage>
+                </ContactCard>
+
+                <ContactCard>
+                    <ContactIcon>📱</ContactIcon>
+                    <ContactLabel>Phone</ContactLabel>
+                    <ContactLink href={`tel:${contactInfo.phone}`}>
+                        {contactInfo.phone}
+                    </ContactLink>
+                    <CopyButton onClick={() => handleCopy(contactInfo.phone, 'phone')}>
+                        Copy Phone
+                    </CopyButton>
+                    <CopyMessage visible={copyMessages.phone}>Copied!</CopyMessage>
+                </ContactCard>
+
+                <ContactCard>
+                    <ContactIcon>💼</ContactIcon>
+                    <ContactLabel>LinkedIn</ContactLabel>
+                    <ContactLink 
+                        href={contactInfo.linkedin}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                    >
+                        View Profile
+                    </ContactLink>
+                </ContactCard>
+            </ContactGrid>
         </ContactSection>
     );
 };
