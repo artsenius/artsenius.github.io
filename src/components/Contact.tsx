@@ -132,7 +132,7 @@ const Contact: React.FC = () => {
                 <ContactCard>
                     <ContactIcon>💼</ContactIcon>
                     <ContactLabel>LinkedIn</ContactLabel>
-                    <ContactLink 
+                    <ContactLink
                         href={contactInfo.linkedin}
                         target="_blank"
                         rel="noopener noreferrer"

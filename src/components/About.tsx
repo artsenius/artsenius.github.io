@@ -155,8 +155,8 @@ const About: React.FC = () => {
                 </ProfileSection>
                 <div>
                     <Bio>
-                        A results-driven QA Leader with expertise in AI testing and modern automation. 
-                        Proven track record of building and leading high-performing QA teams, implementing 
+                        A results-driven QA Leader with expertise in AI testing and modern automation.
+                        Proven track record of building and leading high-performing QA teams, implementing
                         efficient testing processes, and driving quality improvements across organizations.
                     </Bio>
 
