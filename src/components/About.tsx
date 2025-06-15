@@ -149,10 +149,10 @@ const About: React.FC = () => {
                     <ProfileImage data-testid="profile-image" src={profilePhoto} alt="Arthur Senko" />
                     <Name data-testid="profile-name">Arthur Senko</Name>
                     <Position data-testid="profile-position">Senior QA Leader</Position>
-                    <DocumentLink 
+                    <DocumentLink
                         data-testid="resume-link"
-                        href={resumePDF} 
-                        target="_blank" 
+                        href={resumePDF}
+                        target="_blank"
                         rel="noopener noreferrer"
                     >
                         Download Resume

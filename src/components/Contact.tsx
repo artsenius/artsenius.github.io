@@ -108,19 +108,19 @@ const Contact: React.FC = () => {
                 <ContactCard data-testid="contact-card-email">
                     <ContactIcon data-testid="contact-icon-email">📧</ContactIcon>
                     <ContactLabel data-testid="contact-label-email">Email</ContactLabel>
-                    <ContactLink 
+                    <ContactLink
                         data-testid="contact-link-email"
                         href={`mailto:${contactInfo.email}`}
                     >
                         {contactInfo.email}
                     </ContactLink>
-                    <CopyButton 
+                    <CopyButton
                         data-testid="copy-button-email"
                         onClick={() => handleCopy(contactInfo.email, 'email')}
                     >
                         Copy Email
                     </CopyButton>
-                    <CopyMessage 
+                    <CopyMessage
                         data-testid="copy-message-email"
                         visible={copyMessages.email}
                     >
@@ -131,19 +131,19 @@ const Contact: React.FC = () => {
                 <ContactCard data-testid="contact-card-phone">
                     <ContactIcon data-testid="contact-icon-phone">📱</ContactIcon>
                     <ContactLabel data-testid="contact-label-phone">Phone</ContactLabel>
-                    <ContactLink 
+                    <ContactLink
                         data-testid="contact-link-phone"
                         href={`tel:${contactInfo.phone}`}
                     >
                         {contactInfo.phone}
                     </ContactLink>
-                    <CopyButton 
+                    <CopyButton
                         data-testid="copy-button-phone"
                         onClick={() => handleCopy(contactInfo.phone, 'phone')}
                     >
                         Copy Phone
                     </CopyButton>
-                    <CopyMessage 
+                    <CopyMessage
                         data-testid="copy-message-phone"
                         visible={copyMessages.phone}
                     >
