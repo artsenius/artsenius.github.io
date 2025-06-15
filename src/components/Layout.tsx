@@ -18,8 +18,8 @@ const Main = styled.main`
 
 const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     return (
-        <LayoutWrapper>
-            <Main>{children}</Main>
+        <LayoutWrapper data-testid="layout-wrapper">
+            <Main data-testid="main-content">{children}</Main>
             <Footer />
         </LayoutWrapper>
     );

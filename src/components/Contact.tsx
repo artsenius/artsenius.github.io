@@ -102,37 +102,60 @@ const Contact: React.FC = () => {
     };
 
     return (
-        <ContactSection>
-            <Title>Get in Touch</Title>
-            <ContactGrid>
-                <ContactCard>
-                    <ContactIcon>📧</ContactIcon>
-                    <ContactLabel>Email</ContactLabel>
-                    <ContactLink href={`mailto:${contactInfo.email}`}>
+        <ContactSection data-testid="contact-section">
+            <Title data-testid="contact-title">Get in Touch</Title>
+            <ContactGrid data-testid="contact-grid">
+                <ContactCard data-testid="contact-card-email">
+                    <ContactIcon data-testid="contact-icon-email">📧</ContactIcon>
+                    <ContactLabel data-testid="contact-label-email">Email</ContactLabel>
+                    <ContactLink 
+                        data-testid="contact-link-email"
+                        href={`mailto:${contactInfo.email}`}
+                    >
                         {contactInfo.email}
                     </ContactLink>
-                    <CopyButton onClick={() => handleCopy(contactInfo.email, 'email')}>
+                    <CopyButton 
+                        data-testid="copy-button-email"
+                        onClick={() => handleCopy(contactInfo.email, 'email')}
+                    >
                         Copy Email
                     </CopyButton>
-                    <CopyMessage visible={copyMessages.email}>Copied!</CopyMessage>
+                    <CopyMessage 
+                        data-testid="copy-message-email"
+                        visible={copyMessages.email}
+                    >
+                        Copied!
+                    </CopyMessage>
                 </ContactCard>
 
-                <ContactCard>
-                    <ContactIcon>📱</ContactIcon>
-                    <ContactLabel>Phone</ContactLabel>
-                    <ContactLink href={`tel:${contactInfo.phone}`}>
+                <ContactCard data-testid="contact-card-phone">
+                    <ContactIcon data-testid="contact-icon-phone">📱</ContactIcon>
+                    <ContactLabel data-testid="contact-label-phone">Phone</ContactLabel>
+                    <ContactLink 
+                        data-testid="contact-link-phone"
+                        href={`tel:${contactInfo.phone}`}
+                    >
                         {contactInfo.phone}
                     </ContactLink>
-                    <CopyButton onClick={() => handleCopy(contactInfo.phone, 'phone')}>
+                    <CopyButton 
+                        data-testid="copy-button-phone"
+                        onClick={() => handleCopy(contactInfo.phone, 'phone')}
+                    >
                         Copy Phone
                     </CopyButton>
-                    <CopyMessage visible={copyMessages.phone}>Copied!</CopyMessage>
+                    <CopyMessage 
+                        data-testid="copy-message-phone"
+                        visible={copyMessages.phone}
+                    >
+                        Copied!
+                    </CopyMessage>
                 </ContactCard>
 
-                <ContactCard>
-                    <ContactIcon>💼</ContactIcon>
-                    <ContactLabel>LinkedIn</ContactLabel>
+                <ContactCard data-testid="contact-card-linkedin">
+                    <ContactIcon data-testid="contact-icon-linkedin">💼</ContactIcon>
+                    <ContactLabel data-testid="contact-label-linkedin">LinkedIn</ContactLabel>
                     <ContactLink
+                        data-testid="contact-link-linkedin"
                         href={contactInfo.linkedin}
                         target="_blank"
                         rel="noopener noreferrer"

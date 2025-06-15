@@ -142,30 +142,35 @@ const About: React.FC = () => {
     };
 
     return (
-        <AboutSection>
-            <Title>About Me</Title>
-            <Content>
-                <ProfileSection>
-                    <ProfileImage src={profilePhoto} alt="Arthur Senko" />
-                    <Name>Arthur Senko</Name>
-                    <Position>Senior QA Leader</Position>
-                    <DocumentLink href={resumePDF} target="_blank" rel="noopener noreferrer">
+        <AboutSection data-testid="about-section">
+            <Title data-testid="about-title">About Me</Title>
+            <Content data-testid="about-content">
+                <ProfileSection data-testid="profile-section">
+                    <ProfileImage data-testid="profile-image" src={profilePhoto} alt="Arthur Senko" />
+                    <Name data-testid="profile-name">Arthur Senko</Name>
+                    <Position data-testid="profile-position">Senior QA Leader</Position>
+                    <DocumentLink 
+                        data-testid="resume-link"
+                        href={resumePDF} 
+                        target="_blank" 
+                        rel="noopener noreferrer"
+                    >
                         Download Resume
                     </DocumentLink>
                 </ProfileSection>
-                <div>
-                    <Bio>
+                <div data-testid="about-details">
+                    <Bio data-testid="about-bio">
                         A results-driven QA Leader with expertise in AI testing and modern automation.
                         Proven track record of building and leading high-performing QA teams, implementing
                         efficient testing processes, and driving quality improvements across organizations.
                     </Bio>
 
-                    <Section>
-                        <SectionTitle>Current Role</SectionTitle>
-                        <ExperienceItem>
-                            <CompanyName>Senior QA Leader @ Allergan Aesthetics, an AbbVie Company</CompanyName>
-                            <Duration>June 2022 – Present | Remote</Duration>
-                            <ul>
+                    <Section data-testid="current-role-section">
+                        <SectionTitle data-testid="current-role-title">Current Role</SectionTitle>
+                        <ExperienceItem data-testid="experience-item">
+                            <CompanyName data-testid="company-name">Senior QA Leader @ Allergan Aesthetics, an AbbVie Company</CompanyName>
+                            <Duration data-testid="role-duration">June 2022 – Present | Remote</Duration>
+                            <ul data-testid="role-achievements">
                                 <li>Managing QA efforts on projects responsible for ~90% of company revenue</li>
                                 <li>Introduced AI-driven automation, reducing test development time by 80%</li>
                                 <li>Led QA initiatives for the Alle mobile app, achieving 3x reduction in production bugs</li>
@@ -173,22 +178,22 @@ const About: React.FC = () => {
                         </ExperienceItem>
                     </Section>
 
-                    <Section>
-                        <SectionTitle>Technical Skills</SectionTitle>
-                        <SkillsGrid>
+                    <Section data-testid="skills-section">
+                        <SectionTitle data-testid="skills-title">Technical Skills</SectionTitle>
+                        <SkillsGrid data-testid="skills-grid">
                             {Object.values(skills).flat().map((skill, index) => (
-                                <SkillItem key={index}>{skill}</SkillItem>
+                                <SkillItem data-testid={`skill-item-${index}`} key={index}>{skill}</SkillItem>
                             ))}
                         </SkillsGrid>
                     </Section>
 
-                    <Section>
-                        <SectionTitle>Notable Achievements</SectionTitle>
-                        <ul>
-                            <li>Co-founded TechStart.dev, an educational startup for developers and testers</li>
-                            <li>Achieved 95% employment rate for training program graduates</li>
-                            <li>Pioneered AI-driven testing strategies reducing test creation time by 60%</li>
-                            <li>Built and led multiple QA teams from ground up in startup and enterprise settings</li>
+                    <Section data-testid="achievements-section">
+                        <SectionTitle data-testid="achievements-title">Notable Achievements</SectionTitle>
+                        <ul data-testid="achievements-list">
+                            <li data-testid="achievement-1">Co-founded TechStart.dev, an educational startup for developers and testers</li>
+                            <li data-testid="achievement-2">Achieved 95% employment rate for training program graduates</li>
+                            <li data-testid="achievement-3">Pioneered AI-driven testing strategies reducing test creation time by 60%</li>
+                            <li data-testid="achievement-4">Built and led multiple QA teams from ground up in startup and enterprise settings</li>
                         </ul>
                     </Section>
                 </div>

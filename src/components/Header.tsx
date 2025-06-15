@@ -44,11 +44,11 @@ const Header: React.FC = () => {
     const location = useLocation();
 
     return (
-        <Nav>
-            <NavContainer>
-                <NavList>
-                    <li><NavLink to="/" $isActive={location.pathname === "/"}>About</NavLink></li>
-                    <li><NavLink to="/contact" $isActive={location.pathname === "/contact"}>Contact</NavLink></li>
+        <Nav data-testid="header-nav">
+            <NavContainer data-testid="nav-container">
+                <NavList data-testid="nav-list">
+                    <li><NavLink data-testid="nav-link-about" to="/" $isActive={location.pathname === "/"}>About</NavLink></li>
+                    <li><NavLink data-testid="nav-link-contact" to="/contact" $isActive={location.pathname === "/contact"}>Contact</NavLink></li>
                 </NavList>
             </NavContainer>
         </Nav>

@@ -12,8 +12,8 @@ const Footer = () => {
     const currentYear = new Date().getFullYear();
 
     return (
-        <FooterContainer>
-            <p>© {currentYear} Arthur Senko. All rights reserved.</p>
+        <FooterContainer data-testid="footer">
+            <p data-testid="footer-copyright">© {currentYear} Arthur Senko. All rights reserved.</p>
         </FooterContainer>
     );
 };
