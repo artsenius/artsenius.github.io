@@ -6,6 +6,10 @@ const AboutAppSection = styled.section`
     padding: 2rem;
     max-width: 1200px;
     margin: 0 auto;
+
+    @media (max-width: 768px) {
+        padding: 1rem;
+    }
 `;
 
 const Title = styled.h1`
@@ -13,11 +17,21 @@ const Title = styled.h1`
     font-size: 2.5rem;
     margin-bottom: 2rem;
     text-align: center;
+
+    @media (max-width: 768px) {
+        font-size: 1.5rem;
+        margin-bottom: 1.5rem;
+    }
 `;
 
 const Content = styled.div`
     font-size: 1.1rem;
     line-height: 1.6;
+
+    @media (max-width: 768px) {
+        font-size: 1rem;
+        line-height: 1.5;
+    }
 `;
 
 const Section = styled.div`
@@ -28,6 +42,20 @@ const SectionTitle = styled.h2`
     color: #2c3e50;
     font-size: 1.8rem;
     margin-bottom: 1rem;
+
+    @media (max-width: 768px) {
+        font-size: 1.3rem;
+    }
+`;
+
+const SubTitle = styled.h3`
+    color: #2c3e50;
+    font-size: 1.4rem;
+    margin-bottom: 1rem;
+
+    @media (max-width: 768px) {
+        font-size: 1.1rem;
+    }
 `;
 
 const TechStack = styled.div`

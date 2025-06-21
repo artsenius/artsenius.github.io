@@ -43,6 +43,10 @@ const TestAutomationSection = styled.section`
     padding: 2rem;
     max-width: 1200px;
     margin: 0 auto;
+
+    @media (max-width: 768px) {
+        padding: 1rem;
+    }
 `;
 
 const Title = styled.h1`
@@ -50,6 +54,11 @@ const Title = styled.h1`
     font-size: 2.5rem;
     margin-bottom: 2rem;
     text-align: center;
+
+    @media (max-width: 768px) {
+        font-size: 1.5rem;
+        margin-bottom: 1.5rem;
+    }
 `;
 
 const TestRunList = styled.div`
@@ -83,6 +92,12 @@ const TestRunHeader = styled.div<{ status: string; passed: number; failed: numbe
     display: flex;
     justify-content: space-between;
     align-items: center;
+
+    @media (max-width: 768px) {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.5rem;
+    }
 `;
 
 const ChevronIcon = styled.span<{ isExpanded: boolean }>`
@@ -101,18 +116,42 @@ const TestRunTitleWrapper = styled.div`
 const TestRunTitle = styled.h3`
     margin: 0;
     font-size: 1.2rem;
+
+    @media (max-width: 768px) {
+        font-size: 1rem;
+    }
 `;
 
 const TestRunStats = styled.div`
     display: flex;
     gap: 1rem;
+
+    @media (max-width: 768px) {
+        flex-wrap: wrap;
+        gap: 0.75rem;
+    }
+`;
+
+const StatItem = styled.div`
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+
+    @media (max-width: 768px) {
+        font-size: 0.9rem;
+    }
 `;
 
 const TestRunContent = styled.div<{ isExpanded: boolean }>`
-    padding: ${props => props.isExpanded ? '1rem' : '0'};
-    max-height: ${props => props.isExpanded ? '1000px' : '0'};
+    height: auto;
+    max-height: ${props => props.isExpanded ? 'none' : '0'};
     overflow: hidden;
-    transition: all 0.3s ease-in-out;
+    transition: padding 0.3s ease-in-out;
+    padding: ${props => props.isExpanded ? '1rem' : '0'};
+    
+    @media (max-width: 768px) {
+        padding: ${props => props.isExpanded ? '0.75rem' : '0'};
+    }
 `;
 
 
@@ -158,9 +197,9 @@ const LoadingCard = styled.div<{ index: number }>`
     animation: ${fadeInAnimation} 0.5s ease forwards;
     animation-delay: ${props => props.index * 0.1}s;
     
-    /* Match exact spacing of TestRunCard */
-    margin-bottom: 0;
-    height: 60px; /* Match height of non-expanded cards */
+    @media (max-width: 768px) {
+        height: auto;
+    }
 `;
 
 const LoadingHeader = styled.div`
@@ -171,6 +210,14 @@ const LoadingHeader = styled.div`
     align-items: center;
     padding: 1rem;
     position: relative;
+
+    @media (max-width: 768px) {
+        height: auto;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.5rem;
+        min-height: 80px;
+    }
 `;
 
 const LoadingTitle = styled.div`
@@ -197,6 +244,11 @@ const LoadingStats = styled.div`
     display: flex;
     gap: 1rem;
     align-items: center;
+
+    @media (max-width: 768px) {
+        flex-wrap: wrap;
+        gap: 0.75rem;
+    }
 `;
 
 const LoadingStatWrapper = styled.div`
@@ -254,18 +306,30 @@ const LoadingExpandedContent = styled.div`
 
 const LoadingTestSummary = styled.div`
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 0.5rem;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
     margin-bottom: 1rem;
     background-color: #f8fafc;
     padding: 0.75rem;
     border-radius: 6px;
+
+    @media (max-width: 768px) {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 0.75rem;
+        padding: 0.75rem;
+    }
 `;
 
 const LoadingSummaryItem = styled.div`
     display: flex;
     flex-direction: column;
     gap: 0.25rem;
+
+    @media (max-width: 768px) {
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+    }
 `;
 
 const LoadingSummaryLabel = styled.div`
@@ -273,6 +337,10 @@ const LoadingSummaryLabel = styled.div`
     width: 60%;
     border-radius: 4px;
     ${shimmerStyle}
+
+    @media (max-width: 768px) {
+        width: 40%;
+    }
 `;
 
 const LoadingSummaryValue = styled.div`
@@ -280,6 +348,10 @@ const LoadingSummaryValue = styled.div`
     width: 80%;
     border-radius: 4px;
     ${shimmerStyle}
+
+    @media (max-width: 768px) {
+        width: 50%;
+    }
 `;
 
 const LoadingTestDetails = styled.div`
@@ -444,14 +516,6 @@ const LiveTestAutomation: React.FC = () => {
                                             <SummaryValue>{(expandedRuns[run._id].duration / 1000).toFixed(2)}s</SummaryValue>
                                         </SummaryItem>
                                         <SummaryItem>
-                                            <SummaryLabel>Start Time</SummaryLabel>
-                                            <SummaryValue>{formatDate(expandedRuns[run._id].startedAt)}</SummaryValue>
-                                        </SummaryItem>
-                                        <SummaryItem>
-                                            <SummaryLabel>End Time</SummaryLabel>
-                                            <SummaryValue>{formatDate(expandedRuns[run._id].finishedAt)}</SummaryValue>
-                                        </SummaryItem>
-                                        <SummaryItem>
                                             <SummaryLabel>Success Rate</SummaryLabel>
                                             <SummaryValue>
                                                 {Math.round((expandedRuns[run._id].results.passed /
@@ -528,97 +592,142 @@ const LiveTestAutomation: React.FC = () => {
 
 const ExpandedContent = styled.div`
     margin-top: 0.5rem;
+    animation: ${fadeInAnimation} 0.3s ease-in-out;
 `;
 
 const TestSummary = styled.div`
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 0.5rem;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
     margin-bottom: 1rem;
     background-color: #f8fafc;
-    padding: 0.75rem;
+    padding: 1rem;
     border-radius: 6px;
+
+    @media (max-width: 768px) {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 0.75rem;
+        padding: 0.75rem;
+    }
 `;
 
 const SummaryItem = styled.div`
     display: flex;
     flex-direction: column;
     gap: 0.25rem;
+
+    @media (max-width: 768px) {
+        font-size: 0.9rem;
+    }
 `;
 
-const SummaryLabel = styled.span`
+const SummaryLabel = styled.div`
     color: #64748b;
-    font-size: 0.8rem;
+    font-size: 0.9rem;
+
+    @media (max-width: 768px) {
+        font-size: 0.8rem;
+    }
 `;
 
-const SummaryValue = styled.span`
-    color: #1e293b;
-    font-size: 0.9rem;
+const SummaryValue = styled.div`
+    font-size: 1.1rem;
     font-weight: 500;
+
+    @media (max-width: 768px) {
+        font-size: 0.9rem;
+    }
 `;
 
 const TestDetails = styled.div`
-    margin-top: 0.5rem;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+    margin-top: 1rem;
+
+    @media (max-width: 768px) {
+        grid-template-columns: 1fr;
+        gap: 0.75rem;
+    }
 `;
 
 const TestSuite = styled.div`
-    margin-bottom: 1rem;
-    animation: ${fadeInAnimation} 0.3s ease-in-out;
+    background-color: #f8fafc;
+    padding: 1rem;
+    border-radius: 6px;
+
+    @media (max-width: 768px) {
+        padding: 0.75rem;
+    }
 `;
 
 const SuiteTitle = styled.h4`
     color: #2c3e50;
-    margin: 0.25rem 0;
-    font-size: 0.95rem;
-    border-bottom: 1px solid #eee;
-    padding-bottom: 0.25rem;
+    margin: 0 0 0.75rem;
+    font-size: 1.1rem;
+    border-bottom: 1px solid #e2e8f0;
+    padding-bottom: 0.5rem;
+
+    @media (max-width: 768px) {
+        font-size: 1rem;
+        margin-bottom: 0.5rem;
+    }
 `;
 
 const TestCase = styled.div<{ status: string }>`
-    background-color: ${props => {
-        switch (props.status.toLowerCase()) {
-            case 'passed':
-                return '#f0fff4';
-            case 'failed':
-                return '#fff5f5';
-            default:
-                return '#f7fafc';
-        }
-    }};
-    border-left: 4px solid ${props => {
-        switch (props.status.toLowerCase()) {
-            case 'passed':
-                return '#27ae60';
-            case 'failed':
-                return '#e74c3c';
-            default:
-                return '#cbd5e0';
-        }
-    }};
-    padding: 0.5rem;
-    margin: 0.25rem 0;
+    padding: 0.75rem;
+    margin: 0.5rem 0;
     border-radius: 4px;
+    background-color: ${props =>
+        props.status === 'passed' ? '#f0fdf4' :
+            props.status === 'failed' ? '#fef2f2' :
+                props.status === 'skipped' ? '#f8fafc' :
+                    '#fff'};
+    border: 1px solid ${props =>
+        props.status === 'passed' ? '#86efac' :
+            props.status === 'failed' ? '#fecaca' :
+                props.status === 'skipped' ? '#e2e8f0' :
+                    '#e2e8f0'};
+
+    @media (max-width: 768px) {
+        padding: 0.6rem;
+        margin: 0.4rem 0;
+    }
 `;
 
 const TestInfo = styled.div`
     display: flex;
     justify-content: space-between;
-    align-items: center;
-    gap: 0.5rem;
+    align-items: flex-start;
+    gap: 1rem;
+
+    @media (max-width: 768px) {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
 `;
 
-const TestName = styled.span`
-    font-size: 0.9rem;
-    color: #2d3748;
+const TestName = styled.div`
+    font-size: 0.95rem;
+    color: #1e293b;
     flex: 1;
+
+    @media (max-width: 768px) {
+        font-size: 0.9rem;
+    }
 `;
 
 const TestMeta = styled.div`
     display: flex;
-    gap: 0.5rem;
-    color: #718096;
-    font-size: 0.8rem;
+    gap: 1rem;
+    color: #64748b;
+    font-size: 0.9rem;
     white-space: nowrap;
+
+    @media (max-width: 768px) {
+        font-size: 0.85rem;
+        gap: 0.75rem;
+    }
 `;
 
 const TestBrowser = styled.span`
@@ -628,21 +737,23 @@ const TestBrowser = styled.span`
 `;
 
 const TestDuration = styled.span`
-    color: #718096;
+    color: #64748b;
 `;
 
 const TestError = styled.pre`
-    margin-top: 0.5rem;
-    padding: 0.5rem;
-    background-color: #fff5f5;
-    border: 1px solid #fed7d7;
+    margin: 0.5rem 0 0;
+    padding: 0.75rem;
+    background-color: #fff1f2;
     border-radius: 4px;
-    color: #c53030;
-    font-size: 0.8rem;
+    font-size: 0.85rem;
+    color: #e11d48;
+    overflow-x: auto;
     white-space: pre-wrap;
-    word-wrap: break-word;
-    max-height: 150px;
-    overflow-y: auto;
+
+    @media (max-width: 768px) {
+        font-size: 0.8rem;
+        padding: 0.6rem;
+    }
 `;
 
 export default LiveTestAutomation;

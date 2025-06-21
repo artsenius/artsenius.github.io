@@ -7,6 +7,10 @@ const AboutSection = styled.section`
     padding: 2rem;
     max-width: 1200px;
     margin: 0 auto;
+
+    @media (max-width: 768px) {
+        padding: 1rem;
+    }
 `;
 
 const Title = styled.h1`
@@ -14,6 +18,11 @@ const Title = styled.h1`
     font-size: 2.5rem;
     margin-bottom: 2rem;
     text-align: center;
+
+    @media (max-width: 768px) {
+        font-size: 1.5rem;
+        margin-bottom: 1.5rem;
+    }
 `;
 
 const Content = styled.div`
@@ -52,12 +61,20 @@ const Name = styled.h2`
     color: #2c3e50;
     font-size: 1.8rem;
     margin-bottom: 1rem;
+
+    @media (max-width: 768px) {
+        font-size: 1.4rem;
+    }
 `;
 
 const Position = styled.h3`
     color: #34495e;
     font-size: 1.2rem;
     margin-bottom: 1.5rem;
+
+    @media (max-width: 768px) {
+        font-size: 1rem;
+    }
 `;
 
 const DocumentLink = styled.a`
@@ -80,6 +97,11 @@ const Bio = styled.div`
     font-size: 1.1rem;
     line-height: 1.6;
     margin-bottom: 2rem;
+
+    @media (max-width: 768px) {
+        font-size: 1rem;
+        line-height: 1.5;
+    }
 `;
 
 const Section = styled.div`
@@ -90,6 +112,10 @@ const SectionTitle = styled.h3`
     color: #2c3e50;
     margin-bottom: 1rem;
     font-size: 1.4rem;
+
+    @media (max-width: 768px) {
+        font-size: 1.2rem;
+    }
 `;
 
 const SkillsGrid = styled.div`
@@ -109,6 +135,11 @@ const SkillItem = styled.div`
     transition: all 0.3s ease-in-out;
     border: 1px solid transparent;
 
+    @media (max-width: 768px) {
+        font-size: 0.85rem;
+        padding: 0.6rem;
+    }
+
     &:hover {
         transform: translateY(-2px);
         background-color: white;
@@ -125,12 +156,20 @@ const CompanyName = styled.h4`
     color: #2c3e50;
     font-size: 1.2rem;
     margin-bottom: 0.5rem;
+
+    @media (max-width: 768px) {
+        font-size: 1rem;
+    }
 `;
 
 const Duration = styled.p`
     color: #7f8c8d;
     font-size: 0.9rem;
     margin-bottom: 0.5rem;
+
+    @media (max-width: 768px) {
+        font-size: 0.85rem;
+    }
 `;
 
 const CompanyLink = styled.a`
@@ -146,10 +185,11 @@ const CompanyLink = styled.a`
 
 const About: React.FC = () => {
     const skills = {
-        automation: ['WebdriverIO', 'Cypress', 'Playwright', 'Selenium', 'Appium'],
+        automation: ['WebdriverIO', 'Cypress', 'Playwright', 'Selenium', 'Appium', 'Model Context Protocol'],
         technologies: ['JavaScript/TypeScript', 'HTML5', 'CSS3', 'React', 'React Native', 'Express.js', 'MongoDB'],
         cloud: ['BrowserStack', 'LambdaTest', 'SauceLabs', 'AWS'],
-        tools: ['Azure DevOps', 'GitHub Actions', 'Jira', 'Artillery.io', 'Loadster']
+        tools: ['Azure DevOps', 'GitHub Actions', 'Jira', 'Artillery.io'],
+        ai: ['GitHub Copilot', 'OpenAI Codex', 'AI-Driven Testing']
     };
 
     return (
@@ -159,7 +199,7 @@ const About: React.FC = () => {
                 <ProfileSection data-testid="profile-section">
                     <ProfileImage data-testid="profile-image" src={profilePhoto} alt="Arthur Senko" />
                     <Name data-testid="profile-name">Arthur Senko</Name>
-                    <Position data-testid="profile-position">Senior QA Leader<br />AI Enthusiast</Position>
+                    <Position data-testid="profile-position">QA Leader<br />AI Enthusiast</Position>
                     <DocumentLink
                         data-testid="resume-link"
                         href={resumePDF}
