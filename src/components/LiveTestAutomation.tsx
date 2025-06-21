@@ -85,6 +85,19 @@ const TestRunHeader = styled.div<{ status: string; passed: number; failed: numbe
     align-items: center;
 `;
 
+const ChevronIcon = styled.span<{ isExpanded: boolean }>`
+    display: inline-block;
+    margin-right: 0.5rem;
+    transition: transform 0.3s ease;
+    transform: ${props => props.isExpanded ? 'rotate(-180deg)' : 'rotate(0)'};
+    font-size: 0.8rem;
+`;
+
+const TestRunTitleWrapper = styled.div`
+    display: flex;
+    align-items: center;
+`;
+
 const TestRunTitle = styled.h3`
     margin: 0;
     font-size: 1.2rem;
@@ -411,7 +424,10 @@ const LiveTestAutomation: React.FC = () => {
                             onClick={() => toggleRunDetails(run._id)}
                             data-testid={`test-run-header-${run._id}`}
                         >
-                            <TestRunTitle>{run.project}</TestRunTitle>
+                            <TestRunTitleWrapper>
+                                <ChevronIcon isExpanded={!!expandedRuns[run._id] || !!loadingDetails[run._id]}>▼</ChevronIcon>
+                                <TestRunTitle>{run.project}</TestRunTitle>
+                            </TestRunTitleWrapper>
                             <TestRunStats>
                                 <span>✅ {run.results.passed}</span>
                                 <span>❌ {run.results.failed}</span>
@@ -438,7 +454,7 @@ const LiveTestAutomation: React.FC = () => {
                                         <SummaryItem>
                                             <SummaryLabel>Success Rate</SummaryLabel>
                                             <SummaryValue>
-                                                {Math.round((expandedRuns[run._id].results.passed / 
+                                                {Math.round((expandedRuns[run._id].results.passed /
                                                     (expandedRuns[run._id].results.passed + expandedRuns[run._id].results.failed)) * 100)}%
                                             </SummaryValue>
                                         </SummaryItem>
