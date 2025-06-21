@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Redirecting...</title>
+    <script>
+        (function() {
+            // Get the current path after the domain and remove the /about prefix if it exists
+            const path = window.location.pathname.replace(/^\/about/, '');
+            const searchParams = window.location.search;
+            const hash = window.location.hash;
+            
+            // Save it to session storage along with a timestamp
+            const redirectData = {
+                path: path + searchParams + hash,
+                timestamp: Date.now()
+            };
+            sessionStorage.setItem('redirectData', JSON.stringify(redirectData));
+            
+            // Redirect to the root of the GitHub Pages site
+            window.location.replace('/about/');
+        })();
+    </script>
+</head>
+<body>
+    <p style="text-align: center; margin-top: 50px;">
+        Redirecting...
+    </p>
+</body>
+</html>
