@@ -501,9 +501,9 @@ const LiveTestAutomation: React.FC = () => {
                                 <TestRunTitle>{run.project}</TestRunTitle>
                             </TestRunTitleWrapper>
                             <TestRunStats>
-                                <span>✅ {run.results.passed}</span>
-                                <span>❌ {run.results.failed}</span>
-                                <span>{formatDate(run.startedAt)}</span>
+                                <StatItem>✅ {run.results.passed}</StatItem>
+                                <StatItem>❌ {run.results.failed}</StatItem>
+                                <StatItem>{formatDate(run.startedAt)}</StatItem>
                             </TestRunStats>
                         </TestRunHeader>
                         <TestRunContent isExpanded={!!expandedRuns[run._id] || !!loadingDetails[run._id]}>
