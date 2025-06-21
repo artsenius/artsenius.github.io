@@ -1,6 +1,6 @@
 # About Me
 
-A modern, responsive portfolio website built with React, TypeScript, and Styled Components. The site showcases an about section, projects, and contact information with a clean, professional design.
+A modern, responsive portfolio website built with React, TypeScript, and Styled Components. The site showcases an about section, projects, and contact information with a clean, professional design. View our detailed [Requirements](./Requirements.md) document to understand the full scope and complexity of this application.
 
 ## 🚀 Live Demo
 
