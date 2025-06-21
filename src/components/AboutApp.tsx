@@ -1,5 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
+import { Link } from 'react-router-dom';
 
 const AboutAppSection = styled.section`
     padding: 2rem;
@@ -52,7 +53,7 @@ const GithubLink = styled.a`
     }
 `;
 
-const LiveLink = styled.a`
+const LiveLink = styled(Link)`
     color: #e74c3c;
     text-decoration: none;
     font-weight: 500;
@@ -157,7 +158,7 @@ const AboutApp: React.FC = () => {
                         real-time on our Live Automation page.
                     </p>
                     <LiveLink
-                        href="/automation"
+                        to="/automation"
                         data-testid="live-automation-link"
                     >
                         View Live Test Results
