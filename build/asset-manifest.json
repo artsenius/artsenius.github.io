@@ -1,22 +1,15 @@
 {
   "files": {
-    "main.css": "/about/static/css/main.565b2dde.chunk.css",
-    "main.js": "/about/static/js/main.3c309b9b.chunk.js",
-    "main.js.map": "/about/static/js/main.3c309b9b.chunk.js.map",
-    "runtime-main.js": "/about/static/js/runtime-main.c5d0f857.js",
-    "runtime-main.js.map": "/about/static/js/runtime-main.c5d0f857.js.map",
-    "static/js/2.149f7ac0.chunk.js": "/about/static/js/2.149f7ac0.chunk.js",
-    "static/js/2.149f7ac0.chunk.js.map": "/about/static/js/2.149f7ac0.chunk.js.map",
+    "main.css": "/about/static/css/main.93270d0e.css",
+    "main.js": "/about/static/js/main.c1f93b8b.js",
+    "static/media/A_Senko_QA_Leader_SDET_AI_Enthusiast.pdf": "/about/static/media/A_Senko_QA_Leader_SDET_AI_Enthusiast.9da71eb068f141ff2a1e.pdf",
+    "static/media/art.jpg": "/about/static/media/art.5a7020b51115fa441348.jpg",
     "index.html": "/about/index.html",
-    "static/css/main.565b2dde.chunk.css.map": "/about/static/css/main.565b2dde.chunk.css.map",
-    "static/js/2.149f7ac0.chunk.js.LICENSE.txt": "/about/static/js/2.149f7ac0.chunk.js.LICENSE.txt",
-    "static/media/A_Senko_QA_Leader_SDET_AI_Enthusiast.9da71eb0.pdf": "/about/static/media/A_Senko_QA_Leader_SDET_AI_Enthusiast.9da71eb0.pdf",
-    "static/media/art.5a7020b5.jpg": "/about/static/media/art.5a7020b5.jpg"
+    "main.93270d0e.css.map": "/about/static/css/main.93270d0e.css.map",
+    "main.c1f93b8b.js.map": "/about/static/js/main.c1f93b8b.js.map"
   },
   "entrypoints": [
-    "static/js/runtime-main.c5d0f857.js",
-    "static/js/2.149f7ac0.chunk.js",
-    "static/css/main.565b2dde.chunk.css",
-    "static/js/main.3c309b9b.chunk.js"
+    "static/css/main.93270d0e.css",
+    "static/js/main.c1f93b8b.js"
   ]
 }

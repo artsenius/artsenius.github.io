@@ -133,6 +133,17 @@ const Duration = styled.p`
     margin-bottom: 0.5rem;
 `;
 
+const CompanyLink = styled.a`
+    color: #3498db;
+    text-decoration: none;
+    transition: color 0.3s ease;
+
+    &:hover {
+        color: #2980b9;
+        text-decoration: underline;
+    }
+`;
+
 const About: React.FC = () => {
     const skills = {
         automation: ['WebdriverIO', 'Cypress', 'Playwright', 'Selenium', 'Appium'],
@@ -148,7 +159,7 @@ const About: React.FC = () => {
                 <ProfileSection data-testid="profile-section">
                     <ProfileImage data-testid="profile-image" src={profilePhoto} alt="Arthur Senko" />
                     <Name data-testid="profile-name">Arthur Senko</Name>
-                    <Position data-testid="profile-position">Senior QA Leader</Position>
+                    <Position data-testid="profile-position">Senior QA Leader<br />AI Enthusiast</Position>
                     <DocumentLink
                         data-testid="resume-link"
                         href={resumePDF}
@@ -163,12 +174,16 @@ const About: React.FC = () => {
                         A results-driven QA Leader with expertise in AI testing and modern automation.
                         Proven track record of building and leading high-performing QA teams, implementing
                         efficient testing processes, and driving quality improvements across organizations.
+                        Proficient in leading projects of any complexity and creating comprehensive E2E solutions,
+                        from initial concept to production deployment.
                     </Bio>
 
                     <Section data-testid="current-role-section">
                         <SectionTitle data-testid="current-role-title">Current Role</SectionTitle>
                         <ExperienceItem data-testid="experience-item">
-                            <CompanyName data-testid="company-name">Senior QA Leader @ Allergan Aesthetics, an AbbVie Company</CompanyName>
+                            <CompanyName data-testid="company-name">
+                                Senior QA Leader @ <CompanyLink href="https://www.allerganaesthetics.com/" target="_blank" rel="noopener noreferrer">Allergan Aesthetics</CompanyLink>, an <CompanyLink href="https://www.abbvie.com/" target="_blank" rel="noopener noreferrer">AbbVie Company</CompanyLink>
+                            </CompanyName>
                             <Duration data-testid="role-duration">June 2022 – Present | Remote</Duration>
                             <ul data-testid="role-achievements">
                                 <li>Managing QA efforts on projects responsible for ~90% of company revenue</li>

@@ -16,9 +16,14 @@ const Title = styled.h1`
 
 const ContactGrid = styled.div`
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    grid-template-columns: repeat(3, minmax(250px, 1fr));
     gap: 2rem;
     margin-top: 2rem;
+    justify-content: center;
+
+    @media (max-width: 1024px) {
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    }
 `;
 
 const ContactCard = styled.div`
@@ -84,7 +89,8 @@ const CopyMessage = styled.div<{ visible: boolean }>`
 const Contact: React.FC = () => {
     const [copyMessages, setCopyMessages] = useState({
         email: false,
-        phone: false
+        phone: false,
+        linkedin: false
     });
 
     const contactInfo = {
@@ -93,7 +99,7 @@ const Contact: React.FC = () => {
         linkedin: 'https://www.linkedin.com/in/arthur-senko/'
     };
 
-    const handleCopy = async (text: string, type: 'email' | 'phone') => {
+    const handleCopy = async (text: string, type: 'email' | 'phone' | 'linkedin') => {
         await navigator.clipboard.writeText(text);
         setCopyMessages(prev => ({ ...prev, [type]: true }));
         setTimeout(() => {
@@ -162,6 +168,18 @@ const Contact: React.FC = () => {
                     >
                         View Profile
                     </ContactLink>
+                    <CopyButton
+                        data-testid="copy-button-linkedin"
+                        onClick={() => handleCopy(contactInfo.linkedin, 'linkedin')}
+                    >
+                        Copy Profile URL
+                    </CopyButton>
+                    <CopyMessage
+                        data-testid="copy-message-linkedin"
+                        visible={copyMessages.linkedin}
+                    >
+                        Copied!
+                    </CopyMessage>
                 </ContactCard>
             </ContactGrid>
         </ContactSection>
