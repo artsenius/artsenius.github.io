@@ -680,14 +680,14 @@ const TestCase = styled.div<{ status: string }>`
     border-radius: 4px;
     background-color: ${props =>
         props.status === 'passed' ? '#f0fdf4' : // Light green for passed
-        props.status === 'failed' ? '#fef2f2' : // Light red for failed
-        props.status === 'skipped' ? '#f8fafc' :
-        '#fff'};
+            props.status === 'failed' ? '#fef2f2' : // Light red for failed
+                props.status === 'skipped' ? '#f8fafc' :
+                    '#fff'};
     border: 1px solid ${props =>
         props.status === 'passed' ? '#86efac' : // Green border for passed
-        props.status === 'failed' ? '#fecaca' : // Red border for failed
-        props.status === 'skipped' ? '#e2e8f0' :
-        '#e2e8f0'};
+            props.status === 'failed' ? '#fecaca' : // Red border for failed
+                props.status === 'skipped' ? '#e2e8f0' :
+                    '#e2e8f0'};
 
     @media (max-width: 768px) {
         padding: 0.6rem;
