@@ -101,7 +101,7 @@ const AboutApp: React.FC = () => {
         <AboutAppSection data-testid="about-app-section">
             <Title data-testid="about-app-title">About This App</Title>
             <Content>
-                <Section>
+                <Section data-testid="about-app-description">
                     <p>
                         This portfolio website is more than just a resume - it's a demonstration of my
                         ability to architect and implement comprehensive end-to-end solutions. The entire project
@@ -116,10 +116,10 @@ const AboutApp: React.FC = () => {
                     </p>
                 </Section>
 
-                <Section>
+                <Section data-testid="about-app-components">
                     <SectionTitle>Project Components</SectionTitle>
                     <TechStack>
-                        <TechItem>
+                        <TechItem data-testid="about-app-frontend">
                             <h3>Frontend Application</h3>
                             <p>
                                 A modern React application built with TypeScript, featuring responsive design
@@ -129,12 +129,13 @@ const AboutApp: React.FC = () => {
                                 href="https://github.com/artsenius/about"
                                 target="_blank"
                                 rel="noopener noreferrer"
+                                data-testid="github-frontend-link"
                             >
                                 View Frontend Code →
                             </GithubLink>
                         </TechItem>
 
-                        <TechItem>
+                        <TechItem data-testid="about-app-backend">
                             <h3>Backend Server</h3>
                             <p>
                                 An Express.js server with MongoDB integration, providing RESTful APIs for
@@ -145,12 +146,13 @@ const AboutApp: React.FC = () => {
                                 href="https://github.com/artsenius/about-me-backend"
                                 target="_blank"
                                 rel="noopener noreferrer"
+                                data-testid="github-backend-link"
                             >
                                 View Backend Code →
                             </GithubLink>
                         </TechItem>
 
-                        <TechItem>
+                        <TechItem data-testid="about-app-automation-framework">
                             <h3>Test Automation Framework</h3>
                             <p>
                                 A comprehensive Playwright-based automation framework implementing the Model
@@ -161,6 +163,7 @@ const AboutApp: React.FC = () => {
                                 href="https://github.com/artsenius/about-me-automation"
                                 target="_blank"
                                 rel="noopener noreferrer"
+                                data-testid="about-app-automation-link"
                             >
                                 View Automation Code →
                             </GithubLink>
@@ -168,7 +171,7 @@ const AboutApp: React.FC = () => {
                     </TechStack>
                 </Section>
 
-                <Section>
+                <Section data-testid="about-app-live-test-results">
                     <SectionTitle>Live Test Results</SectionTitle>
                     <p>
                         This website is continuously tested using the Playwright automation framework with
