@@ -545,7 +545,7 @@ const LiveTestAutomation: React.FC = () => {
                                                 <SuiteTitle>{test.suite}</SuiteTitle>
                                                 <TestCase status={test.status}>
                                                     <TestInfo>
-                                                        <TestName>{test.title}</TestName>
+                                                        <TestName status={test.status}>{test.title}</TestName>
                                                         <TestMeta>
                                                             <TestBrowser>
                                                                 {test.browser === 'chromium' ? '🌐' : '📱'} {test.browser}
@@ -562,7 +562,7 @@ const LiveTestAutomation: React.FC = () => {
                                                 {test.tests?.map((t: any, i: number) => (
                                                     <TestCase key={i} status={t.status}>
                                                         <TestInfo>
-                                                            <TestName>{t.name}</TestName>
+                                                            <TestName status={t.status}>{t.name}</TestName>
                                                             <TestMeta>
                                                                 <TestBrowser>
                                                                     {t.browser === 'chromium' ? '🌐' : '📱'} {t.browser || 'chromium'}
@@ -679,15 +679,15 @@ const TestCase = styled.div<{ status: string }>`
     margin: 0.5rem 0;
     border-radius: 4px;
     background-color: ${props =>
-        props.status === 'passed' ? '#f0fdf4' :
-            props.status === 'failed' ? '#fef2f2' :
-                props.status === 'skipped' ? '#f8fafc' :
-                    '#fff'};
+        props.status === 'passed' ? '#f0fdf4' : // Light green for passed
+        props.status === 'failed' ? '#fef2f2' : // Light red for failed
+        props.status === 'skipped' ? '#f8fafc' :
+        '#fff'};
     border: 1px solid ${props =>
-        props.status === 'passed' ? '#86efac' :
-            props.status === 'failed' ? '#fecaca' :
-                props.status === 'skipped' ? '#e2e8f0' :
-                    '#e2e8f0'};
+        props.status === 'passed' ? '#86efac' : // Green border for passed
+        props.status === 'failed' ? '#fecaca' : // Red border for failed
+        props.status === 'skipped' ? '#e2e8f0' :
+        '#e2e8f0'};
 
     @media (max-width: 768px) {
         padding: 0.6rem;
@@ -707,10 +707,19 @@ const TestInfo = styled.div`
     }
 `;
 
-const TestName = styled.div`
+const TestName = styled.div<{ status: string }>`
     font-size: 0.95rem;
     color: #1e293b;
     flex: 1;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+
+    &::before {
+        content: "${props => props.status === 'passed' ? '✓' : props.status === 'failed' ? '✘' : ''}";
+        color: ${props => props.status === 'passed' ? '#16a34a' : props.status === 'failed' ? '#dc2626' : 'inherit'};
+        font-weight: bold;
+    }
 
     @media (max-width: 768px) {
         font-size: 0.9rem;
