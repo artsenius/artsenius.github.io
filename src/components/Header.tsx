@@ -8,15 +8,44 @@ const Nav = styled.nav`
     position: sticky;
     top: 0;
     z-index: 1000;
+    width: 100vw;
+    left: 0;
+    margin-left: calc(-50vw + 50%);
+    margin-right: calc(-50vw + 50%);
+
+    @media (max-width: 768px) {
+        margin-left: -2rem;
+        margin-right: -2rem;
+        width: calc(100% + 4rem);
+    }
 `;
 
 const NavContainer = styled.div`
     max-width: 1200px;
     margin: 0 auto;
-    padding: 0 1rem;
+    padding: 0 2rem;
     display: flex;
     justify-content: space-between;
     align-items: center;
+    position: relative;
+
+    @media (max-width: 768px) {
+        padding: 0 1rem;
+    }
+`;
+
+const MobileTitle = styled.h1`
+    display: none;
+    color: white;
+    margin: 0;
+    font-size: 1.2rem;
+    text-align: center;
+    flex: 1;
+    padding: 0 3rem; // Space for menu button
+
+    @media (max-width: 768px) {
+        display: block;
+    }
 `;
 
 const NavList = styled.ul<{ $isOpen: boolean }>`
@@ -105,6 +134,21 @@ const Header: React.FC = () => {
     const location = useLocation();
     const [isOpen, setIsOpen] = useState(false);
 
+    const getPageTitle = () => {
+        switch (location.pathname) {
+            case '/':
+                return 'About Me';
+            case '/about-app':
+                return 'About This App';
+            case '/automation':
+                return 'Live Automation';
+            case '/contact':
+                return 'Contact';
+            default:
+                return '';
+        }
+    };
+
     const toggleMenu = () => setIsOpen(!isOpen);
 
     return (
@@ -117,6 +161,9 @@ const Header: React.FC = () => {
                 >
                     {isOpen ? '✕' : '☰'}
                 </MenuButton>
+                <MobileTitle data-testid="mobile-page-title">
+                    {getPageTitle()}
+                </MobileTitle>
                 <NavList data-testid="nav-list" $isOpen={isOpen}>
                     <li><NavLink data-testid="nav-link-about" to="/" $isActive={location.pathname === "/"} onClick={() => setIsOpen(false)}>About Me</NavLink></li>
                     <li><NavLink data-testid="nav-link-about-app" to="/about-app" $isActive={location.pathname === "/about-app"} onClick={() => setIsOpen(false)}>About This App</NavLink></li>

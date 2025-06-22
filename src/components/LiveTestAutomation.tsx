@@ -49,18 +49,6 @@ const TestAutomationSection = styled.section`
     }
 `;
 
-const Title = styled.h1`
-    color: #2c3e50;
-    font-size: 2.5rem;
-    margin-bottom: 2rem;
-    text-align: center;
-
-    @media (max-width: 768px) {
-        font-size: 1.5rem;
-        margin-bottom: 1.5rem;
-    }
-`;
-
 const TestRunList = styled.div`
     display: flex;
     flex-direction: column;
@@ -397,6 +385,7 @@ const LiveTestAutomation: React.FC = () => {
     const [loadingDetails, setLoadingDetails] = useState<{ [key: string]: boolean }>({});
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
+    const [hoveredError, setHoveredError] = useState<{ id: string; error: string } | null>(null);
 
     useEffect(() => {
         fetchTestRuns();
@@ -465,10 +454,51 @@ const LiveTestAutomation: React.FC = () => {
         </LoadingExpandedContent>
     );
 
+    const getErrorMessage = (error: any): string => {
+        if (!error) return '';
+        if (typeof error === 'string') return error;
+        if (typeof error === 'object') {
+            if (error.message) return error.message;
+            try {
+                return JSON.stringify(error);
+            } catch {
+                return 'Unknown error';
+            }
+        }
+        return String(error);
+    };
+
+    const renderTestCase = (test: any, index: string | number, runId: string) => (
+        <TestCase key={`${runId}-${index}`} status={test.status}>
+            <ErrorWrapper>
+                <TestInfo>
+                    <TestName 
+                        status={test.status}
+                        onMouseEnter={() => test.error && setHoveredError({ 
+                            id: `${runId}-${index}`, 
+                            error: getErrorMessage(test.error) 
+                        })}
+                        onMouseLeave={() => setHoveredError(null)}
+                    >
+                        {test.title || test.name}
+                    </TestName>
+                    <TestMeta>
+                        <TestBrowser>
+                            {test.browser === 'chromium' ? '🌐' : '📱'} {test.browser || 'chromium'}
+                        </TestBrowser>
+                        <TestDuration>{test.duration ? `${(test.duration / 1000).toFixed(2)}s` : 'N/A'}</TestDuration>
+                    </TestMeta>
+                </TestInfo>
+                {hoveredError?.id === `${runId}-${index}` && (
+                    <Tooltip>{hoveredError.error}</Tooltip>
+                )}
+            </ErrorWrapper>
+        </TestCase>
+    );
+
     if (loading) {
         return (
             <TestAutomationSection>
-                <Title>Live Test Automation</Title>
                 <LoadingPlaceholder />
             </TestAutomationSection>
         );
@@ -477,7 +507,6 @@ const LiveTestAutomation: React.FC = () => {
     if (error) {
         return (
             <TestAutomationSection>
-                <Title>Live Test Automation</Title>
                 <ErrorMessage>{error}</ErrorMessage>
             </TestAutomationSection>
         );
@@ -485,7 +514,6 @@ const LiveTestAutomation: React.FC = () => {
 
     return (
         <TestAutomationSection data-testid="test-automation-section">
-            <Title data-testid="test-automation-title">Live Test Automation</Title>
             <TestRunList data-testid="test-run-list">
                 {testRuns.map((run) => (
                     <TestRunCard key={run._id} data-testid={`test-run-card-${run._id}`}>
@@ -530,53 +558,20 @@ const LiveTestAutomation: React.FC = () => {
                                             <SummaryLabel>Failed Tests</SummaryLabel>
                                             <SummaryValue>{expandedRuns[run._id].results.failed}</SummaryValue>
                                         </SummaryItem>
-                                        <SummaryItem data-testid="test-run-skipped-tests">
-                                            <SummaryLabel>Skipped Tests</SummaryLabel>
-                                            <SummaryValue>{expandedRuns[run._id].results.skipped || 0}</SummaryValue>
-                                        </SummaryItem>
-                                        <SummaryItem data-testid="test-run-blocked-tests">
-                                            <SummaryLabel>Blocked Tests</SummaryLabel>
-                                            <SummaryValue>{expandedRuns[run._id].results.blocked || 0}</SummaryValue>
-                                        </SummaryItem>
                                     </TestSummary>
                                     <TestDetails data-testid={`test-details-${run._id}`}>
                                         {expandedRuns[run._id].results.tests?.map((test: any, index: number) => (
                                             <TestSuite key={index}>
                                                 <SuiteTitle>{test.suite}</SuiteTitle>
-                                                <TestCase status={test.status}>
-                                                    <TestInfo>
-                                                        <TestName status={test.status}>{test.title}</TestName>
-                                                        <TestMeta>
-                                                            <TestBrowser>
-                                                                {test.browser === 'chromium' ? '🌐' : '📱'} {test.browser}
-                                                            </TestBrowser>
-                                                            <TestDuration>{(test.duration / 1000).toFixed(2)}s</TestDuration>
-                                                        </TestMeta>
-                                                    </TestInfo>
-                                                </TestCase>
+                                                {renderTestCase(test, index, run._id)}
                                             </TestSuite>
                                         ))}
-                                        {expandedRuns[run._id].results.details?.map((test: any, index: number) => (
-                                            <TestSuite key={`detail-${index}`}>
-                                                <SuiteTitle>{test.suite}</SuiteTitle>
-                                                {test.tests?.map((t: any, i: number) => (
-                                                    <TestCase key={i} status={t.status}>
-                                                        <TestInfo>
-                                                            <TestName status={t.status}>{t.name}</TestName>
-                                                            <TestMeta>
-                                                                <TestBrowser>
-                                                                    {t.browser === 'chromium' ? '🌐' : '📱'} {t.browser || 'chromium'}
-                                                                </TestBrowser>
-                                                                <TestDuration>{t.duration ? `${(t.duration / 1000).toFixed(2)}s` : 'N/A'}</TestDuration>
-                                                            </TestMeta>
-                                                        </TestInfo>
-                                                        {t.error && (
-                                                            <TestError>
-                                                                {t.error}
-                                                            </TestError>
-                                                        )}
-                                                    </TestCase>
-                                                ))}
+                                        {expandedRuns[run._id].results.details?.map((suite: any, suiteIndex: number) => (
+                                            <TestSuite key={`detail-${suiteIndex}`}>
+                                                <SuiteTitle>{suite.suite}</SuiteTitle>
+                                                {suite.tests?.map((test: any, testIndex: number) => 
+                                                    renderTestCase(test, `${suiteIndex}-${testIndex}`, run._id)
+                                                )}
                                             </TestSuite>
                                         ))}
                                     </TestDetails>
@@ -678,20 +673,70 @@ const TestCase = styled.div<{ status: string }>`
     padding: 0.75rem;
     margin: 0.5rem 0;
     border-radius: 4px;
+    position: relative;
     background-color: ${props =>
-        props.status === 'passed' ? '#f0fdf4' : // Light green for passed
-            props.status === 'failed' ? '#fef2f2' : // Light red for failed
-                props.status === 'skipped' ? '#f8fafc' :
-                    '#fff'};
+        props.status === 'passed' ? '#f0fdf4' :
+        props.status === 'failed' ? '#fef2f2' :
+        props.status === 'skipped' ? '#f8fafc' :
+        '#fff'};
     border: 1px solid ${props =>
-        props.status === 'passed' ? '#86efac' : // Green border for passed
-            props.status === 'failed' ? '#fecaca' : // Red border for failed
-                props.status === 'skipped' ? '#e2e8f0' :
-                    '#e2e8f0'};
+        props.status === 'passed' ? '#86efac' :
+        props.status === 'failed' ? '#fecaca' :
+        props.status === 'skipped' ? '#e2e8f0' :
+        '#e2e8f0'};
 
     @media (max-width: 768px) {
         padding: 0.6rem;
         margin: 0.4rem 0;
+    }
+`;
+
+const fadeIn = keyframes`
+    from { opacity: 0; }
+    to { opacity: 1; }
+`;
+
+const Tooltip = styled.div`
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background-color: #fee2e2;
+    border: 1px solid #fecaca;
+    color: #dc2626;
+    padding: 0.75rem;
+    border-radius: 4px;
+    font-size: 0.85rem;
+    margin-top: 0.5rem;
+    z-index: 10;
+    white-space: pre-wrap;
+    width: calc(100% + 2rem); // Extend slightly beyond the test case
+    margin-left: -1rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    animation: ${fadeIn} 0.2s ease-in-out;
+    max-height: calc(100vh - 300px); // Dynamic height based on viewport
+    overflow-y: auto;
+    overflow-x: hidden; // Prevent horizontal scroll
+    font-family: monospace; // Better for error messages
+
+    &::before {
+        content: '';
+        position: absolute;
+        top: -6px;
+        left: 16px;
+        width: 10px;
+        height: 10px;
+        background: #fee2e2;
+        border-left: 1px solid #fecaca;
+        border-top: 1px solid #fecaca;
+        transform: rotate(45deg);
+    }
+
+    @media (max-width: 768px) {
+        font-size: 0.8rem;
+        padding: 0.6rem;
+        width: calc(100% + 1.2rem);
+        margin-left: -0.6rem;
     }
 `;
 
@@ -700,6 +745,8 @@ const TestInfo = styled.div`
     justify-content: space-between;
     align-items: flex-start;
     gap: 1rem;
+    position: relative;
+    flex-wrap: wrap;
 
     @media (max-width: 768px) {
         flex-direction: column;
@@ -707,13 +754,20 @@ const TestInfo = styled.div`
     }
 `;
 
+const ErrorWrapper = styled.div`
+    position: relative;
+    width: 100%;
+`;
+
 const TestName = styled.div<{ status: string }>`
     font-size: 0.95rem;
     color: #1e293b;
     flex: 1;
+    min-width: 200px;
     display: flex;
     align-items: center;
     gap: 0.5rem;
+    cursor: ${props => props.status === 'failed' ? 'help' : 'default'};
 
     &::before {
         content: "${props => props.status === 'passed' ? '✓' : props.status === 'failed' ? '✘' : ''}";
@@ -732,10 +786,12 @@ const TestMeta = styled.div`
     color: #64748b;
     font-size: 0.9rem;
     white-space: nowrap;
+    margin-left: auto;
 
     @media (max-width: 768px) {
         font-size: 0.85rem;
         gap: 0.75rem;
+        margin-left: 1.5rem; // Align with the test name after the ✓/✘ icon
     }
 `;
 
@@ -749,20 +805,5 @@ const TestDuration = styled.span`
     color: #64748b;
 `;
 
-const TestError = styled.pre`
-    margin: 0.5rem 0 0;
-    padding: 0.75rem;
-    background-color: #fff1f2;
-    border-radius: 4px;
-    font-size: 0.85rem;
-    color: #e11d48;
-    overflow-x: auto;
-    white-space: pre-wrap;
-
-    @media (max-width: 768px) {
-        font-size: 0.8rem;
-        padding: 0.6rem;
-    }
-`;
 
 export default LiveTestAutomation;

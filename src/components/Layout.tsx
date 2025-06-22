@@ -12,7 +12,7 @@ const Main = styled.main`
     flex: 1;
     max-width: 1200px;
     margin: 0 auto;
-    padding: 2rem;
+    padding: 0 2rem 2rem;
     width: 100%;
 `;
 

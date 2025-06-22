@@ -13,18 +13,6 @@ const AboutSection = styled.section`
     }
 `;
 
-const Title = styled.h1`
-    color: #2c3e50;
-    font-size: 2.5rem;
-    margin-bottom: 2rem;
-    text-align: center;
-
-    @media (max-width: 768px) {
-        font-size: 1.5rem;
-        margin-bottom: 1.5rem;
-    }
-`;
-
 const Content = styled.div`
     display: grid;
     grid-template-columns: 1fr 2fr;
@@ -194,7 +182,6 @@ const About: React.FC = () => {
 
     return (
         <AboutSection data-testid="about-section">
-            <Title data-testid="about-title">About Me</Title>
             <Content data-testid="about-content">
                 <ProfileSection data-testid="profile-section">
                     <ProfileImage data-testid="profile-image" src={profilePhoto} alt="Arthur Senko" />

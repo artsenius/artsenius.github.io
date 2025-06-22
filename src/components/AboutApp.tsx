@@ -12,18 +12,6 @@ const AboutAppSection = styled.section`
     }
 `;
 
-const Title = styled.h1`
-    color: #2c3e50;
-    font-size: 2.5rem;
-    margin-bottom: 2rem;
-    text-align: center;
-
-    @media (max-width: 768px) {
-        font-size: 1.5rem;
-        margin-bottom: 1.5rem;
-    }
-`;
-
 const Content = styled.div`
     font-size: 1.1rem;
     line-height: 1.6;
@@ -99,7 +87,6 @@ const LiveLink = styled(Link)`
 const AboutApp: React.FC = () => {
     return (
         <AboutAppSection data-testid="about-app-section">
-            <Title data-testid="about-app-title">About This App</Title>
             <Content>
                 <Section data-testid="about-app-description">
                     <p>
