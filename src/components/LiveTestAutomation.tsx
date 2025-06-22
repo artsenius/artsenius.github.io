@@ -294,7 +294,7 @@ const LoadingExpandedContent = styled.div`
 
 const LoadingTestSummary = styled.div`
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(4, 1fr);
     gap: 1rem;
     margin-bottom: 1rem;
     background-color: #f8fafc;
@@ -472,11 +472,11 @@ const LiveTestAutomation: React.FC = () => {
         <TestCase key={`${runId}-${index}`} status={test.status}>
             <ErrorWrapper>
                 <TestInfo>
-                    <TestName 
+                    <TestName
                         status={test.status}
-                        onMouseEnter={() => test.error && setHoveredError({ 
-                            id: `${runId}-${index}`, 
-                            error: getErrorMessage(test.error) 
+                        onMouseEnter={() => test.error && setHoveredError({
+                            id: `${runId}-${index}`,
+                            error: getErrorMessage(test.error)
                         })}
                         onMouseLeave={() => setHoveredError(null)}
                     >
@@ -569,7 +569,7 @@ const LiveTestAutomation: React.FC = () => {
                                         {expandedRuns[run._id].results.details?.map((suite: any, suiteIndex: number) => (
                                             <TestSuite key={`detail-${suiteIndex}`}>
                                                 <SuiteTitle>{suite.suite}</SuiteTitle>
-                                                {suite.tests?.map((test: any, testIndex: number) => 
+                                                {suite.tests?.map((test: any, testIndex: number) =>
                                                     renderTestCase(test, `${suiteIndex}-${testIndex}`, run._id)
                                                 )}
                                             </TestSuite>
@@ -592,7 +592,7 @@ const ExpandedContent = styled.div`
 
 const TestSummary = styled.div`
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(4, 1fr);
     gap: 1rem;
     margin-bottom: 1rem;
     background-color: #f8fafc;
@@ -676,14 +676,14 @@ const TestCase = styled.div<{ status: string }>`
     position: relative;
     background-color: ${props =>
         props.status === 'passed' ? '#f0fdf4' :
-        props.status === 'failed' ? '#fef2f2' :
-        props.status === 'skipped' ? '#f8fafc' :
-        '#fff'};
+            props.status === 'failed' ? '#fef2f2' :
+                props.status === 'skipped' ? '#f8fafc' :
+                    '#fff'};
     border: 1px solid ${props =>
         props.status === 'passed' ? '#86efac' :
-        props.status === 'failed' ? '#fecaca' :
-        props.status === 'skipped' ? '#e2e8f0' :
-        '#e2e8f0'};
+            props.status === 'failed' ? '#fecaca' :
+                props.status === 'skipped' ? '#e2e8f0' :
+                    '#e2e8f0'};
 
     @media (max-width: 768px) {
         padding: 0.6rem;
