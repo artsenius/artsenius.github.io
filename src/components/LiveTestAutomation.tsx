@@ -506,40 +506,40 @@ const LiveTestAutomation: React.FC = () => {
                                 <StatItem>{formatDate(run.startedAt)}</StatItem>
                             </TestRunStats>
                         </TestRunHeader>
-                        <TestRunContent isExpanded={!!expandedRuns[run._id] || !!loadingDetails[run._id]}>
+                        <TestRunContent data-testid="test-run-content" isExpanded={!!expandedRuns[run._id] || !!loadingDetails[run._id]}>
                             {loadingDetails[run._id] && renderLoadingExpandedContent()}
                             {expandedRuns[run._id] && (
-                                <ExpandedContent>
-                                    <TestSummary>
-                                        <SummaryItem>
+                                <ExpandedContent data-testid={`expanded-content-${run._id}`}>
+                                    <TestSummary data-testid={`test-summary-${run._id}`}>
+                                        <SummaryItem data-testid="test-run-duration">
                                             <SummaryLabel>Duration</SummaryLabel>
                                             <SummaryValue>{(expandedRuns[run._id].duration / 1000).toFixed(2)}s</SummaryValue>
                                         </SummaryItem>
-                                        <SummaryItem>
+                                        <SummaryItem data-testid="test-run-success-rate">
                                             <SummaryLabel>Success Rate</SummaryLabel>
                                             <SummaryValue>
                                                 {Math.round((expandedRuns[run._id].results.passed /
                                                     (expandedRuns[run._id].results.passed + expandedRuns[run._id].results.failed)) * 100)}%
                                             </SummaryValue>
                                         </SummaryItem>
-                                        <SummaryItem>
+                                        <SummaryItem data-testid="test-run-passed-tests">
                                             <SummaryLabel>Passed Tests</SummaryLabel>
                                             <SummaryValue>{expandedRuns[run._id].results.passed}</SummaryValue>
                                         </SummaryItem>
-                                        <SummaryItem>
+                                        <SummaryItem data-testid="test-run-failed-tests">
                                             <SummaryLabel>Failed Tests</SummaryLabel>
                                             <SummaryValue>{expandedRuns[run._id].results.failed}</SummaryValue>
                                         </SummaryItem>
-                                        <SummaryItem>
+                                        <SummaryItem data-testid="test-run-skipped-tests">
                                             <SummaryLabel>Skipped Tests</SummaryLabel>
                                             <SummaryValue>{expandedRuns[run._id].results.skipped || 0}</SummaryValue>
                                         </SummaryItem>
-                                        <SummaryItem>
+                                        <SummaryItem data-testid="test-run-blocked-tests">
                                             <SummaryLabel>Blocked Tests</SummaryLabel>
                                             <SummaryValue>{expandedRuns[run._id].results.blocked || 0}</SummaryValue>
                                         </SummaryItem>
                                     </TestSummary>
-                                    <TestDetails>
+                                    <TestDetails data-testid={`test-details-${run._id}`}>
                                         {expandedRuns[run._id].results.tests?.map((test: any, index: number) => (
                                             <TestSuite key={index}>
                                                 <SuiteTitle>{test.suite}</SuiteTitle>

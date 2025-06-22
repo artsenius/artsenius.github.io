@@ -48,16 +48,6 @@ const SectionTitle = styled.h2`
     }
 `;
 
-const SubTitle = styled.h3`
-    color: #2c3e50;
-    font-size: 1.4rem;
-    margin-bottom: 1rem;
-
-    @media (max-width: 768px) {
-        font-size: 1.1rem;
-    }
-`;
-
 const TechStack = styled.div`
     margin-top: 1rem;
 `;
