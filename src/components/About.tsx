@@ -65,19 +65,28 @@ const Position = styled.h3`
     }
 `;
 
-const DocumentLink = styled.a`
+const DocumentButton = styled.button`
     display: inline-block;
     padding: 0.75rem 1.5rem;
     background-color: #2c3e50;
     color: white;
-    text-decoration: none;
+    border: none;
     border-radius: 4px;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: inherit;
+    text-align: center;
     transition: background-color 0.3s;
     margin-bottom: 1rem;
     width: 200px;
 
     &:hover {
         background-color: #34495e;
+    }
+
+    &:focus {
+        outline: 2px solid #3498db;
+        outline-offset: 2px;
     }
 `;
 
@@ -180,6 +189,10 @@ const About: React.FC = () => {
         ai: ['GitHub Copilot', 'OpenAI Codex', 'AI-Driven Testing']
     };
 
+    const handleResumeDownload = () => {
+        window.open(resumePDF, '_blank', 'noopener,noreferrer');
+    };
+
     return (
         <AboutSection data-testid="about-section">
             <Content data-testid="about-content">
@@ -187,14 +200,12 @@ const About: React.FC = () => {
                     <ProfileImage data-testid="profile-image" src={profilePhoto} alt="Arthur Senko" />
                     <Name data-testid="profile-name">Arthur Senko</Name>
                     <Position data-testid="profile-position">QA Leader<br />AI Enthusiast</Position>
-                    <DocumentLink
-                        data-testid="resume-link"
-                        href={resumePDF}
-                        target="_blank"
-                        rel="noopener noreferrer"
+                    <DocumentButton
+                        data-testid="resume-button"
+                        onClick={handleResumeDownload}
                     >
                         Download Resume ↗
-                    </DocumentLink>
+                    </DocumentButton>
                 </ProfileSection>
                 <div data-testid="about-details">
                     <Bio data-testid="about-bio">
