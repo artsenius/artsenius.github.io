@@ -11,6 +11,18 @@ const ContactSection = styled.section`
     }
 `;
 
+const Title = styled.h1`
+    color: #2c3e50;
+    font-size: 2.5rem;
+    margin-bottom: 2rem;
+    text-align: center;
+
+    @media (max-width: 768px) {
+        font-size: 1.5rem;
+        margin-bottom: 1.5rem;
+    }
+`;
+
 const Content = styled.div`
     font-size: 1.1rem;
     line-height: 1.6;
@@ -117,6 +129,7 @@ const Contact: React.FC = () => {
 
     return (
         <ContactSection data-testid="contact-section">
+            <Title data-testid="contact-title">Get in Touch</Title>
             <Content>
                 <ContactGrid data-testid="contact-grid">
                     <ContactCard data-testid="contact-card-email">

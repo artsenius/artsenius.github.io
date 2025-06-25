@@ -12,6 +12,18 @@ const AboutAppSection = styled.section`
     }
 `;
 
+const Title = styled.h1`
+    color: #2c3e50;
+    font-size: 2.5rem;
+    margin-bottom: 2rem;
+    text-align: center;
+
+    @media (max-width: 768px) {
+        font-size: 1.5rem;
+        margin-bottom: 1.5rem;
+    }
+`;
+
 const Content = styled.div`
     font-size: 1.1rem;
     line-height: 1.6;
@@ -33,6 +45,16 @@ const SectionTitle = styled.h2`
 
     @media (max-width: 768px) {
         font-size: 1.3rem;
+    }
+`;
+
+const SubTitle = styled.h3`
+    color: #2c3e50;
+    font-size: 1.4rem;
+    margin-bottom: 1rem;
+
+    @media (max-width: 768px) {
+        font-size: 1.1rem;
     }
 `;
 
@@ -87,8 +109,9 @@ const LiveLink = styled(Link)`
 const AboutApp: React.FC = () => {
     return (
         <AboutAppSection data-testid="about-app-section">
+            <Title data-testid="about-app-title">About This App</Title>
             <Content>
-                <Section data-testid="about-app-description">
+                <Section>
                     <p>
                         This portfolio website is more than just a resume - it's a demonstration of my
                         ability to architect and implement comprehensive end-to-end solutions. The entire project
@@ -103,10 +126,10 @@ const AboutApp: React.FC = () => {
                     </p>
                 </Section>
 
-                <Section data-testid="about-app-components">
+                <Section>
                     <SectionTitle>Project Components</SectionTitle>
                     <TechStack>
-                        <TechItem data-testid="about-app-frontend">
+                        <TechItem>
                             <h3>Frontend Application</h3>
                             <p>
                                 A modern React application built with TypeScript, featuring responsive design
@@ -116,13 +139,12 @@ const AboutApp: React.FC = () => {
                                 href="https://github.com/artsenius/about"
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                data-testid="github-frontend-link"
                             >
                                 View Frontend Code →
                             </GithubLink>
                         </TechItem>
 
-                        <TechItem data-testid="about-app-backend">
+                        <TechItem>
                             <h3>Backend Server</h3>
                             <p>
                                 An Express.js server with MongoDB integration, providing RESTful APIs for
@@ -133,13 +155,12 @@ const AboutApp: React.FC = () => {
                                 href="https://github.com/artsenius/about-me-backend"
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                data-testid="github-backend-link"
                             >
                                 View Backend Code →
                             </GithubLink>
                         </TechItem>
 
-                        <TechItem data-testid="about-app-automation-framework">
+                        <TechItem>
                             <h3>Test Automation Framework</h3>
                             <p>
                                 A comprehensive Playwright-based automation framework implementing the Model
@@ -150,7 +171,6 @@ const AboutApp: React.FC = () => {
                                 href="https://github.com/artsenius/about-me-automation"
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                data-testid="about-app-automation-link"
                             >
                                 View Automation Code →
                             </GithubLink>
@@ -158,7 +178,7 @@ const AboutApp: React.FC = () => {
                     </TechStack>
                 </Section>
 
-                <Section data-testid="about-app-live-test-results">
+                <Section>
                     <SectionTitle>Live Test Results</SectionTitle>
                     <p>
                         This website is continuously tested using the Playwright automation framework with
