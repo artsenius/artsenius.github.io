@@ -47,3 +47,308 @@ img {
     margin: 0 auto;
     padding: 0 1rem;
 }
+
+/* ===== ACCESSIBILITY ENHANCEMENTS ===== */
+
+/* Screen reader only content */
+.sr-only {
+    position: absolute !important;
+    width: 1px !important;
+    height: 1px !important;
+    padding: 0 !important;
+    margin: -1px !important;
+    overflow: hidden !important;
+    clip: rect(0, 0, 0, 0) !important;
+    white-space: nowrap !important;
+    border: 0 !important;
+}
+
+/* Screen reader only content that becomes visible on focus */
+.sr-only-focusable:focus {
+    position: static !important;
+    width: auto !important;
+    height: auto !important;
+    padding: inherit !important;
+    margin: inherit !important;
+    overflow: visible !important;
+    clip: auto !important;
+    white-space: normal !important;
+}
+
+/* Focus management */
+*:focus {
+    outline: 2px solid #3498db;
+    outline-offset: 2px;
+}
+
+/* Hide focus outline for mouse users while keeping it for keyboard users */
+*:focus:not(:focus-visible) {
+    outline: none;
+}
+
+/* Ensure focus is visible on interactive elements */
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible,
+[tabindex]:focus-visible {
+    outline: 2px solid #3498db;
+    outline-offset: 2px;
+    box-shadow: 0 0 0 4px rgba(52, 152, 219, 0.2);
+}
+
+/* Skip link styles */
+.skip-link {
+    position: absolute;
+    top: -40px;
+    left: 6px;
+    background: #3498db;
+    color: white;
+    padding: 8px 16px;
+    text-decoration: none;
+    border-radius: 4px;
+    z-index: 10000;
+    font-size: 0.9rem;
+    font-weight: 500;
+    transition: top 0.2s ease;
+    border: 2px solid transparent;
+}
+
+.skip-link:focus {
+    top: 6px;
+    outline: none;
+    border-color: #2980b9;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+    * {
+        border-color: currentColor !important;
+    }
+    
+    button, 
+    a, 
+    input, 
+    textarea, 
+    select {
+        border: 2px solid currentColor !important;
+    }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+}
+
+/* Ensure minimum touch target sizes on mobile */
+@media (max-width: 768px) {
+    button,
+    a,
+    input[type="button"],
+    input[type="submit"],
+    input[type="reset"],
+    [role="button"],
+    [tabindex] {
+        min-height: 44px;
+        min-width: 44px;
+    }
+}
+
+/* Error states */
+[aria-invalid="true"] {
+    border-color: #e74c3c !important;
+    box-shadow: 0 0 0 2px rgba(231, 76, 60, 0.2) !important;
+}
+
+/* Loading states */
+[aria-busy="true"] {
+    cursor: wait;
+    opacity: 0.7;
+}
+
+/* Disabled states */
+[aria-disabled="true"],
+:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    pointer-events: none;
+}
+
+/* Live regions */
+[aria-live] {
+    position: absolute;
+    left: -10000px;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+}
+
+/* Visible live regions for status messages */
+[aria-live]:not(.sr-only) {
+    position: static;
+    width: auto;
+    height: auto;
+    overflow: visible;
+}
+
+/* Expandable content */
+[aria-expanded="false"] + * {
+    display: none;
+}
+
+[aria-expanded="true"] + * {
+    display: block;
+}
+
+/* Modal and dialog support */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.modal-content {
+    background: white;
+    border-radius: 8px;
+    padding: 2rem;
+    max-width: 90vw;
+    max-height: 90vh;
+    overflow: auto;
+    position: relative;
+}
+
+/* Keyboard navigation helpers */
+.keyboard-navigation-enabled button:focus,
+.keyboard-navigation-enabled a:focus,
+.keyboard-navigation-enabled [tabindex]:focus {
+    outline: 3px solid #3498db;
+    outline-offset: 2px;
+    z-index: 1;
+}
+
+/* Text selection accessibility */
+::selection {
+    background-color: #3498db;
+    color: white;
+}
+
+::-moz-selection {
+    background-color: #3498db;
+    color: white;
+}
+
+/* Ensure proper color contrast for links */
+a {
+    color: #2980b9;
+    text-decoration: underline;
+}
+
+a:hover {
+    color: #3498db;
+}
+
+a:visited {
+    color: #8e44ad;
+}
+
+a:focus {
+    background-color: rgba(52, 152, 219, 0.1);
+    border-radius: 2px;
+    padding: 2px 4px;
+    margin: -2px -4px;
+}
+
+/* Form accessibility */
+label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+}
+
+input:required + label::after,
+textarea:required + label::after,
+select:required + label::after {
+    content: " *";
+    color: #e74c3c;
+    font-weight: bold;
+}
+
+.form-error {
+    color: #e74c3c;
+    font-size: 0.875rem;
+    margin-top: 0.25rem;
+    display: block;
+}
+
+/* Table accessibility */
+table {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+th {
+    text-align: left;
+    font-weight: 600;
+    background-color: #f8f9fa;
+    border: 1px solid #dee2e6;
+    padding: 0.75rem;
+}
+
+td {
+    border: 1px solid #dee2e6;
+    padding: 0.75rem;
+}
+
+/* Print accessibility */
+@media print {
+    * {
+        background: transparent !important;
+        color: black !important;
+        box-shadow: none !important;
+        text-shadow: none !important;
+    }
+    
+    a[href]:after {
+        content: " (" attr(href) ")";
+        font-size: 0.8em;
+    }
+    
+    .skip-link,
+    .sr-only {
+        display: none !important;
+    }
+}
+
+/* Custom properties for consistent accessibility colors */
+:root {
+    --focus-color: #3498db;
+    --focus-background: rgba(52, 152, 219, 0.1);
+    --error-color: #e74c3c;
+    --success-color: #27ae60;
+    --warning-color: #f39c12;
+    --info-color: #3498db;
+    
+    /* Spacing scale for consistent touch targets */
+    --touch-target-min: 44px;
+    --spacing-xs: 0.25rem;
+    --spacing-sm: 0.5rem;
+    --spacing-md: 1rem;
+    --spacing-lg: 1.5rem;
+    --spacing-xl: 2rem;
+}
