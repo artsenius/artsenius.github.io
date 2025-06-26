@@ -193,7 +193,7 @@ const About: React.FC = () => {
                         target="_blank"
                         rel="noopener noreferrer"
                     >
-                        Download Resume →
+                        Download Resume ↗
                     </DocumentLink>
                 </ProfileSection>
                 <div data-testid="about-details">
