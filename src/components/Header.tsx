@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import styled from 'styled-components';
+import { useTheme } from '../contexts/ThemeContext';
+import { lightTheme, darkTheme } from '../styles/theme';
 
-const Nav = styled.nav`
-    background-color: #2c3e50;
+const Nav = styled.nav<{ $isDarkMode: boolean }>`
+    background-color: ${props => props.$isDarkMode ? darkTheme.colors.surface : lightTheme.colors.primary};
     padding: 1rem 0;
     position: sticky;
     top: 0;
@@ -12,6 +14,7 @@ const Nav = styled.nav`
     left: 0;
     margin-left: calc(-50vw + 50%);
     margin-right: calc(-50vw + 50%);
+    transition: background-color 0.3s ease;
 
     @media (max-width: 768px) {
         margin-left: -2rem;
@@ -48,7 +51,7 @@ const MobileTitle = styled.h1`
     }
 `;
 
-const NavList = styled.ul<{ $isOpen: boolean }>`
+const NavList = styled.ul<{ $isOpen: boolean; $isDarkMode: boolean }>`
     list-style: none;
     margin: 0;
     padding: 0;
@@ -62,10 +65,11 @@ const NavList = styled.ul<{ $isOpen: boolean }>`
         top: 100%;
         left: 0;
         right: 0;
-        background-color: #2c3e50;
+        background-color: ${props => props.$isDarkMode ? darkTheme.colors.surface : lightTheme.colors.primary};
         padding: 1rem;
         gap: 1rem;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        box-shadow: 0 4px 6px ${props => props.$isDarkMode ? darkTheme.colors.shadow : lightTheme.colors.shadow};
+        transition: background-color 0.3s ease;
     }
 `;
 
@@ -130,9 +134,44 @@ const MenuButton = styled.button`
     }
 `;
 
+const ThemeToggle = styled.button<{ $isDarkMode: boolean }>`
+    background: none;
+    border: 2px solid ${props => props.$isDarkMode ? darkTheme.colors.primary : lightTheme.colors.primary};
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    color: white;
+    font-size: 1.2rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    margin-left: auto;
+
+    &:hover {
+        background-color: ${props => props.$isDarkMode ? darkTheme.colors.primary : lightTheme.colors.primary};
+        transform: scale(1.05);
+    }
+
+    &:focus {
+        outline: none;
+        box-shadow: 0 0 0 2px ${props => props.$isDarkMode ? darkTheme.colors.accent : lightTheme.colors.accent};
+    }
+
+    @media (max-width: 768px) {
+        margin-left: 0;
+        position: absolute;
+        right: 1rem;
+        top: 50%;
+        transform: translateY(-50%);
+    }
+`;
+
 const Header: React.FC = () => {
     const location = useLocation();
     const [isOpen, setIsOpen] = useState(false);
+    const { isDarkMode, toggleTheme } = useTheme();
 
     const getPageTitle = () => {
         switch (location.pathname) {
@@ -152,7 +191,7 @@ const Header: React.FC = () => {
     const toggleMenu = () => setIsOpen(!isOpen);
 
     return (
-        <Nav data-testid="header-nav">
+        <Nav data-testid="header-nav" $isDarkMode={isDarkMode}>
             <NavContainer data-testid="nav-container">
                 <MenuButton
                     onClick={toggleMenu}
@@ -164,7 +203,7 @@ const Header: React.FC = () => {
                 <MobileTitle data-testid="mobile-page-title">
                     {getPageTitle()}
                 </MobileTitle>
-                <NavList data-testid="nav-list" $isOpen={isOpen}>
+                <NavList data-testid="nav-list" $isOpen={isOpen} $isDarkMode={isDarkMode}>
                     <li><NavLink data-testid="nav-link-about" to="/" $isActive={location.pathname === "/"} onClick={() => setIsOpen(false)}>About Me</NavLink></li>
                     <li><NavLink data-testid="nav-link-about-app" to="/about-app" $isActive={location.pathname === "/about-app"} onClick={() => setIsOpen(false)}>About This App</NavLink></li>
                     <li>
@@ -175,6 +214,14 @@ const Header: React.FC = () => {
                     </li>
                     <li><NavLink data-testid="nav-link-contact" to="/contact" $isActive={location.pathname === "/contact"} onClick={() => setIsOpen(false)}>Contact</NavLink></li>
                 </NavList>
+                <ThemeToggle
+                    $isDarkMode={isDarkMode}
+                    onClick={toggleTheme}
+                    aria-label={`Switch to ${isDarkMode ? 'light' : 'dark'} mode`}
+                    data-testid="theme-toggle"
+                >
+                    {isDarkMode ? '☀️' : '🌙'}
+                </ThemeToggle>
             </NavContainer>
         </Nav>
     );
