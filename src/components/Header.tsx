@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import styled from 'styled-components';
+import { useTheme } from '../contexts/ThemeContext';
 
 const Nav = styled.nav`
-    background-color: #2c3e50;
+    background-color: ${props => props.theme.colors.primary};
     padding: 1rem 0;
     position: sticky;
     top: 0;
@@ -12,6 +13,7 @@ const Nav = styled.nav`
     left: 0;
     margin-left: calc(-50vw + 50%);
     margin-right: calc(-50vw + 50%);
+    transition: background-color 0.3s ease;
 
     @media (max-width: 768px) {
         margin-left: -2rem;
@@ -36,7 +38,7 @@ const NavContainer = styled.div`
 
 const MobileTitle = styled.h1`
     display: none;
-    color: white;
+    color: ${props => props.theme.colors.background};
     margin: 0;
     font-size: 1.2rem;
     text-align: center;
@@ -62,10 +64,10 @@ const NavList = styled.ul<{ $isOpen: boolean }>`
         top: 100%;
         left: 0;
         right: 0;
-        background-color: #2c3e50;
+        background-color: ${props => props.theme.colors.primary};
         padding: 1rem;
         gap: 1rem;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        box-shadow: 0 4px 6px ${props => props.theme.colors.shadow};
     }
 `;
 
@@ -74,7 +76,7 @@ interface NavLinkProps {
 }
 
 const NavLink = styled(Link) <NavLinkProps>`
-    color: ${props => props.$isActive ? '#3498db' : 'white'};
+    color: ${props => props.$isActive ? props.theme.colors.accent : props.theme.colors.background};
     text-decoration: none;
     font-size: 1.1rem;
     transition: color 0.3s ease;
@@ -85,7 +87,7 @@ const NavLink = styled(Link) <NavLinkProps>`
     white-space: nowrap;
 
     &:hover {
-        color: #3498db;
+        color: ${props => props.theme.colors.accent};
     }
 
     @media (max-width: 768px) {
@@ -113,7 +115,7 @@ const MenuButton = styled.button`
     display: none;
     background: none;
     border: none;
-    color: white;
+    color: ${props => props.theme.colors.background};
     font-size: 1.5rem;
     cursor: pointer;
     padding: 0.5rem;
@@ -130,9 +132,46 @@ const MenuButton = styled.button`
     }
 `;
 
+const ThemeToggle = styled.button`
+    background: none;
+    border: 2px solid ${props => props.theme.colors.accent};
+    color: ${props => props.theme.colors.accent};
+    font-size: 1.2rem;
+    cursor: pointer;
+    padding: 0.5rem;
+    border-radius: 50%;
+    width: 2.5rem;
+    height: 2.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    margin-left: 1rem;
+
+    &:hover {
+        background-color: ${props => props.theme.colors.accent};
+        color: ${props => props.theme.colors.background};
+        transform: scale(1.05);
+    }
+
+    &:focus {
+        outline: none;
+        box-shadow: 0 0 0 2px ${props => props.theme.colors.accent}40;
+    }
+
+    @media (max-width: 768px) {
+        margin-left: 0;
+        position: absolute;
+        right: 0.5rem;
+        top: 50%;
+        transform: translateY(-50%);
+    }
+`;
+
 const Header: React.FC = () => {
     const location = useLocation();
     const [isOpen, setIsOpen] = useState(false);
+    const { theme, isDarkMode, toggleTheme } = useTheme();
 
     const getPageTitle = () => {
         switch (location.pathname) {
@@ -152,29 +191,38 @@ const Header: React.FC = () => {
     const toggleMenu = () => setIsOpen(!isOpen);
 
     return (
-        <Nav data-testid="header-nav">
+        <Nav data-testid="header-nav" theme={theme}>
             <NavContainer data-testid="nav-container">
                 <MenuButton
                     onClick={toggleMenu}
                     aria-label="Toggle navigation menu"
                     data-testid="nav-menu-button"
+                    theme={theme}
                 >
                     {isOpen ? '✕' : '☰'}
                 </MenuButton>
-                <MobileTitle data-testid="mobile-page-title">
+                <MobileTitle data-testid="mobile-page-title" theme={theme}>
                     {getPageTitle()}
                 </MobileTitle>
-                <NavList data-testid="nav-list" $isOpen={isOpen}>
-                    <li><NavLink data-testid="nav-link-about" to="/" $isActive={location.pathname === "/"} onClick={() => setIsOpen(false)}>About Me</NavLink></li>
-                    <li><NavLink data-testid="nav-link-about-app" to="/about-app" $isActive={location.pathname === "/about-app"} onClick={() => setIsOpen(false)}>About This App</NavLink></li>
+                <NavList data-testid="nav-list" $isOpen={isOpen} theme={theme}>
+                    <li><NavLink data-testid="nav-link-about" to="/" $isActive={location.pathname === "/"} onClick={() => setIsOpen(false)} theme={theme}>About Me</NavLink></li>
+                    <li><NavLink data-testid="nav-link-about-app" to="/about-app" $isActive={location.pathname === "/about-app"} onClick={() => setIsOpen(false)} theme={theme}>About This App</NavLink></li>
                     <li>
-                        <NavLink data-testid="nav-link-automation" to="/automation" $isActive={location.pathname === "/automation"} onClick={() => setIsOpen(false)}>
+                        <NavLink data-testid="nav-link-automation" to="/automation" $isActive={location.pathname === "/automation"} onClick={() => setIsOpen(false)} theme={theme}>
                             Live Automation
                             <LiveDot />
                         </NavLink>
                     </li>
-                    <li><NavLink data-testid="nav-link-contact" to="/contact" $isActive={location.pathname === "/contact"} onClick={() => setIsOpen(false)}>Contact</NavLink></li>
+                    <li><NavLink data-testid="nav-link-contact" to="/contact" $isActive={location.pathname === "/contact"} onClick={() => setIsOpen(false)} theme={theme}>Contact</NavLink></li>
                 </NavList>
+                <ThemeToggle
+                    onClick={toggleTheme}
+                    aria-label={`Switch to ${isDarkMode ? 'light' : 'dark'} mode`}
+                    data-testid="theme-toggle"
+                    theme={theme}
+                >
+                    {isDarkMode ? '☀️' : '🌙'}
+                </ThemeToggle>
             </NavContainer>
         </Nav>
     );

@@ -1,5 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
+import { useTheme } from '../contexts/ThemeContext';
 import profilePhoto from '../media/art.jpg';
 import resumePDF from '../media/A_Senko_QA_Leader_SDET_AI_Enthusiast.pdf';
 
@@ -46,9 +47,10 @@ const ProfileImage = styled.img`
 `;
 
 const Name = styled.h2`
-    color: #2c3e50;
+    color: ${props => props.theme.colors.text};
     font-size: 1.8rem;
     margin-bottom: 1rem;
+    transition: color 0.3s ease;
 
     @media (max-width: 768px) {
         font-size: 1.4rem;
@@ -56,9 +58,10 @@ const Name = styled.h2`
 `;
 
 const Position = styled.h3`
-    color: #34495e;
+    color: ${props => props.theme.colors.textSecondary};
     font-size: 1.2rem;
     margin-bottom: 1.5rem;
+    transition: color 0.3s ease;
 
     @media (max-width: 768px) {
         font-size: 1rem;
@@ -68,16 +71,18 @@ const Position = styled.h3`
 const DocumentLink = styled.a`
     display: inline-block;
     padding: 0.75rem 1.5rem;
-    background-color: #2c3e50;
-    color: white;
+    background-color: ${props => props.theme.colors.primary};
+    color: ${props => props.theme.colors.background};
     text-decoration: none;
     border-radius: 4px;
-    transition: background-color 0.3s;
+    transition: all 0.3s ease;
     margin-bottom: 1rem;
     width: 200px;
 
     &:hover {
-        background-color: #34495e;
+        background-color: ${props => props.theme.colors.accent};
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px ${props => props.theme.colors.shadow};
     }
 `;
 
@@ -97,9 +102,10 @@ const Section = styled.div`
 `;
 
 const SectionTitle = styled.h3`
-    color: #2c3e50;
+    color: ${props => props.theme.colors.text};
     margin-bottom: 1rem;
     font-size: 1.4rem;
+    transition: color 0.3s ease;
 
     @media (max-width: 768px) {
         font-size: 1.2rem;
@@ -114,12 +120,13 @@ const SkillsGrid = styled.div`
 `;
 
 const SkillItem = styled.div`
-    background-color: #f8f9fa;
+    background-color: ${props => props.theme.colors.surface};
+    color: ${props => props.theme.colors.text};
     padding: 0.75rem;
     border-radius: 4px;
     font-size: 0.9rem;
     text-align: center;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    box-shadow: 0 2px 4px ${props => props.theme.colors.shadow};
     transition: all 0.3s ease-in-out;
     border: 1px solid transparent;
 
@@ -130,9 +137,9 @@ const SkillItem = styled.div`
 
     &:hover {
         transform: translateY(-2px);
-        background-color: white;
-        border-color: #3498db;
-        box-shadow: 0 4px 8px rgba(52, 152, 219, 0.15);
+        background-color: ${props => props.theme.colors.background};
+        border-color: ${props => props.theme.colors.accent};
+        box-shadow: 0 4px 8px ${props => props.theme.colors.accent}30;
     }
 `;
 
@@ -141,9 +148,10 @@ const ExperienceItem = styled.div`
 `;
 
 const CompanyName = styled.h4`
-    color: #2c3e50;
+    color: ${props => props.theme.colors.text};
     font-size: 1.2rem;
     margin-bottom: 0.5rem;
+    transition: color 0.3s ease;
 
     @media (max-width: 768px) {
         font-size: 1rem;
@@ -151,9 +159,10 @@ const CompanyName = styled.h4`
 `;
 
 const Duration = styled.p`
-    color: #7f8c8d;
+    color: ${props => props.theme.colors.textSecondary};
     font-size: 0.9rem;
     margin-bottom: 0.5rem;
+    transition: color 0.3s ease;
 
     @media (max-width: 768px) {
         font-size: 0.85rem;
@@ -161,17 +170,18 @@ const Duration = styled.p`
 `;
 
 const CompanyLink = styled.a`
-    color: #3498db;
+    color: ${props => props.theme.colors.accent};
     text-decoration: none;
     transition: color 0.3s ease;
 
     &:hover {
-        color: #2980b9;
+        color: ${props => props.theme.colors.accent}dd;
         text-decoration: underline;
     }
 `;
 
 const About: React.FC = () => {
+    const { theme } = useTheme();
     const skills = {
         automation: ['WebdriverIO', 'Cypress', 'Playwright', 'Selenium', 'Appium', 'Model Context Protocol'],
         technologies: ['JavaScript/TypeScript', 'HTML5', 'CSS3', 'React', 'React Native', 'Express.js', 'MongoDB'],
@@ -185,13 +195,14 @@ const About: React.FC = () => {
             <Content data-testid="about-content">
                 <ProfileSection data-testid="profile-section">
                     <ProfileImage data-testid="profile-image" src={profilePhoto} alt="Arthur Senko" />
-                    <Name data-testid="profile-name">Arthur Senko</Name>
-                    <Position data-testid="profile-position">QA Leader<br />AI Enthusiast</Position>
+                    <Name data-testid="profile-name" theme={theme}>Arthur Senko</Name>
+                    <Position data-testid="profile-position" theme={theme}>QA Leader<br />AI Enthusiast</Position>
                     <DocumentLink
                         data-testid="resume-link"
                         href={resumePDF}
                         target="_blank"
                         rel="noopener noreferrer"
+                        theme={theme}
                     >
                         Download Resume ↗
                     </DocumentLink>
@@ -206,12 +217,12 @@ const About: React.FC = () => {
                     </Bio>
 
                     <Section data-testid="current-role-section">
-                        <SectionTitle data-testid="current-role-title">Current Role</SectionTitle>
+                        <SectionTitle data-testid="current-role-title" theme={theme}>Current Role</SectionTitle>
                         <ExperienceItem data-testid="experience-item">
-                            <CompanyName data-testid="company-name">
-                                Senior QA Leader @ <CompanyLink href="https://www.allerganaesthetics.com/" target="_blank" rel="noopener noreferrer">Allergan Aesthetics</CompanyLink>, an <CompanyLink href="https://www.abbvie.com/" target="_blank" rel="noopener noreferrer">AbbVie Company</CompanyLink>
+                            <CompanyName data-testid="company-name" theme={theme}>
+                                Senior QA Leader @ <CompanyLink href="https://www.allerganaesthetics.com/" target="_blank" rel="noopener noreferrer" theme={theme}>Allergan Aesthetics</CompanyLink>, an <CompanyLink href="https://www.abbvie.com/" target="_blank" rel="noopener noreferrer" theme={theme}>AbbVie Company</CompanyLink>
                             </CompanyName>
-                            <Duration data-testid="role-duration">June 2022 – Present | Remote</Duration>
+                            <Duration data-testid="role-duration" theme={theme}>June 2022 – Present | Remote</Duration>
                             <ul data-testid="role-achievements">
                                 <li>Managing QA efforts on projects responsible for ~90% of company revenue</li>
                                 <li>Introduced AI-driven automation, reducing test development time by 80%</li>
@@ -221,16 +232,16 @@ const About: React.FC = () => {
                     </Section>
 
                     <Section data-testid="skills-section">
-                        <SectionTitle data-testid="skills-title">Technical Skills</SectionTitle>
+                        <SectionTitle data-testid="skills-title" theme={theme}>Technical Skills</SectionTitle>
                         <SkillsGrid data-testid="skills-grid">
                             {Object.values(skills).flat().map((skill, index) => (
-                                <SkillItem data-testid={`skill-item-${index}`} key={index}>{skill}</SkillItem>
+                                <SkillItem data-testid={`skill-item-${index}`} key={index} theme={theme}>{skill}</SkillItem>
                             ))}
                         </SkillsGrid>
                     </Section>
 
                     <Section data-testid="achievements-section">
-                        <SectionTitle data-testid="achievements-title">Notable Achievements</SectionTitle>
+                        <SectionTitle data-testid="achievements-title" theme={theme}>Notable Achievements</SectionTitle>
                         <ul data-testid="achievements-list">
                             <li data-testid="achievement-1">Co-founded TechStart.dev, an educational startup for developers and testers</li>
                             <li data-testid="achievement-2">Achieved 95% employment rate for training program graduates</li>

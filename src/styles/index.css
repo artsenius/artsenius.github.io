@@ -13,6 +13,35 @@ body {
     background-color: #f8f9fa;
     color: #212529;
     line-height: 1.5;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+body.light-theme {
+    background-color: #ffffff;
+    color: #2c3e50;
+}
+
+body.dark-theme {
+    background-color: #1a1a1a;
+    color: #ffffff;
+}
+
+/* Scrollbar styling for dark theme */
+body.dark-theme::-webkit-scrollbar {
+    width: 8px;
+}
+
+body.dark-theme::-webkit-scrollbar-track {
+    background: #2d2d2d;
+}
+
+body.dark-theme::-webkit-scrollbar-thumb {
+    background: #4fc3f7;
+    border-radius: 4px;
+}
+
+body.dark-theme::-webkit-scrollbar-thumb:hover {
+    background: #29b6f6;
 }
 
 code {

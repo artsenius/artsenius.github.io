@@ -1,5 +1,6 @@
 import React from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { ThemeProvider } from './contexts/ThemeContext';
 import Header from './components/Header';
 import About from './components/About';
 import Contact from './components/Contact';
@@ -34,19 +35,21 @@ const App: React.FC = () => {
   }, [basename]);
 
   return (
-    <BrowserRouter basename={basename}>
-      <Layout>
-        <Header />
-        <Routes>
-          <Route path="/" element={<About />} />
-          <Route path="/contact" element={<Contact />} />
-          <Route path="/about-app" element={<AboutApp />} />
-          <Route path="/automation" element={<LiveTestAutomation />} />
-          {/* Redirect any unknown routes to the About page */}
-          <Route path="*" element={<Navigate to="/" replace />} />
-        </Routes>
-      </Layout>
-    </BrowserRouter>
+    <ThemeProvider>
+      <BrowserRouter basename={basename}>
+        <Layout>
+          <Header />
+          <Routes>
+            <Route path="/" element={<About />} />
+            <Route path="/contact" element={<Contact />} />
+            <Route path="/about-app" element={<AboutApp />} />
+            <Route path="/automation" element={<LiveTestAutomation />} />
+            {/* Redirect any unknown routes to the About page */}
+            <Route path="*" element={<Navigate to="/" replace />} />
+          </Routes>
+        </Layout>
+      </BrowserRouter>
+    </ThemeProvider>
   );
 };
 
