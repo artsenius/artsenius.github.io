@@ -2,11 +2,15 @@ import React from 'react';
 import styled from 'styled-components';
 import profilePhoto from '../media/art.jpg';
 import resumePDF from '../media/A_Senko_QA_Leader_SDET_AI_Enthusiast.pdf';
+import { useTheme } from './ThemeProvider';
 
-const AboutSection = styled.section`
+const AboutSection = styled.section<{ $theme: any }>`
     padding: 2rem;
     max-width: 1200px;
     margin: 0 auto;
+    background-color: ${props => props.$theme.colors.background};
+    color: ${props => props.$theme.colors.text};
+    transition: background-color 0.3s ease, color 0.3s ease;
 
     @media (max-width: 768px) {
         padding: 1rem;
@@ -45,39 +49,42 @@ const ProfileImage = styled.img`
     }
 `;
 
-const Name = styled.h2`
-    color: #2c3e50;
+const Name = styled.h2<{ $theme: any }>`
+    color: ${props => props.$theme.colors.text};
     font-size: 1.8rem;
     margin-bottom: 1rem;
+    transition: color 0.3s ease;
 
     @media (max-width: 768px) {
         font-size: 1.4rem;
     }
 `;
 
-const Position = styled.h3`
-    color: #34495e;
+const Position = styled.h3<{ $theme: any }>`
+    color: ${props => props.$theme.colors.textSecondary};
     font-size: 1.2rem;
     margin-bottom: 1.5rem;
+    transition: color 0.3s ease;
 
     @media (max-width: 768px) {
         font-size: 1rem;
     }
 `;
 
-const DocumentLink = styled.a`
+const DocumentLink = styled.a<{ $theme: any }>`
     display: inline-block;
     padding: 0.75rem 1.5rem;
-    background-color: #2c3e50;
+    background-color: ${props => props.$theme.colors.accent};
     color: white;
     text-decoration: none;
     border-radius: 4px;
-    transition: background-color 0.3s;
+    transition: all 0.3s ease;
     margin-bottom: 1rem;
     width: 200px;
 
     &:hover {
-        background-color: #34495e;
+        background-color: ${props => props.$theme.colors.primary};
+        transform: translateY(-2px);
     }
 `;
 
@@ -113,15 +120,16 @@ const SkillsGrid = styled.div`
     margin-bottom: 2rem;
 `;
 
-const SkillItem = styled.div`
-    background-color: #f8f9fa;
+const SkillItem = styled.div<{ $theme: any }>`
+    background-color: ${props => props.$theme.colors.surface};
     padding: 0.75rem;
     border-radius: 4px;
     font-size: 0.9rem;
     text-align: center;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    box-shadow: 0 2px 4px ${props => props.$theme.colors.shadow};
     transition: all 0.3s ease-in-out;
     border: 1px solid transparent;
+    color: ${props => props.$theme.colors.text};
 
     @media (max-width: 768px) {
         font-size: 0.85rem;
@@ -130,9 +138,9 @@ const SkillItem = styled.div`
 
     &:hover {
         transform: translateY(-2px);
-        background-color: white;
-        border-color: #3498db;
-        box-shadow: 0 4px 8px rgba(52, 152, 219, 0.15);
+        background-color: ${props => props.$theme.colors.hover};
+        border-color: ${props => props.$theme.colors.accent};
+        box-shadow: 0 4px 8px ${props => props.$theme.colors.accent}33;
     }
 `;
 
@@ -172,6 +180,7 @@ const CompanyLink = styled.a`
 `;
 
 const About: React.FC = () => {
+    const { theme } = useTheme();
     const skills = {
         automation: ['WebdriverIO', 'Cypress', 'Playwright', 'Selenium', 'Appium', 'Model Context Protocol'],
         technologies: ['JavaScript/TypeScript', 'HTML5', 'CSS3', 'React', 'React Native', 'Express.js', 'MongoDB'],
@@ -181,17 +190,18 @@ const About: React.FC = () => {
     };
 
     return (
-        <AboutSection data-testid="about-section">
+        <AboutSection data-testid="about-section" $theme={theme}>
             <Content data-testid="about-content">
                 <ProfileSection data-testid="profile-section">
                     <ProfileImage data-testid="profile-image" src={profilePhoto} alt="Arthur Senko" />
-                    <Name data-testid="profile-name">Arthur Senko</Name>
-                    <Position data-testid="profile-position">QA Leader<br />AI Enthusiast</Position>
+                    <Name data-testid="profile-name" $theme={theme}>Arthur Senko</Name>
+                    <Position data-testid="profile-position" $theme={theme}>QA Leader<br />AI Enthusiast</Position>
                     <DocumentLink
                         data-testid="resume-link"
                         href={resumePDF}
                         target="_blank"
                         rel="noopener noreferrer"
+                        $theme={theme}
                     >
                         Download Resume ↗
                     </DocumentLink>
@@ -224,7 +234,7 @@ const About: React.FC = () => {
                         <SectionTitle data-testid="skills-title">Technical Skills</SectionTitle>
                         <SkillsGrid data-testid="skills-grid">
                             {Object.values(skills).flat().map((skill, index) => (
-                                <SkillItem data-testid={`skill-item-${index}`} key={index}>{skill}</SkillItem>
+                                <SkillItem data-testid={`skill-item-${index}`} key={index} $theme={theme}>{skill}</SkillItem>
                             ))}
                         </SkillsGrid>
                     </Section>

@@ -6,6 +6,7 @@ import Contact from './components/Contact';
 import Layout from './components/Layout';
 import AboutApp from './components/AboutApp';
 import LiveTestAutomation from './components/LiveTestAutomation';
+import { ThemeProvider } from './components/ThemeProvider';
 
 const App: React.FC = () => {
   const basename = process.env.NODE_ENV === 'production' ? '/about' : '';
@@ -34,19 +35,21 @@ const App: React.FC = () => {
   }, [basename]);
 
   return (
-    <BrowserRouter basename={basename}>
-      <Layout>
-        <Header />
-        <Routes>
-          <Route path="/" element={<About />} />
-          <Route path="/contact" element={<Contact />} />
-          <Route path="/about-app" element={<AboutApp />} />
-          <Route path="/automation" element={<LiveTestAutomation />} />
-          {/* Redirect any unknown routes to the About page */}
-          <Route path="*" element={<Navigate to="/" replace />} />
-        </Routes>
-      </Layout>
-    </BrowserRouter>
+    <ThemeProvider>
+      <BrowserRouter basename={basename}>
+        <Layout>
+          <Header />
+          <Routes>
+            <Route path="/" element={<About />} />
+            <Route path="/contact" element={<Contact />} />
+            <Route path="/about-app" element={<AboutApp />} />
+            <Route path="/automation" element={<LiveTestAutomation />} />
+            {/* Redirect any unknown routes to the About page */}
+            <Route path="*" element={<Navigate to="/" replace />} />
+          </Routes>
+        </Layout>
+      </BrowserRouter>
+    </ThemeProvider>
   );
 };
 
