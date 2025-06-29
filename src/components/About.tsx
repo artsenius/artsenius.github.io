@@ -3,7 +3,11 @@ import styled from 'styled-components';
 import profilePhoto from '../media/art.jpg';
 import resumePDF from '../media/A_Senko_QA_Leader_SDET_AI_Enthusiast.pdf';
 
-const AboutSection = styled.section`
+interface AboutProps {
+  isDark?: boolean;
+}
+
+const AboutSection = styled.section<{ $isDark?: boolean }>`
     padding: 2rem;
     max-width: 1200px;
     margin: 0 auto;
@@ -113,8 +117,8 @@ const SkillsGrid = styled.div`
     margin-bottom: 2rem;
 `;
 
-const SkillItem = styled.div`
-    background-color: #f8f9fa;
+const SkillItem = styled.div<{ $isDark?: boolean }>`
+    background-color: ${props => props.$isDark ? '#2c2c2c' : '#f8f9fa'};
     padding: 0.75rem;
     border-radius: 4px;
     font-size: 0.9rem;
@@ -122,6 +126,7 @@ const SkillItem = styled.div`
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
     transition: all 0.3s ease-in-out;
     border: 1px solid transparent;
+    color: ${props => props.$isDark ? '#ffffff' : '#2c3e50'};
 
     @media (max-width: 768px) {
         font-size: 0.85rem;
@@ -130,7 +135,7 @@ const SkillItem = styled.div`
 
     &:hover {
         transform: translateY(-2px);
-        background-color: white;
+        background-color: ${props => props.$isDark ? '#404040' : 'white'};
         border-color: #3498db;
         box-shadow: 0 4px 8px rgba(52, 152, 219, 0.15);
     }
@@ -140,8 +145,8 @@ const ExperienceItem = styled.div`
     margin-bottom: 1.5rem;
 `;
 
-const CompanyName = styled.h4`
-    color: #2c3e50;
+const CompanyName = styled.h4<{ $isDark?: boolean }>`
+    color: ${props => props.$isDark ? '#ffffff' : '#2c3e50'};
     font-size: 1.2rem;
     margin-bottom: 0.5rem;
 
@@ -150,8 +155,8 @@ const CompanyName = styled.h4`
     }
 `;
 
-const Duration = styled.p`
-    color: #7f8c8d;
+const Duration = styled.p<{ $isDark?: boolean }>`
+    color: ${props => props.$isDark ? '#bdc3c7' : '#7f8c8d'};
     font-size: 0.9rem;
     margin-bottom: 0.5rem;
 
@@ -171,7 +176,7 @@ const CompanyLink = styled.a`
     }
 `;
 
-const About: React.FC = () => {
+const About: React.FC<AboutProps> = ({ isDark = false }) => {
     const skills = {
         automation: ['WebdriverIO', 'Cypress', 'Playwright', 'Selenium', 'Appium', 'Model Context Protocol'],
         technologies: ['JavaScript/TypeScript', 'HTML5', 'CSS3', 'React', 'React Native', 'Express.js', 'MongoDB'],
@@ -208,10 +213,10 @@ const About: React.FC = () => {
                     <Section data-testid="current-role-section">
                         <SectionTitle data-testid="current-role-title">Current Role</SectionTitle>
                         <ExperienceItem data-testid="experience-item">
-                            <CompanyName data-testid="company-name">
+                            <CompanyName data-testid="company-name" $isDark={isDark}>
                                 Senior QA Leader @ <CompanyLink href="https://www.allerganaesthetics.com/" target="_blank" rel="noopener noreferrer">Allergan Aesthetics</CompanyLink>, an <CompanyLink href="https://www.abbvie.com/" target="_blank" rel="noopener noreferrer">AbbVie Company</CompanyLink>
                             </CompanyName>
-                            <Duration data-testid="role-duration">June 2022 – Present | Remote</Duration>
+                            <Duration data-testid="role-duration" $isDark={isDark}>June 2022 – Present | Remote</Duration>
                             <ul data-testid="role-achievements">
                                 <li>Managing QA efforts on projects responsible for ~90% of company revenue</li>
                                 <li>Introduced AI-driven automation, reducing test development time by 80%</li>
@@ -224,7 +229,7 @@ const About: React.FC = () => {
                         <SectionTitle data-testid="skills-title">Technical Skills</SectionTitle>
                         <SkillsGrid data-testid="skills-grid">
                             {Object.values(skills).flat().map((skill, index) => (
-                                <SkillItem data-testid={`skill-item-${index}`} key={index}>{skill}</SkillItem>
+                                <SkillItem data-testid={`skill-item-${index}`} key={index} $isDark={isDark}>{skill}</SkillItem>
                             ))}
                         </SkillsGrid>
                     </Section>

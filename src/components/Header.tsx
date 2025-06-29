@@ -2,8 +2,13 @@ import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import styled from 'styled-components';
 
-const Nav = styled.nav`
-    background-color: #2c3e50;
+interface HeaderProps {
+  isDark?: boolean;
+  onToggleTheme?: () => void;
+}
+
+const Nav = styled.nav<{ $isDark?: boolean }>`
+    background-color: ${props => props.$isDark ? '#1a1a1a' : '#2c3e50'};
     padding: 1rem 0;
     position: sticky;
     top: 0;
@@ -12,6 +17,7 @@ const Nav = styled.nav`
     left: 0;
     margin-left: calc(-50vw + 50%);
     margin-right: calc(-50vw + 50%);
+    transition: background-color 0.3s ease;
 
     @media (max-width: 768px) {
         margin-left: -2rem;
@@ -130,7 +136,45 @@ const MenuButton = styled.button`
     }
 `;
 
-const Header: React.FC = () => {
+const ThemeToggleButton = styled.button`
+    background: #3498db;
+    border: none;
+    border-radius: 20px;
+    width: 50px;
+    height: 26px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2px;
+    transition: all 0.3s ease;
+    font-size: 14px;
+    margin-left: 1rem;
+    
+    &:hover {
+        transform: scale(1.05);
+        background: #2980b9;
+    }
+
+    &:focus {
+        outline: 2px solid #3498db;
+        outline-offset: 2px;
+    }
+
+    @media (max-width: 768px) {
+        margin-left: 0.5rem;
+        width: 40px;
+        height: 22px;
+        font-size: 12px;
+    }
+`;
+
+const HeaderControls = styled.div`
+    display: flex;
+    align-items: center;
+`;
+
+const Header: React.FC<HeaderProps> = ({ isDark = false, onToggleTheme }) => {
     const location = useLocation();
     const [isOpen, setIsOpen] = useState(false);
 
@@ -152,7 +196,7 @@ const Header: React.FC = () => {
     const toggleMenu = () => setIsOpen(!isOpen);
 
     return (
-        <Nav data-testid="header-nav">
+        <Nav data-testid="header-nav" $isDark={isDark}>
             <NavContainer data-testid="nav-container">
                 <MenuButton
                     onClick={toggleMenu}
@@ -175,6 +219,17 @@ const Header: React.FC = () => {
                     </li>
                     <li><NavLink data-testid="nav-link-contact" to="/contact" $isActive={location.pathname === "/contact"} onClick={() => setIsOpen(false)}>Contact</NavLink></li>
                 </NavList>
+                <HeaderControls>
+                    {onToggleTheme && (
+                        <ThemeToggleButton
+                            onClick={onToggleTheme}
+                            aria-label={`Switch to ${isDark ? 'light' : 'dark'} theme`}
+                            data-testid="theme-toggle-button"
+                        >
+                            {isDark ? '☀️' : '🌙'}
+                        </ThemeToggleButton>
+                    )}
+                </HeaderControls>
             </NavContainer>
         </Nav>
     );
