@@ -72,24 +72,24 @@ const TestRunList = styled.div`
     min-height: 400px; /* Ensure consistent height even when loading */
 `;
 
-const TestRunCard = styled.div`
-    background-color: white;
+const TestRunCard = styled.div<{ $isDark: boolean }>`
+    background-color: ${props => props.$isDark ? 'transparent' : 'white'};
     border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    box-shadow: ${props => props.$isDark ? 'none' : '0 2px 4px rgba(0, 0, 0, 0.1)'};
     overflow: hidden;
 `;
 
-const getStatusColor = (status: string, passed: number, failed: number) => {
+const getStatusColor = (status: string, passed: number, failed: number, isDark: boolean) => {
     if (status === 'completed' || status === 'passed') {
-        if (failed === 0 && passed > 0) return '#27ae60'; // Green for all passed
-        if (failed > 0 && passed > 0) return '#f39c12'; // Orange for mixed results
-        if (failed > 0 && passed === 0) return '#e74c3c'; // Red for all failed
+        if (failed === 0 && passed > 0) return isDark ? 'rgb(20, 83, 45)' : '#27ae60'; // Green for all passed in dark mode
+        if (failed > 0 && passed > 0) return isDark ? '#b45309' : '#f39c12'; // Darker orange for dark mode
+        if (failed > 0 && passed === 0) return isDark ? '#b91c1c' : '#e74c3c'; // Darker red for dark mode
     }
-    return '#7f8c8d'; // Grey for other statuses (like pending or error)
+    return isDark ? '#374151' : '#7f8c8d'; // Grey for other statuses
 };
 
-const TestRunHeader = styled.div<{ status: string; passed: number; failed: number }>`
-    background-color: ${props => getStatusColor(props.status, props.passed, props.failed)};
+const TestRunHeader = styled.div<{ status: string; passed: number; failed: number; $isDark: boolean }>`
+    background-color: ${props => getStatusColor(props.status, props.passed, props.failed, props.$isDark)};
     color: white;
     padding: 1rem;
     cursor: pointer;
@@ -146,18 +146,18 @@ const StatItem = styled.div`
     }
 `;
 
-const TestRunContent = styled.div<{ isExpanded: boolean }>`
+const TestRunContent = styled.div<{ isExpanded: boolean; $isDark: boolean }>`
     height: auto;
     max-height: ${props => props.isExpanded ? 'none' : '0'};
     overflow: hidden;
-    transition: padding 0.3s ease-in-out;
+    transition: padding 0.3s ease-in-out, background-color 0.3s;
     padding: ${props => props.isExpanded ? '1rem' : '0'};
-    
+    background-color: ${props => props.$isDark ? '#23272f' : '#fff'};
+
     @media (max-width: 768px) {
         padding: ${props => props.isExpanded ? '0.75rem' : '0'};
     }
 `;
-
 
 const ErrorMessage = styled.div`
     text-align: center;
@@ -191,16 +191,16 @@ const shimmerAnimation = keyframes`
     }
 `;
 
-const shimmerStyle = css`
-    background: linear-gradient(to right, #f6f7f8 8%, #edeef1 18%, #f6f7f8 33%);
+const shimmerStyle = css<{ $isDark?: boolean }>`
+    background: linear-gradient(to right, ${props => props.$isDark ? '#23272f 8%, #374151 18%, #23272f 33%' : '#f6f7f8 8%, #edeef1 18%, #f6f7f8 33%'});
     background-size: 2400px 100%;
     animation: ${shimmerAnimation} 1.5s linear infinite;
 `;
 
-const LoadingCard = styled.div<{ index: number }>`
-    background-color: white;
+const LoadingCard = styled.div<{ index: number; $isDark: boolean }>`
+    background-color: ${props => props.$isDark ? '#23272f' : 'white'};
     border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 2px 4px ${props => props.$isDark ? 'rgba(0,0,0,0.5)' : 'rgba(0,0,0,0.1)'};
     overflow: hidden;
     opacity: 0;
     animation: ${fadeInAnimation} 0.5s ease forwards;
@@ -211,9 +211,9 @@ const LoadingCard = styled.div<{ index: number }>`
     }
 `;
 
-const LoadingHeader = styled.div`
+const LoadingHeader = styled.div<{ $isDark: boolean }>`
     height: 60px;
-    background-color: #f8f8f8;
+    background-color: ${props => props.$isDark ? '#23272f' : '#f8f8f8'};
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -235,14 +235,14 @@ const LoadingTitle = styled.div`
     gap: 0.5rem;
 `;
 
-const LoadingProjectIcon = styled.div`
+const LoadingProjectIcon = styled.div<{ $isDark: boolean }>`
     width: 24px;
     height: 24px;
     border-radius: 50%;
     ${shimmerStyle}
 `;
 
-const LoadingProjectName = styled.div`
+const LoadingProjectName = styled.div<{ $isDark: boolean }>`
     width: 120px;
     height: 20px;
     ${shimmerStyle}
@@ -266,14 +266,14 @@ const LoadingStatWrapper = styled.div`
     gap: 0.5rem;
 `;
 
-const LoadingStatIcon = styled.div<{ type: 'pass' | 'fail' | 'date' }>`
+const LoadingStatIcon = styled.div<{ type: 'pass' | 'fail' | 'date'; $isDark: boolean }>`
     width: 16px;
     height: 16px;
     border-radius: ${props => props.type === 'date' ? '3px' : '50%'};
     ${shimmerStyle}
 `;
 
-const LoadingStatValue = styled.div<{ width: string }>`
+const LoadingStatValue = styled.div<{ width: string; $isDark: boolean }>`
     width: ${props => props.width};
     height: 16px;
     ${shimmerStyle}
@@ -283,24 +283,24 @@ const LoadingStatValue = styled.div<{ width: string }>`
 const LoadingPlaceholder = () => (
     <TestRunList data-testid="loading-placeholder">
         {[1, 2, 3, 4, 5].map((_, index) => (
-            <LoadingCard key={index} index={index}>
-                <LoadingHeader>
+            <LoadingCard key={index} index={index} $isDark={true}>
+                <LoadingHeader $isDark={true}>
                     <LoadingTitle>
-                        <LoadingProjectIcon />
-                        <LoadingProjectName />
+                        <LoadingProjectIcon $isDark={true} />
+                        <LoadingProjectName $isDark={true} />
                     </LoadingTitle>
                     <LoadingStats>
                         <LoadingStatWrapper>
-                            <LoadingStatIcon type="pass" />
-                            <LoadingStatValue width="24px" />
+                            <LoadingStatIcon type="pass" $isDark={true} />
+                            <LoadingStatValue width="24px" $isDark={true} />
                         </LoadingStatWrapper>
                         <LoadingStatWrapper>
-                            <LoadingStatIcon type="fail" />
-                            <LoadingStatValue width="24px" />
+                            <LoadingStatIcon type="fail" $isDark={true} />
+                            <LoadingStatValue width="24px" $isDark={true} />
                         </LoadingStatWrapper>
                         <LoadingStatWrapper>
-                            <LoadingStatIcon type="date" />
-                            <LoadingStatValue width="120px" />
+                            <LoadingStatIcon type="date" $isDark={true} />
+                            <LoadingStatValue width="120px" $isDark={true} />
                         </LoadingStatWrapper>
                     </LoadingStats>
                 </LoadingHeader>
@@ -313,12 +313,12 @@ const LoadingExpandedContent = styled.div`
     animation: ${fadeInAnimation} 0.3s ease-in-out;
 `;
 
-const LoadingTestSummary = styled.div`
+const LoadingTestSummary = styled.div<{ $isDark: boolean }>`
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 1rem;
     margin-bottom: 1rem;
-    background-color: #f8fafc;
+    background-color: ${props => props.$isDark ? '#23272f' : '#f8fafc'};
     padding: 0.75rem;
     border-radius: 6px;
 
@@ -341,7 +341,7 @@ const LoadingSummaryItem = styled.div`
     }
 `;
 
-const LoadingSummaryLabel = styled.div`
+const LoadingSummaryLabel = styled.div<{ $isDark: boolean }>`
     height: 0.8rem;
     width: 60%;
     border-radius: 4px;
@@ -352,7 +352,7 @@ const LoadingSummaryLabel = styled.div`
     }
 `;
 
-const LoadingSummaryValue = styled.div`
+const LoadingSummaryValue = styled.div<{ $isDark: boolean }>`
     height: 0.9rem;
     width: 80%;
     border-radius: 4px;
@@ -367,11 +367,11 @@ const LoadingTestDetails = styled.div`
     margin-top: 0.5rem;
 `;
 
-const LoadingTestSuite = styled.div`
+const LoadingTestSuite = styled.div<{ $isDark: boolean }>`
     margin-bottom: 1rem;
 `;
 
-const LoadingSuiteTitle = styled.div`
+const LoadingSuiteTitle = styled.div<{ $isDark: boolean }>`
     height: 0.95rem;
     width: 70%;
     margin: 0.25rem 0;
@@ -379,7 +379,7 @@ const LoadingSuiteTitle = styled.div`
     ${shimmerStyle}
 `;
 
-const LoadingTestCase = styled.div`
+const LoadingTestCase = styled.div<{ $isDark: boolean }>`
     height: 2.5rem;
     padding: 0.5rem;
     margin: 0.25rem 0;
@@ -454,20 +454,20 @@ const LiveTestAutomation: React.FC<LiveTestAutomationProps> = ({ isDark }) => {
 
     const renderLoadingExpandedContent = () => (
         <LoadingExpandedContent>
-            <LoadingTestSummary>
+            <LoadingTestSummary $isDark={isDark}>
                 {Array(8).fill(null).map((_, index) => (
                     <LoadingSummaryItem key={index}>
-                        <LoadingSummaryLabel />
-                        <LoadingSummaryValue />
+                        <LoadingSummaryLabel $isDark={isDark} />
+                        <LoadingSummaryValue $isDark={isDark} />
                     </LoadingSummaryItem>
                 ))}
             </LoadingTestSummary>
             <LoadingTestDetails>
                 {Array(3).fill(null).map((_, suiteIndex) => (
-                    <LoadingTestSuite key={suiteIndex}>
-                        <LoadingSuiteTitle />
+                    <LoadingTestSuite key={suiteIndex} $isDark={isDark}>
+                        <LoadingSuiteTitle $isDark={isDark} />
                         {Array(2).fill(null).map((_, caseIndex) => (
-                            <LoadingTestCase key={caseIndex} />
+                            <LoadingTestCase key={caseIndex} $isDark={isDark} />
                         ))}
                     </LoadingTestSuite>
                 ))}
@@ -490,11 +490,12 @@ const LiveTestAutomation: React.FC<LiveTestAutomationProps> = ({ isDark }) => {
     };
 
     const renderTestCase = (test: any, index: string | number, runId: string) => (
-        <TestCase key={`${runId}-${index}`} status={test.status}>
+        <TestCase key={`${runId}-${index}`} status={test.status} $isDark={isDark}>
             <ErrorWrapper>
                 <TestInfo>
                     <TestName
                         status={test.status}
+                        $isDark={isDark}
                         onMouseEnter={() => test.error && setHoveredError({
                             id: `${runId}-${index}`,
                             error: getErrorMessage(test.error)
@@ -520,7 +521,6 @@ const LiveTestAutomation: React.FC<LiveTestAutomationProps> = ({ isDark }) => {
     if (loading) {
         return (
             <TestAutomationSection>
-                <Title>Live Test Automation</Title>
                 <LoadingPlaceholder />
             </TestAutomationSection>
         );
@@ -529,7 +529,6 @@ const LiveTestAutomation: React.FC<LiveTestAutomationProps> = ({ isDark }) => {
     if (error) {
         return (
             <TestAutomationSection>
-                <Title>Live Test Automation</Title>
                 <ErrorMessage>{error}</ErrorMessage>
             </TestAutomationSection>
         );
@@ -537,14 +536,14 @@ const LiveTestAutomation: React.FC<LiveTestAutomationProps> = ({ isDark }) => {
 
     return (
         <TestAutomationSection data-testid="test-automation-section">
-            <Title data-testid="test-automation-title">Live Test Automation</Title>
             <TestRunList data-testid="test-run-list">
                 {testRuns.map((run) => (
-                    <TestRunCard key={run._id} data-testid={`test-run-card-${run._id}`}>
+                    <TestRunCard key={run._id} data-testid={`test-run-card-${run._id}`} $isDark={isDark}>
                         <TestRunHeader
                             status={run.status}
                             passed={run.results.passed}
                             failed={run.results.failed}
+                            $isDark={isDark}
                             onClick={() => toggleRunDetails(run._id)}
                             data-testid={`test-run-header-${run._id}`}
                         >
@@ -558,11 +557,11 @@ const LiveTestAutomation: React.FC<LiveTestAutomationProps> = ({ isDark }) => {
                                 <StatItem>{formatDate(run.startedAt)}</StatItem>
                             </TestRunStats>
                         </TestRunHeader>
-                        <TestRunContent data-testid="test-run-content" isExpanded={!!expandedRuns[run._id] || !!loadingDetails[run._id]}>
+                        <TestRunContent data-testid="test-run-content" isExpanded={!!expandedRuns[run._id] || !!loadingDetails[run._id]} $isDark={isDark}>
                             {loadingDetails[run._id] && renderLoadingExpandedContent()}
                             {expandedRuns[run._id] && (
                                 <ExpandedContent data-testid={`expanded-content-${run._id}`}>
-                                    <TestSummary data-testid={`test-summary-${run._id}`}>
+                                    <TestSummary data-testid={`test-summary-${run._id}`} $isDark={isDark}>
                                         <SummaryItem data-testid="test-run-duration">
                                             <SummaryLabel>Duration</SummaryLabel>
                                             <SummaryValue>{(expandedRuns[run._id].duration / 1000).toFixed(2)}s</SummaryValue>
@@ -593,14 +592,37 @@ const LiveTestAutomation: React.FC<LiveTestAutomationProps> = ({ isDark }) => {
                                     </TestSummary>
                                     <TestDetails data-testid={`test-details-${run._id}`}>
                                         {expandedRuns[run._id].results.tests?.map((test: any, index: number) => (
-                                            <TestSuite key={index}>
-                                                <SuiteTitle>{test.suite}</SuiteTitle>
-                                                {renderTestCase(test, index, run._id)}
+                                            <TestSuite data-testid={`test-suite-${run._id}`} key={index} $isDark={isDark}>
+                                                <SuiteTitle data-testid={`test-suite-title-${run._id}`} $isDark={isDark}>{test.suite}</SuiteTitle>
+                                                <TestCase status={test.status} $isDark={isDark}>
+                                                    <ErrorWrapper>
+                                                        <TestInfo>
+                                                            <TestName status={test.status} $isDark={isDark}
+                                                                onMouseEnter={() => test.error && setHoveredError({
+                                                                    id: `${run._id}-${index}`,
+                                                                    error: getErrorMessage(test.error)
+                                                                })}
+                                                                onMouseLeave={() => setHoveredError(null)}
+                                                            >
+                                                                {test.title || test.name}
+                                                            </TestName>
+                                                            <TestMeta>
+                                                                <TestBrowser>
+                                                                    {test.browser === 'chromium' ? '🌐' : '📱'} {test.browser || 'chromium'}
+                                                                </TestBrowser>
+                                                                <TestDuration>{test.duration ? `${(test.duration / 1000).toFixed(2)}s` : 'N/A'}</TestDuration>
+                                                            </TestMeta>
+                                                        </TestInfo>
+                                                        {hoveredError?.id === `${run._id}-${index}` && (
+                                                            <Tooltip>{hoveredError.error}</Tooltip>
+                                                        )}
+                                                    </ErrorWrapper>
+                                                </TestCase>
                                             </TestSuite>
                                         ))}
                                         {expandedRuns[run._id].results.details?.map((suite: any, suiteIndex: number) => (
-                                            <TestSuite key={`detail-${suiteIndex}`}>
-                                                <SuiteTitle>{suite.suite}</SuiteTitle>
+                                            <TestSuite key={`detail-${suiteIndex}`} $isDark={isDark}>
+                                                <SuiteTitle $isDark={isDark}>{suite.suite}</SuiteTitle>
                                                 {suite.tests?.map((test: any, testIndex: number) =>
                                                     renderTestCase(test, `${suiteIndex}-${testIndex}`, run._id)
                                                 )}
@@ -622,12 +644,13 @@ const ExpandedContent = styled.div`
     animation: ${fadeInAnimation} 0.3s ease-in-out;
 `;
 
-const TestSummary = styled.div`
+const TestSummary = styled.div<{ $isDark: boolean }>`
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 1rem;
     margin-bottom: 1rem;
-    background-color: #f8fafc;
+    background-color: ${props => props.$isDark ? '#23272f' : '#f8fafc'};
+    color: ${props => props.$isDark ? '#ecf0f1' : '#2c3e50'};
     padding: 1rem;
     border-radius: 6px;
 
@@ -678,8 +701,9 @@ const TestDetails = styled.div`
     }
 `;
 
-const TestSuite = styled.div`
-    background-color: #f8fafc;
+const TestSuite = styled.div<{ $isDark: boolean }>`
+    background-color: ${props => props.$isDark ? '#23272f' : '#f8fafc'};
+    color: ${props => props.$isDark ? '#ecf0f1' : '#2c3e50'};
     padding: 1rem;
     border-radius: 6px;
 
@@ -688,11 +712,11 @@ const TestSuite = styled.div`
     }
 `;
 
-const SuiteTitle = styled.h4`
-    color: #2c3e50;
+const SuiteTitle = styled.h4<{ $isDark: boolean }>`
+    color: ${props => props.$isDark ? '#f3f4f6' : '#2c3e50'};
     margin: 0 0 0.75rem;
     font-size: 1.1rem;
-    border-bottom: 1px solid #e2e8f0;
+    border-bottom: 1px solid ${props => props.$isDark ? '#374151' : '#e2e8f0'};
     padding-bottom: 0.5rem;
 
     @media (max-width: 768px) {
@@ -701,21 +725,38 @@ const SuiteTitle = styled.h4`
     }
 `;
 
-const TestCase = styled.div<{ status: string }>`
+const TestCase = styled.div<{ status: string; $isDark: boolean }>`
     padding: 0.75rem;
     margin: 0.5rem 0;
     border-radius: 4px;
     position: relative;
-    background-color: ${props =>
-        props.status === 'passed' ? '#f0fdf4' :
-            props.status === 'failed' ? '#fef2f2' :
-                props.status === 'skipped' ? '#f8fafc' :
-                    '#fff'};
-    border: 1px solid ${props =>
-        props.status === 'passed' ? '#86efac' :
-            props.status === 'failed' ? '#fecaca' :
-                props.status === 'skipped' ? '#e2e8f0' :
-                    '#e2e8f0'};
+    background-color: ${props => {
+        if (props.$isDark) {
+            if (props.status === 'passed') return '#14532d';
+            if (props.status === 'failed') return '#7f1d1d';
+            if (props.status === 'skipped') return '#23272f';
+            return '#23272f';
+        } else {
+            if (props.status === 'passed') return '#f0fdf4';
+            if (props.status === 'failed') return '#fef2f2';
+            if (props.status === 'skipped') return '#f8fafc';
+            return '#fff';
+        }
+    }};
+    border: 1px solid ${props => {
+        if (props.$isDark) {
+            if (props.status === 'passed') return '#22c55e';
+            if (props.status === 'failed') return '#ef4444';
+            if (props.status === 'skipped') return '#374151';
+            return '#374151';
+        } else {
+            if (props.status === 'passed') return '#86efac';
+            if (props.status === 'failed') return '#fecaca';
+            if (props.status === 'skipped') return '#e2e8f0';
+            return '#e2e8f0';
+        }
+    }};
+    color: ${props => props.$isDark ? '#ecf0f1' : '#1e293b'};
 
     @media (max-width: 768px) {
         padding: 0.6rem;
@@ -737,9 +778,9 @@ const TestInfo = styled.div`
     }
 `;
 
-const TestName = styled.div<{ status: string }>`
+const TestName = styled.div<{ status: string; $isDark: boolean }>`
     font-size: 0.95rem;
-    color: #1e293b;
+    color: ${props => props.$isDark ? '#ecf0f1' : '#1e293b'};
     flex: 1;
     min-width: 200px;
     display: flex;
@@ -749,7 +790,11 @@ const TestName = styled.div<{ status: string }>`
 
     &::before {
         content: "${props => props.status === 'passed' ? '✓' : props.status === 'failed' ? '✘' : ''}";
-        color: ${props => props.status === 'passed' ? '#16a34a' : props.status === 'failed' ? '#dc2626' : 'inherit'};
+        color: ${props => {
+            if (props.status === 'passed') return props.$isDark ? '#22c55e' : '#16a34a';
+            if (props.status === 'failed') return props.$isDark ? '#ef4444' : '#dc2626';
+            return props.$isDark ? '#ecf0f1' : 'inherit';
+        }};
         font-weight: bold;
     }
 

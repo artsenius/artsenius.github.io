@@ -3,8 +3,8 @@ import { Link, useLocation } from 'react-router-dom';
 import styled from 'styled-components';
 import { useTheme } from './ThemeProvider';
 
-const Nav = styled.nav<{ $theme: any }>`
-    background-color: ${props => props.$theme.colors.primary};
+const Nav = styled.nav<{ $theme: any, $isDark: boolean }>`
+    background-color: ${props => props.$isDark ? '#2c3e50' : props.$theme.colors.primary};
     padding: 1rem 0;
     position: sticky;
     top: 0;
@@ -190,7 +190,7 @@ const Header: React.FC = () => {
     const toggleMenu = () => setIsOpen(!isOpen);
 
     return (
-        <Nav data-testid="header-nav" $theme={theme}>
+        <Nav data-testid="header-nav" $theme={theme} $isDark={isDarkMode}>
             <NavContainer data-testid="nav-container">
                 <MenuButton
                     onClick={toggleMenu}

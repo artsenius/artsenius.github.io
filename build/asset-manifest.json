@@ -1,15 +1,15 @@
 {
   "files": {
     "main.css": "/about/static/css/main.93270d0e.css",
-    "main.js": "/about/static/js/main.e778b7ee.js",
+    "main.js": "/about/static/js/main.f4d5dadb.js",
     "static/media/A_Senko_QA_Leader_SDET_AI_Enthusiast.pdf": "/about/static/media/A_Senko_QA_Leader_SDET_AI_Enthusiast.9da71eb068f141ff2a1e.pdf",
     "static/media/art.jpg": "/about/static/media/art.5a7020b51115fa441348.jpg",
     "index.html": "/about/index.html",
     "main.93270d0e.css.map": "/about/static/css/main.93270d0e.css.map",
-    "main.e778b7ee.js.map": "/about/static/js/main.e778b7ee.js.map"
+    "main.f4d5dadb.js.map": "/about/static/js/main.f4d5dadb.js.map"
   },
   "entrypoints": [
     "static/css/main.93270d0e.css",
-    "static/js/main.e778b7ee.js"
+    "static/js/main.f4d5dadb.js"
   ]
 }

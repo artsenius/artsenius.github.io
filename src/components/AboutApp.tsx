@@ -38,10 +38,11 @@ const Section = styled.div`
     margin-bottom: 2rem;
 `;
 
-const SectionTitle = styled.h2`
-    color: #2c3e50;
+const SectionTitle = styled.h2<{ $isDark: boolean }>`
+    color: ${props => props.$isDark ? '#ecf0f1' : '#2c3e50'};
     font-size: 1.8rem;
     margin-bottom: 1rem;
+    transition: color 0.3s;
 
     @media (max-width: 768px) {
         font-size: 1.3rem;
@@ -62,11 +63,13 @@ const TechStack = styled.div`
     margin-top: 1rem;
 `;
 
-const TechItem = styled.div`
-    background-color: #f8f9fa;
+const TechItem = styled.div<{ $isDark: boolean }>`
+    background-color: ${props => props.$isDark ? '#2d2d2d' : '#f8f9fa'};
+    color: ${props => props.$isDark ? '#ecf0f1' : '#2c3e50'};
     padding: 1rem;
     border-radius: 8px;
     margin-bottom: 1rem;
+    transition: background-color 0.3s, color 0.3s;
 `;
 
 const GithubLink = styled.a`
@@ -113,7 +116,7 @@ interface AboutAppProps {
 const AboutApp: React.FC<AboutAppProps> = ({ isDark }) => {
     return (
         <AboutAppSection data-testid="about-app-section">
-            <Title data-testid="about-app-title">About This App</Title>
+            {/* <Title data-testid="about-app-title">About This App</Title> */}
             <Content>
                 <Section data-testid="about-app-description">
                     <p>
@@ -131,9 +134,9 @@ const AboutApp: React.FC<AboutAppProps> = ({ isDark }) => {
                 </Section>
 
                 <Section data-testid="about-app-components">
-                    <SectionTitle>Project Components</SectionTitle>
+                    <SectionTitle $isDark={isDark}>Project Components</SectionTitle>
                     <TechStack>
-                        <TechItem data-testid="about-app-frontend">
+                        <TechItem data-testid="about-app-frontend" $isDark={isDark}>
                             <h3>Frontend Application</h3>
                             <p>
                                 A modern React application built with TypeScript, featuring responsive design
@@ -149,7 +152,7 @@ const AboutApp: React.FC<AboutAppProps> = ({ isDark }) => {
                             </GithubLink>
                         </TechItem>
 
-                        <TechItem data-testid="about-app-backend">
+                        <TechItem data-testid="about-app-backend" $isDark={isDark}>
                             <h3>Backend Server</h3>
                             <p>
                                 An Express.js server with MongoDB integration, providing RESTful APIs for
@@ -166,7 +169,7 @@ const AboutApp: React.FC<AboutAppProps> = ({ isDark }) => {
                             </GithubLink>
                         </TechItem>
 
-                        <TechItem data-testid="about-app-automation-framework">
+                        <TechItem data-testid="about-app-automation-framework" $isDark={isDark}>
                             <h3>Test Automation Framework</h3>
                             <p>
                                 A comprehensive Playwright-based automation framework implementing the Model
@@ -186,7 +189,7 @@ const AboutApp: React.FC<AboutAppProps> = ({ isDark }) => {
                 </Section>
 
                 <Section data-testid="about-app-live-test-results">
-                    <SectionTitle>Live Test Results</SectionTitle>
+                    <SectionTitle $isDark={isDark}>Live Test Results</SectionTitle>
                     <p>
                         This website is continuously tested using the Playwright automation framework with
                         tests running daily. You can view the live test results and detailed reports in

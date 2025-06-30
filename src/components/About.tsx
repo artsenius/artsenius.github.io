@@ -4,12 +4,12 @@ import profilePhoto from '../media/art.jpg';
 import resumePDF from '../media/A_Senko_QA_Leader_SDET_AI_Enthusiast.pdf';
 import { useTheme } from './ThemeProvider';
 
-const AboutSection = styled.section<{ $theme: any }>`
+const AboutSection = styled.section`
     padding: 2rem;
     max-width: 1200px;
     margin: 0 auto;
-    background-color: ${props => props.$theme.colors.background};
-    color: ${props => props.$theme.colors.text};
+    background-color: ${props => props.theme.colors.background};
+    color: ${props => props.theme.colors.text};
     transition: background-color 0.3s ease, color 0.3s ease;
 
     @media (max-width: 768px) {
@@ -49,8 +49,8 @@ const ProfileImage = styled.img`
     }
 `;
 
-const Name = styled.h2<{ $theme: any }>`
-    color: ${props => props.$theme.colors.text};
+const Name = styled.h2`
+    color: ${props => props.theme.colors.text};
     font-size: 1.8rem;
     margin-bottom: 1rem;
     transition: color 0.3s ease;
@@ -60,8 +60,8 @@ const Name = styled.h2<{ $theme: any }>`
     }
 `;
 
-const Position = styled.h3<{ $theme: any }>`
-    color: ${props => props.$theme.colors.textSecondary};
+const Position = styled.h3`
+    color: ${props => props.theme.colors.textSecondary};
     font-size: 1.2rem;
     margin-bottom: 1.5rem;
     transition: color 0.3s ease;
@@ -71,10 +71,10 @@ const Position = styled.h3<{ $theme: any }>`
     }
 `;
 
-const DocumentLink = styled.a<{ $theme: any }>`
+const DocumentLink = styled.a`
     display: inline-block;
     padding: 0.75rem 1.5rem;
-    background-color: ${props => props.$theme.colors.accent};
+    background-color: ${props => props.theme.colors.accent};
     color: white;
     text-decoration: none;
     border-radius: 4px;
@@ -83,7 +83,7 @@ const DocumentLink = styled.a<{ $theme: any }>`
     width: 200px;
 
     &:hover {
-        background-color: ${props => props.$theme.colors.primary};
+        background-color: ${props => props.theme.colors.primary};
         transform: translateY(-2px);
     }
 `;
@@ -103,10 +103,11 @@ const Section = styled.div`
     margin-bottom: 2rem;
 `;
 
-const SectionTitle = styled.h3`
-    color: #2c3e50;
+const SectionTitle = styled.h3<{ $isDark: boolean }>`
+    color: ${props => props.$isDark ? props.theme.colors.text : '#2c3e50'};
     margin-bottom: 1rem;
     font-size: 1.4rem;
+    transition: color 0.3s;
 
     @media (max-width: 768px) {
         font-size: 1.2rem;
@@ -120,16 +121,16 @@ const SkillsGrid = styled.div`
     margin-bottom: 2rem;
 `;
 
-const SkillItem = styled.div<{ $theme: any }>`
-    background-color: ${props => props.$theme.colors.surface};
+const SkillItem = styled.div`
+    background-color: ${props => props.theme.colors.surface};
     padding: 0.75rem;
     border-radius: 4px;
     font-size: 0.9rem;
     text-align: center;
-    box-shadow: 0 2px 4px ${props => props.$theme.colors.shadow};
+    box-shadow: 0 2px 4px ${props => props.theme.colors.shadow};
     transition: all 0.3s ease-in-out;
     border: 1px solid transparent;
-    color: ${props => props.$theme.colors.text};
+    color: ${props => props.theme.colors.text};
 
     @media (max-width: 768px) {
         font-size: 0.85rem;
@@ -138,9 +139,9 @@ const SkillItem = styled.div<{ $theme: any }>`
 
     &:hover {
         transform: translateY(-2px);
-        background-color: ${props => props.$theme.colors.hover};
-        border-color: ${props => props.$theme.colors.accent};
-        box-shadow: 0 4px 8px ${props => props.$theme.colors.accent}33;
+        background-color: ${props => props.theme.colors.hover};
+        border-color: ${props => props.theme.colors.accent};
+        box-shadow: 0 4px 8px ${props => props.theme.colors.accent}33;
     }
 `;
 
@@ -148,10 +149,11 @@ const ExperienceItem = styled.div`
     margin-bottom: 1.5rem;
 `;
 
-const CompanyName = styled.h4`
-    color: #2c3e50;
+const CompanyName = styled.h4<{ $isDark: boolean }>`
+    color: ${props => props.$isDark ? props.theme.colors.text : '#2c3e50'};
     font-size: 1.2rem;
     margin-bottom: 0.5rem;
+    transition: color 0.3s;
 
     @media (max-width: 768px) {
         font-size: 1rem;
@@ -190,22 +192,21 @@ const About: React.FC<AboutProps> = ({ isDark }) => {
         technologies: ['JavaScript/TypeScript', 'HTML5', 'CSS3', 'React', 'React Native', 'Express.js', 'MongoDB'],
         cloud: ['BrowserStack', 'LambdaTest', 'SauceLabs', 'AWS'],
         tools: ['Azure DevOps', 'GitHub Actions', 'Jira', 'Artillery.io'],
-        ai: ['GitHub Copilot', 'OpenAI Codex', 'AI-Driven Testing']
+        ai: ['GitHub Copilot', 'Cursor Agents', 'AI-Driven Testing']
     };
 
     return (
-        <AboutSection data-testid="about-section" $theme={theme}>
+        <AboutSection data-testid="about-section">
             <Content data-testid="about-content">
                 <ProfileSection data-testid="profile-section">
                     <ProfileImage data-testid="profile-image" src={profilePhoto} alt="Arthur Senko" />
-                    <Name data-testid="profile-name" $theme={theme}>Arthur Senko</Name>
-                    <Position data-testid="profile-position" $theme={theme}>QA Leader<br />AI Enthusiast</Position>
+                    <Name data-testid="profile-name">Arthur Senko</Name>
+                    <Position data-testid="profile-position">QA Leader<br />AI Enthusiast</Position>
                     <DocumentLink
                         data-testid="resume-link"
                         href={resumePDF}
                         target="_blank"
                         rel="noopener noreferrer"
-                        $theme={theme}
                     >
                         Download Resume ↗
                     </DocumentLink>
@@ -220,36 +221,38 @@ const About: React.FC<AboutProps> = ({ isDark }) => {
                     </Bio>
 
                     <Section data-testid="current-role-section">
-                        <SectionTitle data-testid="current-role-title">Current Role</SectionTitle>
+                        <SectionTitle data-testid="current-role-title" $isDark={isDark}>Current Role</SectionTitle>
                         <ExperienceItem data-testid="experience-item">
-                            <CompanyName data-testid="company-name">
+                            <CompanyName data-testid="company-name" $isDark={isDark}>
                                 Senior QA Leader @ <CompanyLink href="https://www.allerganaesthetics.com/" target="_blank" rel="noopener noreferrer">Allergan Aesthetics</CompanyLink>, an <CompanyLink href="https://www.abbvie.com/" target="_blank" rel="noopener noreferrer">AbbVie Company</CompanyLink>
                             </CompanyName>
                             <Duration data-testid="role-duration">June 2022 – Present | Remote</Duration>
                             <ul data-testid="role-achievements">
                                 <li>Managing QA efforts on projects responsible for ~90% of company revenue</li>
-                                <li>Introduced AI-driven automation, reducing test development time by 80%</li>
+                                <li>Developed and implemented AI-driven testing strategies</li>
+                                <li>Reduced manual efforts by 60% and accelerated test automation creation by a factor of 10</li>
                                 <li>Led QA initiatives for the Alle mobile app, achieving 3x reduction in production bugs</li>
                             </ul>
                         </ExperienceItem>
                     </Section>
 
                     <Section data-testid="skills-section">
-                        <SectionTitle data-testid="skills-title">Technical Skills</SectionTitle>
+                        <SectionTitle data-testid="skills-title" $isDark={isDark}>Technical Skills</SectionTitle>
                         <SkillsGrid data-testid="skills-grid">
                             {Object.values(skills).flat().map((skill, index) => (
-                                <SkillItem data-testid={`skill-item-${index}`} key={index} $theme={theme}>{skill}</SkillItem>
+                                <SkillItem data-testid={`skill-item-${index}`} key={index}>{skill}</SkillItem>
                             ))}
                         </SkillsGrid>
                     </Section>
 
                     <Section data-testid="achievements-section">
-                        <SectionTitle data-testid="achievements-title">Notable Achievements</SectionTitle>
+                        <SectionTitle data-testid="achievements-title" $isDark={isDark}>Notable Achievements</SectionTitle>
                         <ul data-testid="achievements-list">
+                            <li data-testid="achievement-3a">Developed and implemented AI-driven testing strategies</li>
+                            <li data-testid="achievement-3b">Reduced manual efforts by 60% and accelerated test automation creation by a factor of 10</li>
+                            <li data-testid="achievement-4">Built and led multiple QA teams from ground up in startup and enterprise settings</li>
                             <li data-testid="achievement-1">Co-founded TechStart.dev, an educational startup for developers and testers</li>
                             <li data-testid="achievement-2">Achieved 95% employment rate for training program graduates</li>
-                            <li data-testid="achievement-3">Pioneered AI-driven testing strategies reducing test creation time by 60%</li>
-                            <li data-testid="achievement-4">Built and led multiple QA teams from ground up in startup and enterprise settings</li>
                         </ul>
                     </Section>
                 </div>

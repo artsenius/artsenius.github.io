@@ -46,13 +46,14 @@ const ContactGrid = styled.div`
     }
 `;
 
-const ContactCard = styled.div`
-    background-color: white;
+const ContactCard = styled.div<{ $isDark: boolean }>`
+    background-color: ${props => props.$isDark ? '#2d2d2d' : 'white'};
+    color: ${props => props.$isDark ? '#ecf0f1' : '#2c3e50'};
     padding: 2rem;
     border-radius: 8px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     text-align: center;
-    transition: transform 0.2s;
+    transition: background-color 0.2s, color 0.2s;
 
     &:hover {
         transform: translateY(-5px);
@@ -65,8 +66,14 @@ const ContactIcon = styled.div`
     color: #2c3e50;
 `;
 
-const ContactLink = styled.a`
-    color: #2c3e50;
+const ContactLabel = styled.h3<{ $isDark: boolean }>`
+    color: ${props => props.$isDark ? '#ecf0f1' : '#34495e'};
+    margin-bottom: 0.5rem;
+    transition: color 0.3s;
+`;
+
+const ContactLink = styled.a<{ $isDark: boolean }>`
+    color: ${props => props.$isDark ? '#ecf0f1' : '#2c3e50'};
     text-decoration: none;
     font-size: 1.1rem;
     display: block;
@@ -76,11 +83,6 @@ const ContactLink = styled.a`
     &:hover {
         color: #3498db;
     }
-`;
-
-const ContactLabel = styled.h3`
-    color: #34495e;
-    margin-bottom: 0.5rem;
 `;
 
 const CopyButton = styled.button`
@@ -133,15 +135,15 @@ const Contact: React.FC<ContactProps> = ({ isDark }) => {
 
     return (
         <ContactSection data-testid="contact-section">
-            <Title data-testid="contact-title">Get in Touch</Title>
             <Content>
                 <ContactGrid data-testid="contact-grid">
-                    <ContactCard data-testid="contact-card-email">
+                    <ContactCard data-testid="contact-card-email" $isDark={isDark}>
                         <ContactIcon data-testid="contact-icon-email">📧</ContactIcon>
-                        <ContactLabel data-testid="contact-label-email">Email</ContactLabel>
+                        <ContactLabel data-testid="contact-label-email" $isDark={isDark}>Email</ContactLabel>
                         <ContactLink
                             data-testid="contact-link-email"
                             href={`mailto:${contactInfo.email}`}
+                            $isDark={isDark}
                         >
                             {contactInfo.email}
                         </ContactLink>
@@ -159,12 +161,13 @@ const Contact: React.FC<ContactProps> = ({ isDark }) => {
                         </CopyMessage>
                     </ContactCard>
 
-                    <ContactCard data-testid="contact-card-phone">
+                    <ContactCard data-testid="contact-card-phone" $isDark={isDark}>
                         <ContactIcon data-testid="contact-icon-phone">📱</ContactIcon>
-                        <ContactLabel data-testid="contact-label-phone">Phone</ContactLabel>
+                        <ContactLabel data-testid="contact-label-phone" $isDark={isDark}>Phone</ContactLabel>
                         <ContactLink
                             data-testid="contact-link-phone"
                             href={`tel:${contactInfo.phone}`}
+                            $isDark={isDark}
                         >
                             {contactInfo.phone}
                         </ContactLink>
@@ -182,14 +185,15 @@ const Contact: React.FC<ContactProps> = ({ isDark }) => {
                         </CopyMessage>
                     </ContactCard>
 
-                    <ContactCard data-testid="contact-card-linkedin">
+                    <ContactCard data-testid="contact-card-linkedin" $isDark={isDark}>
                         <ContactIcon data-testid="contact-icon-linkedin">💼</ContactIcon>
-                        <ContactLabel data-testid="contact-label-linkedin">LinkedIn</ContactLabel>
+                        <ContactLabel data-testid="contact-label-linkedin" $isDark={isDark}>LinkedIn</ContactLabel>
                         <ContactLink
                             data-testid="contact-link-linkedin"
                             href={contactInfo.linkedin}
                             target="_blank"
                             rel="noopener noreferrer"
+                            $isDark={isDark}
                         >
                             View Profile
                         </ContactLink>
