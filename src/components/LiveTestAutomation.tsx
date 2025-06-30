@@ -39,6 +39,10 @@ interface TestRunDetail extends TestRun {
     results: TestRun['results'];
 }
 
+interface LiveTestAutomationProps {
+    isDark: boolean;
+}
+
 const TestAutomationSection = styled.section`
     padding: 2rem;
     max-width: 1200px;
@@ -396,7 +400,7 @@ const formatDate = (dateString: string) => {
     }).format(date);
 };
 
-const LiveTestAutomation: React.FC = () => {
+const LiveTestAutomation: React.FC<LiveTestAutomationProps> = ({ isDark }) => {
     const [testRuns, setTestRuns] = useState<TestRun[]>([]);
     const [expandedRuns, setExpandedRuns] = useState<{ [key: string]: TestRunDetail }>({});
     const [loadingDetails, setLoadingDetails] = useState<{ [key: string]: boolean }>({});

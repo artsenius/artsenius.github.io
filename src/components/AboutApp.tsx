@@ -106,7 +106,11 @@ const LiveLink = styled(Link)`
     }
 `;
 
-const AboutApp: React.FC = () => {
+interface AboutAppProps {
+    isDark: boolean;
+}
+
+const AboutApp: React.FC<AboutAppProps> = ({ isDark }) => {
     return (
         <AboutAppSection data-testid="about-app-section">
             <Title data-testid="about-app-title">About This App</Title>

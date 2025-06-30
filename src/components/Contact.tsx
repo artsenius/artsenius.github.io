@@ -106,7 +106,11 @@ const CopyMessage = styled.div<{ visible: boolean }>`
     transition: opacity 0.2s;
 `;
 
-const Contact: React.FC = () => {
+interface ContactProps {
+    isDark: boolean;
+}
+
+const Contact: React.FC<ContactProps> = ({ isDark }) => {
     const [copyMessages, setCopyMessages] = useState({
         email: false,
         phone: false,
