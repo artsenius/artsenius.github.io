@@ -1,12 +1,13 @@
 name: After Pages Deploy
 
 on:
-  pages:
-    types: [deployment]
+  push:
+    branches:
+      - gh-pages
 
 jobs:
   log-success:
     runs-on: ubuntu-latest
     steps:
       - name: Log Success
-        run: echo "Success" 
+        run: echo "Success" fur
