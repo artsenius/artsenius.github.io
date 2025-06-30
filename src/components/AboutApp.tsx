@@ -115,7 +115,6 @@ const AboutApp: React.FC = () => {
     
     return (
         <AboutAppSection data-testid="about-app-section">
-            <Title data-testid="about-app-title" $theme={theme}>About This App</Title>
             <Content>
                 <Section data-testid="about-app-description">
                     <p>

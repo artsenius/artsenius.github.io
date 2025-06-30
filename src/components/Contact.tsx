@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
+import { useTheme } from './ThemeProvider';
 
 const ContactSection = styled.section`
     padding: 2rem;
@@ -8,18 +9,6 @@ const ContactSection = styled.section`
 
     @media (max-width: 768px) {
         padding: 1rem;
-    }
-`;
-
-const Title = styled.h1`
-    color: #2c3e50;
-    font-size: 2.5rem;
-    margin-bottom: 2rem;
-    text-align: center;
-
-    @media (max-width: 768px) {
-        font-size: 1.5rem;
-        margin-bottom: 1.5rem;
     }
 `;
 
@@ -46,27 +35,30 @@ const ContactGrid = styled.div`
     }
 `;
 
-const ContactCard = styled.div`
-    background-color: white;
+const ContactCard = styled.div<{ $theme: any }>`
+    background-color: ${props => props.$theme.colors.surface};
+    color: ${props => props.$theme.colors.text};
     padding: 2rem;
     border-radius: 8px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 6px ${props => props.$theme.colors.shadow};
     text-align: center;
-    transition: transform 0.2s;
+    transition: transform 0.2s, background-color 0.3s ease, color 0.3s ease;
+    border: 1px solid ${props => props.$theme.colors.border};
 
     &:hover {
         transform: translateY(-5px);
+        background-color: ${props => props.$theme.colors.hover};
     }
 `;
 
-const ContactIcon = styled.div`
+const ContactIcon = styled.div<{ $theme: any }>`
     font-size: 2rem;
     margin-bottom: 1rem;
-    color: #2c3e50;
+    color: ${props => props.$theme.colors.text};
 `;
 
-const ContactLink = styled.a`
-    color: #2c3e50;
+const ContactLink = styled.a<{ $theme: any }>`
+    color: ${props => props.$theme.colors.text};
     text-decoration: none;
     font-size: 1.1rem;
     display: block;
@@ -74,17 +66,17 @@ const ContactLink = styled.a`
     transition: color 0.2s;
 
     &:hover {
-        color: #3498db;
+        color: ${props => props.$theme.colors.accent};
     }
 `;
 
-const ContactLabel = styled.h3`
-    color: #34495e;
+const ContactLabel = styled.h3<{ $theme: any }>`
+    color: ${props => props.$theme.colors.text};
     margin-bottom: 0.5rem;
 `;
 
-const CopyButton = styled.button`
-    background-color: #2c3e50;
+const CopyButton = styled.button<{ $theme: any }>`
+    background-color: ${props => props.$theme.colors.accent};
     color: white;
     border: none;
     padding: 0.5rem 1rem;
@@ -94,7 +86,7 @@ const CopyButton = styled.button`
     transition: background-color 0.2s;
 
     &:hover {
-        background-color: #34495e;
+        background-color: ${props => props.$theme.colors.hover === '#404040' ? '#2980b9' : '#34495e'};
     }
 `;
 
@@ -107,6 +99,7 @@ const CopyMessage = styled.div<{ visible: boolean }>`
 `;
 
 const Contact: React.FC = () => {
+    const { theme } = useTheme();
     const [copyMessages, setCopyMessages] = useState({
         email: false,
         phone: false,
@@ -129,21 +122,22 @@ const Contact: React.FC = () => {
 
     return (
         <ContactSection data-testid="contact-section">
-            <Title data-testid="contact-title">Get in Touch</Title>
             <Content>
                 <ContactGrid data-testid="contact-grid">
-                    <ContactCard data-testid="contact-card-email">
-                        <ContactIcon data-testid="contact-icon-email">📧</ContactIcon>
-                        <ContactLabel data-testid="contact-label-email">Email</ContactLabel>
+                    <ContactCard data-testid="contact-card-email" $theme={theme}>
+                        <ContactIcon data-testid="contact-icon-email" $theme={theme}>📧</ContactIcon>
+                        <ContactLabel data-testid="contact-label-email" $theme={theme}>Email</ContactLabel>
                         <ContactLink
                             data-testid="contact-link-email"
                             href={`mailto:${contactInfo.email}`}
+                            $theme={theme}
                         >
                             {contactInfo.email}
                         </ContactLink>
                         <CopyButton
                             data-testid="copy-button-email"
                             onClick={() => handleCopy(contactInfo.email, 'email')}
+                            $theme={theme}
                         >
                             Copy Email
                         </CopyButton>
@@ -155,18 +149,20 @@ const Contact: React.FC = () => {
                         </CopyMessage>
                     </ContactCard>
 
-                    <ContactCard data-testid="contact-card-phone">
-                        <ContactIcon data-testid="contact-icon-phone">📱</ContactIcon>
-                        <ContactLabel data-testid="contact-label-phone">Phone</ContactLabel>
+                    <ContactCard data-testid="contact-card-phone" $theme={theme}>
+                        <ContactIcon data-testid="contact-icon-phone" $theme={theme}>📱</ContactIcon>
+                        <ContactLabel data-testid="contact-label-phone" $theme={theme}>Phone</ContactLabel>
                         <ContactLink
                             data-testid="contact-link-phone"
                             href={`tel:${contactInfo.phone}`}
+                            $theme={theme}
                         >
                             {contactInfo.phone}
                         </ContactLink>
                         <CopyButton
                             data-testid="copy-button-phone"
                             onClick={() => handleCopy(contactInfo.phone, 'phone')}
+                            $theme={theme}
                         >
                             Copy Phone
                         </CopyButton>
@@ -178,20 +174,22 @@ const Contact: React.FC = () => {
                         </CopyMessage>
                     </ContactCard>
 
-                    <ContactCard data-testid="contact-card-linkedin">
-                        <ContactIcon data-testid="contact-icon-linkedin">💼</ContactIcon>
-                        <ContactLabel data-testid="contact-label-linkedin">LinkedIn</ContactLabel>
+                    <ContactCard data-testid="contact-card-linkedin" $theme={theme}>
+                        <ContactIcon data-testid="contact-icon-linkedin" $theme={theme}>💼</ContactIcon>
+                        <ContactLabel data-testid="contact-label-linkedin" $theme={theme}>LinkedIn</ContactLabel>
                         <ContactLink
                             data-testid="contact-link-linkedin"
                             href={contactInfo.linkedin}
                             target="_blank"
                             rel="noopener noreferrer"
+                            $theme={theme}
                         >
                             View Profile
                         </ContactLink>
                         <CopyButton
                             data-testid="copy-button-linkedin"
                             onClick={() => handleCopy(contactInfo.linkedin, 'linkedin')}
+                            $theme={theme}
                         >
                             Copy Profile URL
                         </CopyButton>

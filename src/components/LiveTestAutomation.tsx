@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import styled, { keyframes, css } from 'styled-components';
 import { API_ENDPOINTS, fetchWithErrorHandling } from '../config/api';
+import { useTheme } from './ThemeProvider';
 
 interface TestRun {
     _id: string;
@@ -75,23 +76,24 @@ const TestRunCard = styled.div`
     overflow: hidden;
 `;
 
-const getStatusColor = (status: string, passed: number, failed: number) => {
+const getStatusColor = (status: string, passed: number, failed: number, isDarkMode: boolean = false) => {
     if (status === 'completed' || status === 'passed') {
-        if (failed === 0 && passed > 0) return '#27ae60'; // Green for all passed
+        if (failed === 0 && passed > 0) return isDarkMode ? '#1d4ed8' : '#27ae60'; // Dark green/blue for all passed in dark mode
         if (failed > 0 && passed > 0) return '#f39c12'; // Orange for mixed results
         if (failed > 0 && passed === 0) return '#e74c3c'; // Red for all failed
     }
     return '#7f8c8d'; // Grey for other statuses (like pending or error)
 };
 
-const TestRunHeader = styled.div<{ status: string; passed: number; failed: number }>`
-    background-color: ${props => getStatusColor(props.status, props.passed, props.failed)};
+const TestRunHeader = styled.div<{ status: string; passed: number; failed: number; $isDarkMode?: boolean }>`
+    background-color: ${props => getStatusColor(props.status, props.passed, props.failed, props.$isDarkMode)};
     color: white;
     padding: 1rem;
     cursor: pointer;
     display: flex;
     justify-content: space-between;
     align-items: center;
+    transition: background-color 0.3s ease;
 
     @media (max-width: 768px) {
         flex-direction: column;
@@ -397,6 +399,7 @@ const formatDate = (dateString: string) => {
 };
 
 const LiveTestAutomation: React.FC = () => {
+    const { theme, isDarkMode } = useTheme();
     const [testRuns, setTestRuns] = useState<TestRun[]>([]);
     const [expandedRuns, setExpandedRuns] = useState<{ [key: string]: TestRunDetail }>({});
     const [loadingDetails, setLoadingDetails] = useState<{ [key: string]: boolean }>({});
@@ -486,11 +489,12 @@ const LiveTestAutomation: React.FC = () => {
     };
 
     const renderTestCase = (test: any, index: string | number, runId: string) => (
-        <TestCase key={`${runId}-${index}`} status={test.status}>
+        <TestCase key={`${runId}-${index}`} status={test.status} $theme={theme}>
             <ErrorWrapper>
                 <TestInfo>
                     <TestName
                         status={test.status}
+                        $theme={theme}
                         onMouseEnter={() => test.error && setHoveredError({
                             id: `${runId}-${index}`,
                             error: getErrorMessage(test.error)
@@ -516,7 +520,6 @@ const LiveTestAutomation: React.FC = () => {
     if (loading) {
         return (
             <TestAutomationSection>
-                <Title>Live Test Automation</Title>
                 <LoadingPlaceholder />
             </TestAutomationSection>
         );
@@ -525,7 +528,6 @@ const LiveTestAutomation: React.FC = () => {
     if (error) {
         return (
             <TestAutomationSection>
-                <Title>Live Test Automation</Title>
                 <ErrorMessage>{error}</ErrorMessage>
             </TestAutomationSection>
         );
@@ -533,7 +535,6 @@ const LiveTestAutomation: React.FC = () => {
 
     return (
         <TestAutomationSection data-testid="test-automation-section">
-            <Title data-testid="test-automation-title">Live Test Automation</Title>
             <TestRunList data-testid="test-run-list">
                 {testRuns.map((run) => (
                     <TestRunCard key={run._id} data-testid={`test-run-card-${run._id}`}>
@@ -541,6 +542,7 @@ const LiveTestAutomation: React.FC = () => {
                             status={run.status}
                             passed={run.results.passed}
                             failed={run.results.failed}
+                            $isDarkMode={isDarkMode}
                             onClick={() => toggleRunDetails(run._id)}
                             data-testid={`test-run-header-${run._id}`}
                         >
@@ -558,45 +560,45 @@ const LiveTestAutomation: React.FC = () => {
                             {loadingDetails[run._id] && renderLoadingExpandedContent()}
                             {expandedRuns[run._id] && (
                                 <ExpandedContent data-testid={`expanded-content-${run._id}`}>
-                                    <TestSummary data-testid={`test-summary-${run._id}`}>
+                                    <TestSummary data-testid={`test-summary-${run._id}`} $theme={theme}>
                                         <SummaryItem data-testid="test-run-duration">
-                                            <SummaryLabel>Duration</SummaryLabel>
-                                            <SummaryValue>{(expandedRuns[run._id].duration / 1000).toFixed(2)}s</SummaryValue>
+                                            <SummaryLabel $theme={theme}>Duration</SummaryLabel>
+                                            <SummaryValue $theme={theme}>{(expandedRuns[run._id].duration / 1000).toFixed(2)}s</SummaryValue>
                                         </SummaryItem>
                                         <SummaryItem data-testid="test-run-success-rate">
-                                            <SummaryLabel>Success Rate</SummaryLabel>
-                                            <SummaryValue>
+                                            <SummaryLabel $theme={theme}>Success Rate</SummaryLabel>
+                                            <SummaryValue $theme={theme}>
                                                 {Math.round((expandedRuns[run._id].results.passed /
                                                     (expandedRuns[run._id].results.passed + expandedRuns[run._id].results.failed)) * 100)}%
                                             </SummaryValue>
                                         </SummaryItem>
                                         <SummaryItem data-testid="test-run-passed-tests">
-                                            <SummaryLabel>Passed Tests</SummaryLabel>
-                                            <SummaryValue>{expandedRuns[run._id].results.passed}</SummaryValue>
+                                            <SummaryLabel $theme={theme}>Passed Tests</SummaryLabel>
+                                            <SummaryValue $theme={theme}>{expandedRuns[run._id].results.passed}</SummaryValue>
                                         </SummaryItem>
                                         <SummaryItem data-testid="test-run-failed-tests">
-                                            <SummaryLabel>Failed Tests</SummaryLabel>
-                                            <SummaryValue>{expandedRuns[run._id].results.failed}</SummaryValue>
+                                            <SummaryLabel $theme={theme}>Failed Tests</SummaryLabel>
+                                            <SummaryValue $theme={theme}>{expandedRuns[run._id].results.failed}</SummaryValue>
                                         </SummaryItem>
                                         <SummaryItem>
-                                            <SummaryLabel>Skipped Tests</SummaryLabel>
-                                            <SummaryValue>{expandedRuns[run._id].results.skipped || 0}</SummaryValue>
+                                            <SummaryLabel $theme={theme}>Skipped Tests</SummaryLabel>
+                                            <SummaryValue $theme={theme}>{expandedRuns[run._id].results.skipped || 0}</SummaryValue>
                                         </SummaryItem>
                                         <SummaryItem>
-                                            <SummaryLabel>Blocked Tests</SummaryLabel>
-                                            <SummaryValue>{expandedRuns[run._id].results.blocked || 0}</SummaryValue>
+                                            <SummaryLabel $theme={theme}>Blocked Tests</SummaryLabel>
+                                            <SummaryValue $theme={theme}>{expandedRuns[run._id].results.blocked || 0}</SummaryValue>
                                         </SummaryItem>
                                     </TestSummary>
                                     <TestDetails data-testid={`test-details-${run._id}`}>
                                         {expandedRuns[run._id].results.tests?.map((test: any, index: number) => (
-                                            <TestSuite key={index}>
-                                                <SuiteTitle>{test.suite}</SuiteTitle>
+                                            <TestSuite key={index} $theme={theme}>
+                                                <SuiteTitle $theme={theme}>{test.suite}</SuiteTitle>
                                                 {renderTestCase(test, index, run._id)}
                                             </TestSuite>
                                         ))}
                                         {expandedRuns[run._id].results.details?.map((suite: any, suiteIndex: number) => (
-                                            <TestSuite key={`detail-${suiteIndex}`}>
-                                                <SuiteTitle>{suite.suite}</SuiteTitle>
+                                            <TestSuite key={`detail-${suiteIndex}`} $theme={theme}>
+                                                <SuiteTitle $theme={theme}>{suite.suite}</SuiteTitle>
                                                 {suite.tests?.map((test: any, testIndex: number) =>
                                                     renderTestCase(test, `${suiteIndex}-${testIndex}`, run._id)
                                                 )}
@@ -618,14 +620,16 @@ const ExpandedContent = styled.div`
     animation: ${fadeInAnimation} 0.3s ease-in-out;
 `;
 
-const TestSummary = styled.div`
+const TestSummary = styled.div<{ $theme?: any }>`
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 1rem;
     margin-bottom: 1rem;
-    background-color: #f8fafc;
+    background-color: ${props => props.$theme?.colors.surface || '#f8fafc'};
     padding: 1rem;
     border-radius: 6px;
+    border: 1px solid ${props => props.$theme?.colors.border || 'transparent'};
+    transition: background-color 0.3s ease;
 
     @media (max-width: 768px) {
         grid-template-columns: repeat(2, 1fr);
@@ -644,8 +648,8 @@ const SummaryItem = styled.div`
     }
 `;
 
-const SummaryLabel = styled.div`
-    color: #64748b;
+const SummaryLabel = styled.div<{ $theme?: any }>`
+    color: ${props => props.$theme?.colors.textSecondary || '#64748b'};
     font-size: 0.9rem;
 
     @media (max-width: 768px) {
@@ -653,7 +657,8 @@ const SummaryLabel = styled.div`
     }
 `;
 
-const SummaryValue = styled.div`
+const SummaryValue = styled.div<{ $theme?: any }>`
+    color: ${props => props.$theme?.colors.text || '#1e293b'};
     font-size: 1.1rem;
     font-weight: 500;
 
@@ -674,21 +679,23 @@ const TestDetails = styled.div`
     }
 `;
 
-const TestSuite = styled.div`
-    background-color: #f8fafc;
+const TestSuite = styled.div<{ $theme?: any }>`
+    background-color: ${props => props.$theme?.colors.surface || '#f8fafc'};
     padding: 1rem;
     border-radius: 6px;
+    border: 1px solid ${props => props.$theme?.colors.border || 'transparent'};
+    transition: background-color 0.3s ease;
 
     @media (max-width: 768px) {
         padding: 0.75rem;
     }
 `;
 
-const SuiteTitle = styled.h4`
-    color: #2c3e50;
+const SuiteTitle = styled.h4<{ $theme?: any }>`
+    color: ${props => props.$theme?.colors.text || '#2c3e50'};
     margin: 0 0 0.75rem;
     font-size: 1.1rem;
-    border-bottom: 1px solid #e2e8f0;
+    border-bottom: 1px solid ${props => props.$theme?.colors.border || '#e2e8f0'};
     padding-bottom: 0.5rem;
 
     @media (max-width: 768px) {
@@ -697,21 +704,33 @@ const SuiteTitle = styled.h4`
     }
 `;
 
-const TestCase = styled.div<{ status: string }>`
+const TestCase = styled.div<{ status: string; $theme?: any }>`
     padding: 0.75rem;
     margin: 0.5rem 0;
     border-radius: 4px;
     position: relative;
-    background-color: ${props =>
-        props.status === 'passed' ? '#f0fdf4' :
-            props.status === 'failed' ? '#fef2f2' :
-                props.status === 'skipped' ? '#f8fafc' :
-                    '#fff'};
-    border: 1px solid ${props =>
-        props.status === 'passed' ? '#86efac' :
-            props.status === 'failed' ? '#fecaca' :
-                props.status === 'skipped' ? '#e2e8f0' :
-                    '#e2e8f0'};
+    background-color: ${props => {
+        if (props.status === 'passed') {
+            return props.$theme?.colors.background === '#1a1a1a' ? '#0f172a' : '#f0fdf4';
+        }
+        if (props.status === 'failed') {
+            return props.$theme?.colors.background === '#1a1a1a' ? '#1e1b1b' : '#fef2f2';
+        }
+        if (props.status === 'skipped') {
+            return props.$theme?.colors.surface || '#f8fafc';
+        }
+        return props.$theme?.colors.surface || '#fff';
+    }};
+    border: 1px solid ${props => {
+        if (props.status === 'passed') {
+            return props.$theme?.colors.background === '#1a1a1a' ? '#1e40af' : '#86efac';
+        }
+        if (props.status === 'failed') {
+            return '#fecaca';
+        }
+        return props.$theme?.colors.border || '#e2e8f0';
+    }};
+    transition: background-color 0.3s ease, border-color 0.3s ease;
 
     @media (max-width: 768px) {
         padding: 0.6rem;
@@ -733,9 +752,9 @@ const TestInfo = styled.div`
     }
 `;
 
-const TestName = styled.div<{ status: string }>`
+const TestName = styled.div<{ status: string; $theme?: any }>`
     font-size: 0.95rem;
-    color: #1e293b;
+    color: ${props => props.$theme?.colors.text || '#1e293b'};
     flex: 1;
     min-width: 200px;
     display: flex;
@@ -745,7 +764,15 @@ const TestName = styled.div<{ status: string }>`
 
     &::before {
         content: "${props => props.status === 'passed' ? '✓' : props.status === 'failed' ? '✘' : ''}";
-        color: ${props => props.status === 'passed' ? '#16a34a' : props.status === 'failed' ? '#dc2626' : 'inherit'};
+        color: ${props => {
+            if (props.status === 'passed') {
+                return props.$theme?.colors.background === '#1a1a1a' ? '#3b82f6' : '#16a34a';
+            }
+            if (props.status === 'failed') {
+                return '#dc2626';
+            }
+            return 'inherit';
+        }};
         font-weight: bold;
     }
 
