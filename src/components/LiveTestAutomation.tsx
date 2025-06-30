@@ -47,6 +47,9 @@ const TestAutomationSection = styled.section`
     padding: 2rem;
     max-width: 1200px;
     margin: 0 auto;
+    width: 100%;
+    overflow-x: hidden;
+    box-sizing: border-box;
 
     @media (max-width: 768px) {
         padding: 1rem;
@@ -70,6 +73,9 @@ const TestRunList = styled.div`
     flex-direction: column;
     gap: 1rem;
     min-height: 400px; /* Ensure consistent height even when loading */
+    width: 100%;
+    overflow-x: hidden;
+    box-sizing: border-box;
 `;
 
 const TestRunCard = styled.div<{ $isDark: boolean }>`
@@ -400,6 +406,9 @@ const formatDate = (dateString: string) => {
     }).format(date);
 };
 
+const MAX_RESULTS = 30;
+const PAGE_SIZE = 5;
+
 const LiveTestAutomation: React.FC<LiveTestAutomationProps> = ({ isDark }) => {
     const [testRuns, setTestRuns] = useState<TestRun[]>([]);
     const [expandedRuns, setExpandedRuns] = useState<{ [key: string]: TestRunDetail }>({});
@@ -407,20 +416,28 @@ const LiveTestAutomation: React.FC<LiveTestAutomationProps> = ({ isDark }) => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
     const [hoveredError, setHoveredError] = useState<{ id: string; error: string } | null>(null);
+    const [limit, setLimit] = useState(PAGE_SIZE);
+    const [loadingMore, setLoadingMore] = useState(false);
 
     useEffect(() => {
-        fetchTestRuns();
-    }, []);
+        fetchTestRuns(limit);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [limit]);
 
-    const fetchTestRuns = async () => {
+    const fetchTestRuns = async (currentLimit: number) => {
+        setLoading(currentLimit === PAGE_SIZE); // Only show main loader on first load
+        setLoadingMore(currentLimit > PAGE_SIZE); // Show loading more only for subsequent loads
         try {
-            const data = await fetchWithErrorHandling(API_ENDPOINTS.TEST_RUNS_SUMMARY);
+            const url = `${API_ENDPOINTS.TEST_RUNS_SUMMARY}?limit=${currentLimit}`;
+            const data = await fetchWithErrorHandling(url);
             setTestRuns(data);
-            setLoading(false);
+            setError(null);
         } catch (error: any) {
             console.error('Fetch error details:', error);
             setError(`Failed to load test runs: ${error.message || 'Unknown error'}`);
+        } finally {
             setLoading(false);
+            setLoadingMore(false);
         }
     };
 
@@ -534,6 +551,8 @@ const LiveTestAutomation: React.FC<LiveTestAutomationProps> = ({ isDark }) => {
         );
     }
 
+    const canLoadMore = testRuns.length >= limit && limit < MAX_RESULTS;
+
     return (
         <TestAutomationSection data-testid="test-automation-section">
             <TestRunList data-testid="test-run-list">
@@ -634,6 +653,18 @@ const LiveTestAutomation: React.FC<LiveTestAutomationProps> = ({ isDark }) => {
                         </TestRunContent>
                     </TestRunCard>
                 ))}
+                {canLoadMore && (
+                    <LoadMoreWrapper>
+                        <LoadMoreButton
+                            onClick={() => setLimit(l => Math.min(l + PAGE_SIZE, MAX_RESULTS))}
+                            disabled={loadingMore}
+                            $isDark={isDark}
+                            data-testid="load-more-button"
+                        >
+                            {loadingMore ? 'Loading...' : 'Load more results'}
+                        </LoadMoreButton>
+                    </LoadMoreWrapper>
+                )}
             </TestRunList>
         </TestAutomationSection>
     );
@@ -858,8 +889,8 @@ const Tooltip = styled.div`
     margin-top: 0.5rem;
     z-index: 10;
     white-space: pre-wrap;
-    width: calc(100% + 2rem); // Extend slightly beyond the test case
-    margin-left: -1rem;
+    width: 100%;
+    max-width: 100vw;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     animation: ${fadeIn} 0.2s ease-in-out;
     max-height: calc(100vh - 300px); // Dynamic height based on viewport
@@ -883,14 +914,39 @@ const Tooltip = styled.div`
     @media (max-width: 768px) {
         font-size: 0.8rem;
         padding: 0.6rem;
-        width: calc(100% + 1.2rem);
-        margin-left: -0.6rem;
+        width: 100%;
     }
 `;
 
 const ErrorWrapper = styled.div`
     position: relative;
     width: 100%;
+`;
+
+const LoadMoreWrapper = styled.div`
+    display: flex;
+    justify-content: center;
+    padding: 1rem;
+`;
+
+const LoadMoreButton = styled.button<{ $isDark: boolean }>`
+    background-color: ${props => props.$isDark ? '#23272f' : '#f8f8f8'};
+    color: ${props => props.$isDark ? '#ecf0f1' : '#2c3e50'};
+    padding: 0.75rem 1rem;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 1rem;
+    font-weight: 500;
+
+    &:hover {
+        background-color: ${props => props.$isDark ? '#374151' : '#e2e8f0'};
+    }
+
+    &:disabled {
+        background-color: ${props => props.$isDark ? '#374151' : '#e2e8f0'};
+        cursor: not-allowed;
+    }
 `;
 
 export default LiveTestAutomation;
