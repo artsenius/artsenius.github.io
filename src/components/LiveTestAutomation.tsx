@@ -409,6 +409,23 @@ const formatDate = (dateString: string) => {
 const MAX_RESULTS = 30;
 const PAGE_SIZE = 5;
 
+const Spinner = styled.div`
+    border: 3px solid rgba(255,255,255,0.2);
+    border-top: 3px solid #3498db;
+    border-radius: 50%;
+    width: 1.2em;
+    height: 1.2em;
+    animation: spin 0.7s linear infinite;
+    display: inline-block;
+    vertical-align: middle;
+    margin-right: 0.5em;
+
+    @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+`;
+
 const LiveTestAutomation: React.FC<LiveTestAutomationProps> = ({ isDark }) => {
     const [testRuns, setTestRuns] = useState<TestRun[]>([]);
     const [expandedRuns, setExpandedRuns] = useState<{ [key: string]: TestRunDetail }>({});
@@ -653,7 +670,7 @@ const LiveTestAutomation: React.FC<LiveTestAutomationProps> = ({ isDark }) => {
                         </TestRunContent>
                     </TestRunCard>
                 ))}
-                {canLoadMore && (
+                {(canLoadMore || loadingMore) && (
                     <LoadMoreWrapper>
                         <LoadMoreButton
                             onClick={() => setLimit(l => Math.min(l + PAGE_SIZE, MAX_RESULTS))}
@@ -661,7 +678,7 @@ const LiveTestAutomation: React.FC<LiveTestAutomationProps> = ({ isDark }) => {
                             $isDark={isDark}
                             data-testid="load-more-button"
                         >
-                            {loadingMore ? 'Loading...' : 'Load more results'}
+                            {loadingMore ? <><Spinner />Loading...</> : 'Load more results'}
                         </LoadMoreButton>
                     </LoadMoreWrapper>
                 )}

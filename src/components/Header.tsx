@@ -9,16 +9,12 @@ const Nav = styled.nav<{ $theme: any, $isDark: boolean }>`
     position: sticky;
     top: 0;
     z-index: 1000;
-    width: 100vw;
+    width: 100%;
     left: 0;
-    margin-left: calc(-50vw + 50%);
-    margin-right: calc(-50vw + 50%);
     transition: background-color 0.3s ease;
 
     @media (max-width: 768px) {
-        margin-left: -2rem;
-        margin-right: -2rem;
-        width: calc(100% + 4rem);
+        width: 100%;
     }
 `;
 
