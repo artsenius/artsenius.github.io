@@ -32,6 +32,10 @@ jobs:
           user_name: github-actions[bot]
           user_email: github-actions[bot]@users.noreply.github.com
 
+  test-automation:
+    runs-on: ubuntu-latest
+    needs: build-and-deploy
+    steps:
       - name: Trigger automation workflow in about-me-automation
         uses: peter-evans/repository-dispatch@v3
         with:

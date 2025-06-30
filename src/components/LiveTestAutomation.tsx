@@ -56,18 +56,6 @@ const TestAutomationSection = styled.section`
     }
 `;
 
-const Title = styled.h1`
-    color: #2c3e50;
-    font-size: 2.5rem;
-    margin-bottom: 2rem;
-    text-align: center;
-
-    @media (max-width: 768px) {
-        font-size: 1.5rem;
-        margin-bottom: 1.5rem;
-    }
-`;
-
 const TestRunList = styled.div`
     display: flex;
     flex-direction: column;
