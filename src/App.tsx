@@ -6,8 +6,11 @@ import Contact from './components/Contact';
 import Layout from './components/Layout';
 import AboutApp from './components/AboutApp';
 import LiveTestAutomation from './components/LiveTestAutomation';
+import { ThemeProvider, useTheme } from './components/ThemeProvider';
+import { ThemeProvider as StyledThemeProvider } from 'styled-components';
 
-const App: React.FC = () => {
+const ThemedRoutes: React.FC = () => {
+  const { isDarkMode, theme } = useTheme();
   const basename = process.env.NODE_ENV === 'production' ? '/about' : '';
 
   React.useEffect(() => {
@@ -34,19 +37,29 @@ const App: React.FC = () => {
   }, [basename]);
 
   return (
-    <BrowserRouter basename={basename}>
-      <Layout>
-        <Header />
-        <Routes>
-          <Route path="/" element={<About />} />
-          <Route path="/contact" element={<Contact />} />
-          <Route path="/about-app" element={<AboutApp />} />
-          <Route path="/automation" element={<LiveTestAutomation />} />
-          {/* Redirect any unknown routes to the About page */}
-          <Route path="*" element={<Navigate to="/" replace />} />
-        </Routes>
-      </Layout>
-    </BrowserRouter>
+    <StyledThemeProvider theme={theme}>
+      <BrowserRouter basename={basename}>
+        <Layout>
+          <Header />
+          <Routes>
+            <Route path="/" element={<About isDark={isDarkMode} />} />
+            <Route path="/contact" element={<Contact isDark={isDarkMode} />} />
+            <Route path="/about-app" element={<AboutApp isDark={isDarkMode} />} />
+            <Route path="/automation" element={<LiveTestAutomation isDark={isDarkMode} />} />
+            {/* Redirect any unknown routes to the About page */}
+            <Route path="*" element={<Navigate to="/" replace />} />
+          </Routes>
+        </Layout>
+      </BrowserRouter>
+    </StyledThemeProvider>
+  );
+};
+
+const App: React.FC = () => {
+  return (
+    <ThemeProvider>
+      <ThemedRoutes />
+    </ThemeProvider>
   );
 };
 

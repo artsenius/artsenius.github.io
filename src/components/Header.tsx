@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import styled from 'styled-components';
+import { useTheme } from './ThemeProvider';
 
-const Nav = styled.nav`
-    background-color: #2c3e50;
+const Nav = styled.nav<{ $theme: any, $isDark: boolean }>`
+    background-color: ${props => props.$isDark ? '#2c3e50' : props.$theme.colors.primary};
     padding: 1rem 0;
     position: sticky;
     top: 0;
@@ -12,6 +13,7 @@ const Nav = styled.nav`
     left: 0;
     margin-left: calc(-50vw + 50%);
     margin-right: calc(-50vw + 50%);
+    transition: background-color 0.3s ease;
 
     @media (max-width: 768px) {
         margin-left: -2rem;
@@ -130,9 +132,45 @@ const MenuButton = styled.button`
     }
 `;
 
+const ThemeToggle = styled.button<{ $theme: any }>`
+    background: none;
+    border: 2px solid ${props => props.$theme.colors.accent};
+    color: ${props => props.$theme.colors.accent};
+    border-radius: 50%;
+    width: 2.5rem;
+    height: 2.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 1.2rem;
+    transition: all 0.3s ease;
+    margin-left: auto;
+
+    &:hover {
+        background-color: ${props => props.$theme.colors.accent};
+        color: ${props => props.$theme.colors.primary};
+        transform: scale(1.1);
+    }
+
+    &:focus {
+        outline: none;
+        box-shadow: 0 0 0 3px ${props => props.$theme.colors.accent}33;
+    }
+
+    @media (max-width: 768px) {
+        width: 2rem;
+        height: 2rem;
+        font-size: 1rem;
+        margin-left: 0;
+        margin-right: 0.5rem;
+    }
+`;
+
 const Header: React.FC = () => {
     const location = useLocation();
     const [isOpen, setIsOpen] = useState(false);
+    const { theme, isDarkMode, toggleTheme } = useTheme();
 
     const getPageTitle = () => {
         switch (location.pathname) {
@@ -152,7 +190,7 @@ const Header: React.FC = () => {
     const toggleMenu = () => setIsOpen(!isOpen);
 
     return (
-        <Nav data-testid="header-nav">
+        <Nav data-testid="header-nav" $theme={theme} $isDark={isDarkMode}>
             <NavContainer data-testid="nav-container">
                 <MenuButton
                     onClick={toggleMenu}
@@ -175,6 +213,14 @@ const Header: React.FC = () => {
                     </li>
                     <li><NavLink data-testid="nav-link-contact" to="/contact" $isActive={location.pathname === "/contact"} onClick={() => setIsOpen(false)}>Contact</NavLink></li>
                 </NavList>
+                <ThemeToggle
+                    onClick={toggleTheme}
+                    aria-label={`Switch to ${isDarkMode ? 'light' : 'dark'} mode`}
+                    data-testid="theme-toggle"
+                    $theme={theme}
+                >
+                    {isDarkMode ? '☀️' : '🌙'}
+                </ThemeToggle>
             </NavContainer>
         </Nav>
     );
