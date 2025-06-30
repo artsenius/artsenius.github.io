@@ -112,7 +112,6 @@ const LiveLink = styled(Link)`
 
 const AboutApp: React.FC = () => {
     const { theme } = useTheme();
-    
     return (
         <AboutAppSection data-testid="about-app-section">
             <Content>

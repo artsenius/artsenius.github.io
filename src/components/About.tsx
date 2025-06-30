@@ -179,7 +179,11 @@ const CompanyLink = styled.a`
     }
 `;
 
-const About: React.FC = () => {
+interface AboutProps {
+  isDark: boolean;
+}
+
+const About: React.FC<AboutProps> = ({ isDark }) => {
     const { theme } = useTheme();
     const skills = {
         automation: ['WebdriverIO', 'Cypress', 'Playwright', 'Selenium', 'Appium', 'Model Context Protocol'],
