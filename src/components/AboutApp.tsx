@@ -1,6 +1,5 @@
 import React from 'react';
 import styled from 'styled-components';
-import { Link } from 'react-router-dom';
 
 const AboutAppSection = styled.section`
     padding: 2rem;
@@ -62,14 +61,18 @@ const GithubLink = styled.a`
     }
 `;
 
-const LiveLink = styled(Link)`
+const LiveButton = styled.button`
     color: #e74c3c;
-    text-decoration: none;
+    background: none;
+    border: none;
     font-weight: 500;
     display: inline-flex;
     align-items: center;
     gap: 0.5rem;
     transition: color 0.3s;
+    cursor: pointer;
+    font-size: 1rem;
+    padding: 0;
 
     &:hover {
         color: #c0392b;
@@ -89,9 +92,10 @@ const LiveLink = styled(Link)`
 
 interface AboutAppProps {
     isDark: boolean;
+    onGoToAutomation?: () => void;
 }
 
-const AboutApp: React.FC<AboutAppProps> = ({ isDark }) => {
+const AboutApp: React.FC<AboutAppProps> = ({ isDark, onGoToAutomation }) => {
     return (
         <AboutAppSection data-testid="about-app-section">
             {/* <Title data-testid="about-app-title">About This App</Title> */}
@@ -173,12 +177,13 @@ const AboutApp: React.FC<AboutAppProps> = ({ isDark }) => {
                         tests running daily. You can view the live test results and detailed reports in
                         real-time on our Live Automation page.
                     </p>
-                    <LiveLink
-                        to="/automation"
+                    <LiveButton
+                        type="button"
+                        onClick={onGoToAutomation}
                         data-testid="live-automation-link"
                     >
                         View Live Test Results
-                    </LiveLink>
+                    </LiveButton>
                 </Section>
             </Content>
         </AboutAppSection>

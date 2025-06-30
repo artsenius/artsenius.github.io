@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { Link, useLocation } from 'react-router-dom';
 import styled from 'styled-components';
 import { useTheme } from './ThemeProvider';
 
@@ -67,11 +66,13 @@ const NavList = styled.ul<{ $isOpen: boolean }>`
     }
 `;
 
-interface NavLinkProps {
+interface NavButtonProps {
     $isActive: boolean;
 }
 
-const NavLink = styled(Link) <NavLinkProps>`
+const NavButton = styled.button<NavButtonProps>`
+    background: none;
+    border: none;
     color: ${props => props.$isActive ? '#3498db' : 'white'};
     text-decoration: none;
     font-size: 1.1rem;
@@ -81,6 +82,7 @@ const NavLink = styled(Link) <NavLinkProps>`
     align-items: center;
     gap: 0.5rem;
     white-space: nowrap;
+    cursor: pointer;
 
     &:hover {
         color: #3498db;
@@ -130,53 +132,35 @@ const MenuButton = styled.button`
 
 const ThemeToggle = styled.button<{ $theme: any }>`
     background: none;
-    border: 2px solid ${props => props.$theme.colors.accent};
-    color: ${props => props.$theme.colors.accent};
-    border-radius: 50%;
-    width: 2.5rem;
-    height: 2.5rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    border: none;
+    color: white;
+    font-size: 1.3rem;
     cursor: pointer;
-    font-size: 1.2rem;
-    transition: all 0.3s ease;
-    margin-left: auto;
-
+    margin-left: 1rem;
+    transition: color 0.3s;
     &:hover {
-        background-color: ${props => props.$theme.colors.accent};
-        color: ${props => props.$theme.colors.primary};
-        transform: scale(1.1);
-    }
-
-    &:focus {
-        outline: none;
-        box-shadow: 0 0 0 3px ${props => props.$theme.colors.accent}33;
-    }
-
-    @media (max-width: 768px) {
-        width: 2rem;
-        height: 2rem;
-        font-size: 1rem;
-        margin-left: 0;
-        margin-right: 0.5rem;
+        color: ${props => props.$theme.colors.secondary};
     }
 `;
 
-const Header: React.FC = () => {
-    const location = useLocation();
+interface HeaderProps {
+    currentPage: 'about' | 'about-app' | 'automation' | 'contact';
+    setCurrentPage: (page: 'about' | 'about-app' | 'automation' | 'contact') => void;
+}
+
+const Header: React.FC<HeaderProps> = ({ currentPage, setCurrentPage }) => {
     const [isOpen, setIsOpen] = useState(false);
     const { theme, isDarkMode, toggleTheme } = useTheme();
 
     const getPageTitle = () => {
-        switch (location.pathname) {
-            case '/':
+        switch (currentPage) {
+            case 'about':
                 return 'About Me';
-            case '/about-app':
+            case 'about-app':
                 return 'About This App';
-            case '/automation':
+            case 'automation':
                 return 'Live Automation';
-            case '/contact':
+            case 'contact':
                 return 'Contact';
             default:
                 return '';
@@ -199,15 +183,15 @@ const Header: React.FC = () => {
                     {getPageTitle()}
                 </MobileTitle>
                 <NavList data-testid="nav-list" $isOpen={isOpen}>
-                    <li><NavLink data-testid="nav-link-about" to="/" $isActive={location.pathname === "/"} onClick={() => setIsOpen(false)}>About Me</NavLink></li>
-                    <li><NavLink data-testid="nav-link-about-app" to="/about-app" $isActive={location.pathname === "/about-app"} onClick={() => setIsOpen(false)}>About This App</NavLink></li>
+                    <li><NavButton data-testid="nav-link-about" $isActive={currentPage === 'about'} onClick={() => { setCurrentPage('about'); setIsOpen(false); }}>About Me</NavButton></li>
+                    <li><NavButton data-testid="nav-link-about-app" $isActive={currentPage === 'about-app'} onClick={() => { setCurrentPage('about-app'); setIsOpen(false); }}>About This App</NavButton></li>
                     <li>
-                        <NavLink data-testid="nav-link-automation" to="/automation" $isActive={location.pathname === "/automation"} onClick={() => setIsOpen(false)}>
+                        <NavButton data-testid="nav-link-automation" $isActive={currentPage === 'automation'} onClick={() => { setCurrentPage('automation'); setIsOpen(false); }}>
                             Live Automation
                             <LiveDot />
-                        </NavLink>
+                        </NavButton>
                     </li>
-                    <li><NavLink data-testid="nav-link-contact" to="/contact" $isActive={location.pathname === "/contact"} onClick={() => setIsOpen(false)}>Contact</NavLink></li>
+                    <li><NavButton data-testid="nav-link-contact" $isActive={currentPage === 'contact'} onClick={() => { setCurrentPage('contact'); setIsOpen(false); }}>Contact</NavButton></li>
                 </NavList>
                 <ThemeToggle
                     onClick={toggleTheme}

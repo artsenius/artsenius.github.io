@@ -1,5 +1,4 @@
-import React from 'react';
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import React, { useState } from 'react';
 import Header from './components/Header';
 import About from './components/About';
 import Contact from './components/Contact';
@@ -9,48 +8,33 @@ import LiveTestAutomation from './components/LiveTestAutomation';
 import { ThemeProvider, useTheme } from './components/ThemeProvider';
 import { ThemeProvider as StyledThemeProvider } from 'styled-components';
 
-const ThemedRoutes: React.FC = () => {
+const AppContent: React.FC = () => {
   const { isDarkMode, theme } = useTheme();
-  const basename = process.env.NODE_ENV === 'production' ? '/about' : '';
+  const [currentPage, setCurrentPage] = useState<'about' | 'about-app' | 'automation' | 'contact'>('about');
 
-  React.useEffect(() => {
-    // Check for redirect data in session storage
-    const redirectDataStr = sessionStorage.getItem('redirectData');
-    if (redirectDataStr) {
-      try {
-        const redirectData = JSON.parse(redirectDataStr);
-        const { path, timestamp } = redirectData;
-
-        // Only use the redirect if it's less than 5 seconds old to prevent stale redirects
-        if (Date.now() - timestamp < 5000 && path && path !== '/') {
-          // Clean up session storage
-          sessionStorage.removeItem('redirectData');
-
-          // Use the router's navigate function to restore the path
-          window.history.replaceState(null, '', basename + path);
-        }
-      } catch (e) {
-        console.error('Error parsing redirect data:', e);
-        sessionStorage.removeItem('redirectData');
-      }
-    }
-  }, [basename]);
+  let PageComponent;
+  switch (currentPage) {
+    case 'about-app':
+      PageComponent = <AboutApp isDark={isDarkMode} onGoToAutomation={() => setCurrentPage('automation')} />;
+      break;
+    case 'automation':
+      PageComponent = <LiveTestAutomation isDark={isDarkMode} />;
+      break;
+    case 'contact':
+      PageComponent = <Contact isDark={isDarkMode} />;
+      break;
+    case 'about':
+    default:
+      PageComponent = <About isDark={isDarkMode} />;
+      break;
+  }
 
   return (
     <StyledThemeProvider theme={theme}>
-    <BrowserRouter basename={basename}>
       <Layout>
-        <Header />
-        <Routes>
-          <Route path="/" element={<About isDark={isDarkMode} />} />
-          <Route path="/contact" element={<Contact isDark={isDarkMode} />} />
-          <Route path="/about-app" element={<AboutApp isDark={isDarkMode} />} />
-          <Route path="/automation" element={<LiveTestAutomation isDark={isDarkMode} />} />
-          {/* Redirect any unknown routes to the About page */}
-          <Route path="*" element={<Navigate to="/" replace />} />
-        </Routes>
+        <Header currentPage={currentPage} setCurrentPage={setCurrentPage} />
+        {PageComponent}
       </Layout>
-    </BrowserRouter>
     </StyledThemeProvider>
   );
 };
@@ -58,7 +42,7 @@ const ThemedRoutes: React.FC = () => {
 const App: React.FC = () => {
   return (
     <ThemeProvider>
-      <ThemedRoutes />
+      <AppContent />
     </ThemeProvider>
   );
 };
