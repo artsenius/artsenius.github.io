@@ -1,0 +1,12 @@
+name: After Pages Deploy
+
+on:
+  pages:
+    types: [deployment]
+
+jobs:
+  log-success:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Log Success
+        run: echo "Success" 
