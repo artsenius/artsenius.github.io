@@ -876,22 +876,6 @@ const TestDuration = styled.span`
     color: #64748b;
 `;
 
-const TestError = styled.pre`
-    margin: 0.5rem 0 0;
-    padding: 0.75rem;
-    background-color: #fff1f2;
-    border-radius: 4px;
-    font-size: 0.85rem;
-    color: #e11d48;
-    overflow-x: auto;
-    white-space: pre-wrap;
-
-    @media (max-width: 768px) {
-        font-size: 0.8rem;
-        padding: 0.6rem;
-    }
-`;
-
 const Tooltip = styled.div`
     position: absolute;
     top: 100%;
