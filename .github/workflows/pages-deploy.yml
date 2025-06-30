@@ -41,4 +41,12 @@ jobs:
         with:
           token: ${{ secrets.TRIGGER_AUTOMATION_PAT }}
           repository: artsenius/about-me-automation
-          event-type: trigger-nightly-tests 
+          event-type: trigger-nightly-tests
+
+      - name: Wait for automation workflow run
+        uses: lewagon/wait-on-check-action@v1.3.3
+        with:
+          ref: main
+          repo-token: ${{ secrets.TRIGGER_AUTOMATION_PAT }}
+          check-name: "Nightly E2E Tests"
+          wait-interval: 30
