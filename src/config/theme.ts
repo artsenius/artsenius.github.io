@@ -17,8 +17,8 @@ export const lightTheme: Theme = {
 
 export const darkTheme: Theme = {
   colors: {
-    primary: '#ecf0f1',
-    secondary: '#bdc3c7',
+    primary: '#2c3e50', // Dark header to match footer
+    secondary: '#34495e',
     background: '#1a1a1a',
     surface: '#2d2d2d',
     text: '#ecf0f1',

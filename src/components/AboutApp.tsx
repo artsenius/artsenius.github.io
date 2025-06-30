@@ -1,6 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
+import { useTheme } from './ThemeProvider';
 
 const AboutAppSection = styled.section`
     padding: 2rem;
@@ -12,8 +13,8 @@ const AboutAppSection = styled.section`
     }
 `;
 
-const Title = styled.h1`
-    color: #2c3e50;
+const Title = styled.h1<{ $theme: any }>`
+    color: ${props => props.$theme.colors.text};
     font-size: 2.5rem;
     margin-bottom: 2rem;
     text-align: center;
@@ -38,8 +39,8 @@ const Section = styled.div`
     margin-bottom: 2rem;
 `;
 
-const SectionTitle = styled.h2`
-    color: #2c3e50;
+const SectionTitle = styled.h2<{ $theme: any }>`
+    color: ${props => props.$theme.colors.text};
     font-size: 1.8rem;
     margin-bottom: 1rem;
 
@@ -48,8 +49,8 @@ const SectionTitle = styled.h2`
     }
 `;
 
-const SubTitle = styled.h3`
-    color: #2c3e50;
+const SubTitle = styled.h3<{ $theme: any }>`
+    color: ${props => props.$theme.colors.text};
     font-size: 1.4rem;
     margin-bottom: 1rem;
 
@@ -62,11 +63,14 @@ const TechStack = styled.div`
     margin-top: 1rem;
 `;
 
-const TechItem = styled.div`
-    background-color: #f8f9fa;
+const TechItem = styled.div<{ $theme: any }>`
+    background-color: ${props => props.$theme.colors.surface};
+    color: ${props => props.$theme.colors.text};
     padding: 1rem;
     border-radius: 8px;
     margin-bottom: 1rem;
+    border: 1px solid ${props => props.$theme.colors.border};
+    transition: background-color 0.3s ease, border-color 0.3s ease;
 `;
 
 const GithubLink = styled.a`
@@ -107,9 +111,11 @@ const LiveLink = styled(Link)`
 `;
 
 const AboutApp: React.FC = () => {
+    const { theme } = useTheme();
+    
     return (
         <AboutAppSection data-testid="about-app-section">
-            <Title data-testid="about-app-title">About This App</Title>
+            <Title data-testid="about-app-title" $theme={theme}>About This App</Title>
             <Content>
                 <Section data-testid="about-app-description">
                     <p>
@@ -127,9 +133,9 @@ const AboutApp: React.FC = () => {
                 </Section>
 
                 <Section data-testid="about-app-components">
-                    <SectionTitle>Project Components</SectionTitle>
+                    <SectionTitle $theme={theme}>Project Components</SectionTitle>
                     <TechStack>
-                        <TechItem data-testid="about-app-frontend">
+                        <TechItem data-testid="about-app-frontend" $theme={theme}>
                             <h3>Frontend Application</h3>
                             <p>
                                 A modern React application built with TypeScript, featuring responsive design
@@ -145,7 +151,7 @@ const AboutApp: React.FC = () => {
                             </GithubLink>
                         </TechItem>
 
-                        <TechItem data-testid="about-app-backend">
+                        <TechItem data-testid="about-app-backend" $theme={theme}>
                             <h3>Backend Server</h3>
                             <p>
                                 An Express.js server with MongoDB integration, providing RESTful APIs for
@@ -162,7 +168,7 @@ const AboutApp: React.FC = () => {
                             </GithubLink>
                         </TechItem>
 
-                        <TechItem data-testid="about-app-automation-framework">
+                        <TechItem data-testid="about-app-automation-framework" $theme={theme}>
                             <h3>Test Automation Framework</h3>
                             <p>
                                 A comprehensive Playwright-based automation framework implementing the Model
@@ -182,7 +188,7 @@ const AboutApp: React.FC = () => {
                 </Section>
 
                 <Section data-testid="about-app-live-test-results">
-                    <SectionTitle>Live Test Results</SectionTitle>
+                    <SectionTitle $theme={theme}>Live Test Results</SectionTitle>
                     <p>
                         This website is continuously tested using the Playwright automation framework with
                         tests running daily. You can view the live test results and detailed reports in
