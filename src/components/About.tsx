@@ -253,13 +253,13 @@ const About: React.FC<AboutProps> = ({ isDark }) => {
     const [searchTerm, setSearchTerm] = React.useState('');
     const [activeFilter, setActiveFilter] = React.useState<string>('all');
 
-    const skills = {
+    const skills = React.useMemo(() => ({
         automation: ['WebdriverIO', 'Cypress', 'Playwright', 'Selenium', 'Appium', 'Model Context Protocol'],
         technologies: ['JavaScript/TypeScript', 'HTML5', 'CSS3', 'React', 'React Native', 'Express.js', 'MongoDB'],
         cloud: ['BrowserStack', 'LambdaTest', 'SauceLabs', 'AWS'],
         tools: ['Azure DevOps', 'GitHub Actions', 'Jira', 'Artillery.io'],
         ai: ['GitHub Copilot', 'Cursor Agents', 'AI-Driven Testing']
-    };
+    }), []);
 
     const skillCategories = [
         { key: 'all', label: 'All Skills' },

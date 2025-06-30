@@ -38,19 +38,19 @@ const ThemedRoutes: React.FC = () => {
 
   return (
     <StyledThemeProvider theme={theme}>
-      <BrowserRouter basename={basename}>
-        <Layout>
-          <Header />
-          <Routes>
-            <Route path="/" element={<About isDark={isDarkMode} />} />
-            <Route path="/contact" element={<Contact isDark={isDarkMode} />} />
-            <Route path="/about-app" element={<AboutApp isDark={isDarkMode} />} />
-            <Route path="/automation" element={<LiveTestAutomation isDark={isDarkMode} />} />
-            {/* Redirect any unknown routes to the About page */}
-            <Route path="*" element={<Navigate to="/" replace />} />
-          </Routes>
-        </Layout>
-      </BrowserRouter>
+    <BrowserRouter basename={basename}>
+      <Layout>
+        <Header />
+        <Routes>
+          <Route path="/" element={<About isDark={isDarkMode} />} />
+          <Route path="/contact" element={<Contact isDark={isDarkMode} />} />
+          <Route path="/about-app" element={<AboutApp isDark={isDarkMode} />} />
+          <Route path="/automation" element={<LiveTestAutomation isDark={isDarkMode} />} />
+          {/* Redirect any unknown routes to the About page */}
+          <Route path="*" element={<Navigate to="/" replace />} />
+        </Routes>
+      </Layout>
+    </BrowserRouter>
     </StyledThemeProvider>
   );
 };

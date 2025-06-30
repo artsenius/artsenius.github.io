@@ -159,7 +159,7 @@ const TestRunContent = styled.div<{ isExpanded: boolean; $isDark: boolean }>`
     transition: padding 0.3s ease-in-out, background-color 0.3s;
     padding: ${props => props.isExpanded ? '1rem' : '0'};
     background-color: ${props => props.$isDark ? '#23272f' : '#fff'};
-
+    
     @media (max-width: 768px) {
         padding: ${props => props.isExpanded ? '0.75rem' : '0'};
     }
