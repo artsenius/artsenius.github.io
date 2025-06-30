@@ -121,7 +121,61 @@ const SkillsGrid = styled.div`
     margin-bottom: 2rem;
 `;
 
-const SkillItem = styled.div`
+const SkillsFilterContainer = styled.div`
+    margin-bottom: 1.5rem;
+`;
+
+const SearchInput = styled.input`
+    width: 100%;
+    padding: 0.75rem;
+    border: 2px solid ${props => props.theme.colors.surface};
+    border-radius: 8px;
+    font-size: 1rem;
+    background-color: ${props => props.theme.colors.surface};
+    color: ${props => props.theme.colors.text};
+    margin-bottom: 1rem;
+    transition: all 0.3s ease;
+
+    &:focus {
+        outline: none;
+        border-color: ${props => props.theme.colors.accent};
+        box-shadow: 0 0 0 3px ${props => props.theme.colors.accent}33;
+    }
+
+    &::placeholder {
+        color: ${props => props.theme.colors.textSecondary};
+    }
+`;
+
+const FilterButtons = styled.div`
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+`;
+
+const FilterButton = styled.button<{ $isActive: boolean }>`
+    padding: 0.5rem 1rem;
+    border: 2px solid ${props => props.$isActive ? props.theme.colors.accent : props.theme.colors.surface};
+    background-color: ${props => props.$isActive ? props.theme.colors.accent : props.theme.colors.surface};
+    color: ${props => props.$isActive ? 'white' : props.theme.colors.text};
+    border-radius: 20px;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+
+    &:hover {
+        border-color: ${props => props.theme.colors.accent};
+        background-color: ${props => props.$isActive ? props.theme.colors.primary : props.theme.colors.hover};
+    }
+
+    &:focus {
+        outline: none;
+        box-shadow: 0 0 0 3px ${props => props.theme.colors.accent}33;
+    }
+`;
+
+const SkillItem = styled.div<{ $isVisible: boolean }>`
     background-color: ${props => props.theme.colors.surface};
     padding: 0.75rem;
     border-radius: 4px;
@@ -131,6 +185,9 @@ const SkillItem = styled.div`
     transition: all 0.3s ease-in-out;
     border: 1px solid transparent;
     color: ${props => props.theme.colors.text};
+    opacity: ${props => props.$isVisible ? 1 : 0};
+    transform: ${props => props.$isVisible ? 'scale(1)' : 'scale(0.8)'};
+    display: ${props => props.$isVisible ? 'block' : 'none'};
 
     @media (max-width: 768px) {
         font-size: 0.85rem;
@@ -138,11 +195,17 @@ const SkillItem = styled.div`
     }
 
     &:hover {
-        transform: translateY(-2px);
+        transform: translateY(-2px) ${props => props.$isVisible ? 'scale(1)' : 'scale(0.8)'};
         background-color: ${props => props.theme.colors.hover};
         border-color: ${props => props.theme.colors.accent};
         box-shadow: 0 4px 8px ${props => props.theme.colors.accent}33;
     }
+`;
+
+const ResultsCounter = styled.p`
+    color: ${props => props.theme.colors.textSecondary};
+    font-size: 0.9rem;
+    margin-bottom: 0.5rem;
 `;
 
 const ExperienceItem = styled.div`
@@ -187,12 +250,55 @@ interface AboutProps {
 
 const About: React.FC<AboutProps> = ({ isDark }) => {
     const { theme } = useTheme();
+    const [searchTerm, setSearchTerm] = React.useState('');
+    const [activeFilter, setActiveFilter] = React.useState<string>('all');
+
     const skills = {
         automation: ['WebdriverIO', 'Cypress', 'Playwright', 'Selenium', 'Appium', 'Model Context Protocol'],
         technologies: ['JavaScript/TypeScript', 'HTML5', 'CSS3', 'React', 'React Native', 'Express.js', 'MongoDB'],
         cloud: ['BrowserStack', 'LambdaTest', 'SauceLabs', 'AWS'],
         tools: ['Azure DevOps', 'GitHub Actions', 'Jira', 'Artillery.io'],
         ai: ['GitHub Copilot', 'Cursor Agents', 'AI-Driven Testing']
+    };
+
+    const skillCategories = [
+        { key: 'all', label: 'All Skills' },
+        { key: 'automation', label: 'Test Automation' },
+        { key: 'technologies', label: 'Technologies' },
+        { key: 'cloud', label: 'Cloud & Testing' },
+        { key: 'tools', label: 'DevOps Tools' },
+        { key: 'ai', label: 'AI & Innovation' }
+    ];
+
+    const getAllSkills = () => {
+        return Object.entries(skills).flatMap(([category, skillList]) => 
+            skillList.map(skill => ({ skill, category }))
+        );
+    };
+
+    const filteredSkills = React.useMemo(() => {
+        const allSkills = Object.entries(skills).flatMap(([category, skillList]) => 
+            skillList.map(skill => ({ skill, category }))
+        );
+        
+        return allSkills.filter(({ skill, category }) => {
+            const matchesSearch = skill.toLowerCase().includes(searchTerm.toLowerCase());
+            const matchesFilter = activeFilter === 'all' || category === activeFilter;
+            return matchesSearch && matchesFilter;
+        });
+    }, [searchTerm, activeFilter, skills]);
+
+    const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setSearchTerm(e.target.value);
+    };
+
+    const handleFilterChange = (filter: string) => {
+        setActiveFilter(filter);
+    };
+
+    const clearFilters = () => {
+        setSearchTerm('');
+        setActiveFilter('all');
     };
 
     return (
@@ -238,11 +344,69 @@ const About: React.FC<AboutProps> = ({ isDark }) => {
 
                     <Section data-testid="skills-section">
                         <SectionTitle data-testid="skills-title" $isDark={isDark}>Technical Skills</SectionTitle>
+                        
+                        <SkillsFilterContainer data-testid="skills-filter-container">
+                            <SearchInput
+                                data-testid="skills-search"
+                                type="text"
+                                placeholder="Search skills... (e.g., React, JavaScript, Cypress)"
+                                value={searchTerm}
+                                onChange={handleSearchChange}
+                                aria-label="Search technical skills"
+                            />
+                            
+                            <FilterButtons data-testid="filter-buttons">
+                                {skillCategories.map(({ key, label }) => (
+                                    <FilterButton
+                                        key={key}
+                                        data-testid={`filter-${key}`}
+                                        $isActive={activeFilter === key}
+                                        onClick={() => handleFilterChange(key)}
+                                        aria-label={`Filter by ${label}`}
+                                    >
+                                        {label}
+                                    </FilterButton>
+                                ))}
+                                {(searchTerm || activeFilter !== 'all') && (
+                                    <FilterButton
+                                        data-testid="clear-filters"
+                                        $isActive={false}
+                                        onClick={clearFilters}
+                                        aria-label="Clear all filters"
+                                        style={{ marginLeft: '0.5rem', fontWeight: 'bold' }}
+                                    >
+                                        Clear ✕
+                                    </FilterButton>
+                                )}
+                            </FilterButtons>
+                            
+                            <ResultsCounter data-testid="results-counter">
+                                Showing {filteredSkills.length} of {getAllSkills().length} skills
+                            </ResultsCounter>
+                        </SkillsFilterContainer>
+
                         <SkillsGrid data-testid="skills-grid">
-                            {Object.values(skills).flat().map((skill, index) => (
-                                <SkillItem data-testid={`skill-item-${index}`} key={index}>{skill}</SkillItem>
+                            {filteredSkills.map(({ skill }, index) => (
+                                <SkillItem 
+                                    data-testid={`skill-item-${index}`} 
+                                    key={`${skill}-${index}`}
+                                    $isVisible={true}
+                                >
+                                    {skill}
+                                </SkillItem>
                             ))}
                         </SkillsGrid>
+                        
+                        {filteredSkills.length === 0 && (
+                            <p data-testid="no-results" style={{ 
+                                textAlign: 'center', 
+                                color: theme.colors.textSecondary,
+                                fontStyle: 'italic',
+                                padding: '2rem'
+                            }}>
+                                No skills found matching your criteria. Try adjusting your search or filters.
+                            </p>
+                        )}
                     </Section>
 
                     <Section data-testid="achievements-section">
