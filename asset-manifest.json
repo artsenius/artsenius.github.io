@@ -1,15 +1,15 @@
 {
   "files": {
-    "main.css": "/static/css/main.93270d0e.css",
-    "main.js": "/static/js/main.8364e8ac.js",
+    "main.css": "/static/css/main.f46492a3.css",
+    "main.js": "/static/js/main.87af760c.js",
     "static/media/A_Senko_QA_Leader_SDET_AI_Enthusiast.pdf": "/static/media/A_Senko_QA_Leader_SDET_AI_Enthusiast.9da71eb068f141ff2a1e.pdf",
     "static/media/art.jpg": "/static/media/art.5a7020b51115fa441348.jpg",
     "index.html": "/index.html",
-    "main.93270d0e.css.map": "/static/css/main.93270d0e.css.map",
-    "main.8364e8ac.js.map": "/static/js/main.8364e8ac.js.map"
+    "main.f46492a3.css.map": "/static/css/main.f46492a3.css.map",
+    "main.87af760c.js.map": "/static/js/main.87af760c.js.map"
   },
   "entrypoints": [
-    "static/css/main.93270d0e.css",
-    "static/js/main.8364e8ac.js"
+    "static/css/main.f46492a3.css",
+    "static/js/main.87af760c.js"
   ]
 }
