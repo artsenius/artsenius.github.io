@@ -18,8 +18,6 @@ const Nav = styled.nav<{ $theme: any, $isDark: boolean }>`
 `;
 
 const NavContainer = styled.div`
-    max-width: 1200px;
-    margin: 0 auto;
     padding: 0 2rem;
     display: flex;
     justify-content: space-between;
