@@ -25,7 +25,7 @@ const AppContent: React.FC = () => {
       break;
     case 'about':
     default:
-      PageComponent = <About isDark={isDarkMode} />;
+      PageComponent = <About isDark={isDarkMode} setCurrentPage={setCurrentPage} />;
       break;
   }
 
