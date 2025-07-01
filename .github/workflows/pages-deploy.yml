@@ -31,6 +31,7 @@ jobs:
           publish_branch: gh-pages
           user_name: github-actions[bot]
           user_email: github-actions[bot]@users.noreply.github.com
+          cname: www.arthursenko.com
 
   test-automation:
     runs-on: ubuntu-latest
