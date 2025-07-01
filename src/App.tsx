@@ -31,8 +31,8 @@ const AppContent: React.FC = () => {
 
   return (
     <StyledThemeProvider theme={theme}>
+      <Header currentPage={currentPage} setCurrentPage={setCurrentPage} />
       <Layout>
-        <Header currentPage={currentPage} setCurrentPage={setCurrentPage} />
         {PageComponent}
       </Layout>
     </StyledThemeProvider>

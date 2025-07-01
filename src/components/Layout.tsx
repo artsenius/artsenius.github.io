@@ -14,6 +14,10 @@ const Main = styled.main`
     margin: 0 auto;
     padding: 0 2rem 2rem;
     width: 100%;
+
+    @media (max-width: 768px) {
+        padding: 0 1rem 1rem;
+    }
 `;
 
 const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
