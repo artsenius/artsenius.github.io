@@ -144,12 +144,12 @@ const AboutApp: React.FC<AboutAppProps> = ({ isDark, onGoToAutomation }) => {
                     <p>
                         This portfolio website demonstrates a complete end-to-end solution architecture, showcasing modern development practices, 
                         AI-powered development workflows, and comprehensive automation testing. The project consists of a <strong>React frontend</strong> hosted on 
-                        <strong>GitHub Pages</strong>, an <strong>Express.js + MongoDB backend</strong> hosted on <strong>Azure Cloud</strong>, and 
-                        <strong>Playwright test automation</strong> running in <strong>GitHub Actions</strong> with a robust CI/CD pipeline.
+                        <strong> GitHub Pages</strong>, an <strong>Express.js + MongoDB backend</strong> hosted on <strong>Azure Cloud</strong>, and 
+                        <strong> Playwright test automation</strong> running in <strong>GitHub Actions</strong> with a robust CI/CD pipeline.
                     </p>
                     <p>
                         The entire solution was developed using modern AI-powered tools including <strong>Cursor IDE</strong> with Background Agents 
-                        integrated with <strong>Slack</strong>, <strong>GitHub Copilot</strong> for code generation, and <strong>Playwright's Model Context Protocol (MCP)</strong> 
+                        integrated with <strong>Slack</strong>, <strong>GitHub Copilot</strong> for code generation, and <strong>Playwright's Model Context Protocol (MCP) </strong> 
                         for intelligent test automation. This demonstrates how AI can accelerate development while maintaining high quality standards.
                     </p>
                 </Section>
