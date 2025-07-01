@@ -88,6 +88,16 @@ const DocumentLink = styled.a`
     }
 `;
 
+const InfoBox = styled.div<{ $isDark: boolean }>`
+    background: ${props => props.$isDark ? '#23272f' : '#e8f4fd'};
+    border-left: 4px solid ${props => props.$isDark ? props.theme.colors.accent : '#2196f3'};
+    padding: 12px 16px;
+    margin-bottom: 24px;
+    color: ${props => props.$isDark ? props.theme.colors.text : '#0d47a1'};
+    font-size: 1rem;
+    border-radius: 4px;
+`;
+
 const Bio = styled.div`
     font-size: 1.1rem;
     line-height: 1.6;
@@ -256,11 +266,11 @@ const About: React.FC<AboutProps> = ({ isDark, setCurrentPage }) => {
 
     const skills = React.useMemo(() => ({
         automation: ['WebdriverIO', 'Cypress', 'Playwright', 'Selenium', 'Appium', 'Model Context Protocol', 'Artillery Pro', 'KaneAI', 'SmartUI'],
-        technologies: ['JavaScript/TypeScript', 'HTML5', 'CSS3', 'React', 'React Native', 'Express.js', 'MongoDB', 'Node.js', 'RESTful APIs', 'GraphQL'],
-        cloud: ['BrowserStack', 'LambdaTest', 'SauceLabs', 'AWS', 'Multi-region HA', 'Cloud Performance Testing'],
-        tools: ['Azure DevOps', 'GitHub Actions', 'Jira', 'Docker', 'Jenkins', 'Git', 'Visual QA', 'Accessibility Testing'],
-        ai: ['GitHub Copilot', 'Cursor Agents', 'AI-Driven Testing', 'Playwright MCP', 'Machine Learning Testing'],
-        methodologies: ['Agile/Scrum', 'Continuous Integration', 'Test-Driven Development', 'Behavior-Driven Development', 'DevOps', 'Load Testing', 'Risk-Based Testing']
+        technologies: ['JavaScript/TypeScript', 'React', 'React Native', 'Express.js', 'MongoDB', 'RESTful APIs', 'GraphQL'],
+        cloud: ['BrowserStack', 'LambdaTest', 'SauceLabs', 'AWS'],
+        tools: ['Azure DevOps', 'GitHub Actions', 'Docker', 'Jenkins', 'Visual QA', 'Accessibility Testing'],
+        ai: ['Cursor Agents', 'Playwright MCP'],
+        methodologies: ['DevOps', 'Load Testing']
     }), []);
 
     const skillCategories = [
@@ -321,22 +331,21 @@ const About: React.FC<AboutProps> = ({ isDark, setCurrentPage }) => {
                     </DocumentLink>
                 </ProfileSection>
                 <div data-testid="about-details">
+                    <InfoBox data-testid="app-info-box" $isDark={isDark}>
+                        <strong>App Info:</strong> This site is powered by a React frontend, with an Express.js and MongoDB backend. Automated Playwright tests run on both desktop and mobile after every deployment.
+                        To learn more about this E2E solution, see the <button
+                            type="button"
+                            onClick={(e) => {
+                                e.preventDefault();
+                                setCurrentPage?.('about-app');
+                            }}
+                            style={{ color: theme.colors.accent, textDecoration: 'underline', cursor: 'pointer', background: 'none', border: 'none', padding: 0, font: 'inherit' }}
+                        >
+                            About This App
+                        </button> page.
+                    </InfoBox>
+
                     <Bio data-testid="about-bio">
-                        <p>
-                            This is a React App frontend with Express.js + MongoDB backend and Playwright automation 
-                            running automatically on desktop and mobile on each deployment. You can learn more about 
-                            the app on the <a 
-                                href="#" 
-                                onClick={(e) => {
-                                    e.preventDefault();
-                                    setCurrentPage?.('about-app');
-                                }}
-                                style={{ color: theme.colors.accent, textDecoration: 'underline', cursor: 'pointer' }}
-                            >
-                                About this page
-                            </a>.
-                        </p>
-                        <br />
                         <p>
                             A results-driven QA Leader and Test Automation Architect with expertise in AI testing and modern automation.
                             Proven track record of building and leading high-performing QA teams, implementing
@@ -355,21 +364,11 @@ const About: React.FC<AboutProps> = ({ isDark, setCurrentPage }) => {
                             </CompanyName>
                             <Duration data-testid="role-duration">June 2022 – Present | Remote</Duration>
                             <ul data-testid="role-achievements">
-                                <li>Led QA efforts on a project responsible for ~90% of company revenue, improving quality, reducing defects, and helping earn millions by improving software quality</li>
-                                <li>Introduced AI-driven automation using Playwright MCP and GitHub Copilot, reducing test development time by 80% and increasing test coverage</li>
-                                <li>Integrated KaneAI by LambdaTest into manual testing processes, cutting test case creation and execution time by over 60%</li>
-                                <li>Spearheaded QA for a customer financing platform, helping launch a high-quality product that enabled millions in revenue through successful transactions</li>
-                                <li>Led QA initiatives for the Alle mobile app, which handles ~90% of customer traffic resulting in a 3x reduction in production bugs and a 50% increase in 5-star reviews</li>
-                                <li>Designed and executed test procedures for infrastructure preparation for high-traffic tentpole events (e.g., Mother's Day, Botox Day), supporting $20M+ in single-day gift card transactions</li>
-                                <li>Migrated legacy automation frameworks to modern, scalable platforms: Playwright (web), WebDriverIO + Appium (mobile)</li>
-                                <li>Pioneered use of LambdaTest and SmartUI for cloud-based cross-browser testing and visual regression, integrating results via API into centralized reporting</li>
-                                <li>Implemented company's first comprehensive load testing strategy using Artillery Pro + AWS for cloud-based performance testing</li>
-                                <li>Defined and led validation strategy for Multi-region High Availability to support business-critical Alle systems</li>
-                                <li>Instituted Visual QA and accessibility testing practices, strengthening UX quality and reliability in production</li>
-                                <li>Introduced agile QA reporting practices and improved visibility of quality metrics across the organization</li>
-                                <li>Drove team growth and engagement, resulting in multiple promotions and conversions from contract to full-time roles</li>
-                                <li>Fostered a high-performance, inclusive QA culture through hands-on mentorship, training, and leadership by example</li>
-                                <li>Played a key role in shaping long-term QA strategy, test architecture, automation tooling, and process improvement roadmap</li>
+                                <li>Led QA for a project responsible for ~90% of company revenue, driving quality improvements and significant business impact.</li>
+                                <li>Introduced AI-driven automation (Playwright MCP, GitHub Copilot), reducing test development time by 80% and boosting coverage.</li>
+                                <li>Designed and executed test procedures for infrastructure preparation for high-traffic tentpole events (e.g., Mother's Day, Botox Day), supporting $20M+ in single-day gift card transactions.</li>
+                                <li>Implemented cloud-based cross-browser and visual testing, and the company's first comprehensive load testing strategy.</li>
+                                <li>Fostered a high-performance, inclusive QA culture through mentorship and process innovation.</li>
                             </ul>
                         </ExperienceItem>
                     </Section>
@@ -444,15 +443,11 @@ const About: React.FC<AboutProps> = ({ isDark, setCurrentPage }) => {
                     <Section data-testid="achievements-section">
                         <SectionTitle data-testid="achievements-title" $isDark={isDark}>Notable Achievements</SectionTitle>
                         <ul data-testid="achievements-list">
-                            <li data-testid="achievement-1">In each role I was building and improving QA processes, often from scratch</li>
-                            <li data-testid="achievement-2">Always played a key role on all projects with unwavering responsibility and ownership mindset</li>
-                            <li data-testid="achievement-3">The main quality is responsibility - always thinking like an owner of a company and being genuinely interested in success</li>
-                            <li data-testid="achievement-4">Built and led multiple QA teams from ground up in startup and enterprise settings</li>
-                            <li data-testid="achievement-5">Co-founded TechStart.dev, an educational startup for developers and testers</li>
-                            <li data-testid="achievement-6">Achieved 95% employment rate for training program graduates</li>
-                            <li data-testid="achievement-7">Developed and implemented AI-driven testing strategies across multiple organizations</li>
-                            <li data-testid="achievement-8">Successfully led QA initiatives that directly contributed to millions in company revenue</li>
-                            <li data-testid="achievement-9">Pioneered adoption of cutting-edge automation tools and frameworks in enterprise environments</li>
+                            <li>Built and scaled QA teams and processes from the ground up in both startup and enterprise environments.</li>
+                            <li>Co-founded TechStart.dev, helping developers and testers launch their careers with a 95% graduate employment rate.</li>
+                            <li>Consistently played a pivotal role on every project, demonstrating unwavering responsibility, ownership, and commitment to success.</li>
+                            <li>Successfully led QA initiatives that delivered measurable business value, directly contributing to millions in company revenue.</li>
+                            <li>Pioneered the adoption of advanced automation tools and frameworks, driving innovation in enterprise environments.</li>
                         </ul>
                     </Section>
                 </div>
