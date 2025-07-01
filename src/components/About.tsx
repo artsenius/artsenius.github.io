@@ -246,19 +246,21 @@ const CompanyLink = styled.a`
 
 interface AboutProps {
   isDark: boolean;
+  setCurrentPage?: (page: 'about' | 'about-app' | 'automation' | 'contact') => void;
 }
 
-const About: React.FC<AboutProps> = ({ isDark }) => {
+const About: React.FC<AboutProps> = ({ isDark, setCurrentPage }) => {
     const { theme } = useTheme();
     const [searchTerm, setSearchTerm] = React.useState('');
     const [activeFilter, setActiveFilter] = React.useState<string>('all');
 
     const skills = React.useMemo(() => ({
-        automation: ['WebdriverIO', 'Cypress', 'Playwright', 'Selenium', 'Appium', 'Model Context Protocol'],
-        technologies: ['JavaScript/TypeScript', 'HTML5', 'CSS3', 'React', 'React Native', 'Express.js', 'MongoDB'],
-        cloud: ['BrowserStack', 'LambdaTest', 'SauceLabs', 'AWS'],
-        tools: ['Azure DevOps', 'GitHub Actions', 'Jira', 'Artillery.io'],
-        ai: ['GitHub Copilot', 'Cursor Agents', 'AI-Driven Testing']
+        automation: ['WebdriverIO', 'Cypress', 'Playwright', 'Selenium', 'Appium', 'Model Context Protocol', 'Artillery Pro', 'KaneAI', 'SmartUI'],
+        technologies: ['JavaScript/TypeScript', 'HTML5', 'CSS3', 'React', 'React Native', 'Express.js', 'MongoDB', 'Node.js', 'RESTful APIs', 'GraphQL'],
+        cloud: ['BrowserStack', 'LambdaTest', 'SauceLabs', 'AWS', 'Multi-region HA', 'Cloud Performance Testing'],
+        tools: ['Azure DevOps', 'GitHub Actions', 'Jira', 'Docker', 'Jenkins', 'Git', 'Visual QA', 'Accessibility Testing'],
+        ai: ['GitHub Copilot', 'Cursor Agents', 'AI-Driven Testing', 'Playwright MCP', 'Machine Learning Testing'],
+        methodologies: ['Agile/Scrum', 'Continuous Integration', 'Test-Driven Development', 'Behavior-Driven Development', 'DevOps', 'Load Testing', 'Risk-Based Testing']
     }), []);
 
     const skillCategories = [
@@ -267,7 +269,8 @@ const About: React.FC<AboutProps> = ({ isDark }) => {
         { key: 'technologies', label: 'Technologies' },
         { key: 'cloud', label: 'Cloud & Testing' },
         { key: 'tools', label: 'DevOps Tools' },
-        { key: 'ai', label: 'AI & Innovation' }
+        { key: 'ai', label: 'AI & Innovation' },
+        { key: 'methodologies', label: 'Methodologies' }
     ];
 
     const getAllSkills = () => {
@@ -319,25 +322,54 @@ const About: React.FC<AboutProps> = ({ isDark }) => {
                 </ProfileSection>
                 <div data-testid="about-details">
                     <Bio data-testid="about-bio">
-                        A results-driven QA Leader with expertise in AI testing and modern automation.
-                        Proven track record of building and leading high-performing QA teams, implementing
-                        efficient testing processes, and driving quality improvements across organizations.
-                        Proficient in leading projects of any complexity and creating comprehensive E2E solutions,
-                        from initial concept to production deployment.
+                        <p>
+                            This is a React App frontend with Express.js + MongoDB backend and Playwright automation 
+                            running automatically on desktop and mobile on each deployment. You can learn more about 
+                            the app on the <a 
+                                href="#" 
+                                onClick={(e) => {
+                                    e.preventDefault();
+                                    setCurrentPage?.('about-app');
+                                }}
+                                style={{ color: theme.colors.accent, textDecoration: 'underline', cursor: 'pointer' }}
+                            >
+                                About this page
+                            </a>.
+                        </p>
+                        <br />
+                        <p>
+                            A results-driven QA Leader and Test Automation Architect with expertise in AI testing and modern automation.
+                            Proven track record of building and leading high-performing QA teams, implementing
+                            efficient testing processes, and driving quality improvements across organizations.
+                            Experienced in building comprehensive testing solutions and continuous integration pipelines from the ground up,
+                            from initial concept to production deployment. Specialized in architecting scalable automation frameworks
+                            that deliver exceptional results for even the most complex enterprise projects.
+                        </p>
                     </Bio>
 
                     <Section data-testid="current-role-section">
                         <SectionTitle data-testid="current-role-title" $isDark={isDark}>Current Role</SectionTitle>
                         <ExperienceItem data-testid="experience-item">
                             <CompanyName data-testid="company-name" $isDark={isDark}>
-                                Senior QA Leader @ <CompanyLink href="https://www.allerganaesthetics.com/" target="_blank" rel="noopener noreferrer">Allergan Aesthetics</CompanyLink>, an <CompanyLink href="https://www.abbvie.com/" target="_blank" rel="noopener noreferrer">AbbVie Company</CompanyLink>
+                                QA Leader @ <CompanyLink href="https://www.allerganaesthetics.com/" target="_blank" rel="noopener noreferrer">Allergan Aesthetics</CompanyLink>, an <CompanyLink href="https://www.abbvie.com/" target="_blank" rel="noopener noreferrer">AbbVie Company</CompanyLink>
                             </CompanyName>
                             <Duration data-testid="role-duration">June 2022 – Present | Remote</Duration>
                             <ul data-testid="role-achievements">
-                                <li>Managing QA efforts on projects responsible for ~90% of company revenue</li>
-                                <li>Developed and implemented AI-driven testing strategies</li>
-                                <li>Reduced manual efforts by 60% and accelerated test automation creation by a factor of 10</li>
-                                <li>Led QA initiatives for the Alle mobile app, achieving 3x reduction in production bugs</li>
+                                <li>Led QA efforts on a project responsible for ~90% of company revenue, improving quality, reducing defects, and helping earn millions by improving software quality</li>
+                                <li>Introduced AI-driven automation using Playwright MCP and GitHub Copilot, reducing test development time by 80% and increasing test coverage</li>
+                                <li>Integrated KaneAI by LambdaTest into manual testing processes, cutting test case creation and execution time by over 60%</li>
+                                <li>Spearheaded QA for a customer financing platform, helping launch a high-quality product that enabled millions in revenue through successful transactions</li>
+                                <li>Led QA initiatives for the Alle mobile app, which handles ~90% of customer traffic resulting in a 3x reduction in production bugs and a 50% increase in 5-star reviews</li>
+                                <li>Designed and executed test procedures for infrastructure preparation for high-traffic tentpole events (e.g., Mother's Day, Botox Day), supporting $20M+ in single-day gift card transactions</li>
+                                <li>Migrated legacy automation frameworks to modern, scalable platforms: Playwright (web), WebDriverIO + Appium (mobile)</li>
+                                <li>Pioneered use of LambdaTest and SmartUI for cloud-based cross-browser testing and visual regression, integrating results via API into centralized reporting</li>
+                                <li>Implemented company's first comprehensive load testing strategy using Artillery Pro + AWS for cloud-based performance testing</li>
+                                <li>Defined and led validation strategy for Multi-region High Availability to support business-critical Alle systems</li>
+                                <li>Instituted Visual QA and accessibility testing practices, strengthening UX quality and reliability in production</li>
+                                <li>Introduced agile QA reporting practices and improved visibility of quality metrics across the organization</li>
+                                <li>Drove team growth and engagement, resulting in multiple promotions and conversions from contract to full-time roles</li>
+                                <li>Fostered a high-performance, inclusive QA culture through hands-on mentorship, training, and leadership by example</li>
+                                <li>Played a key role in shaping long-term QA strategy, test architecture, automation tooling, and process improvement roadmap</li>
                             </ul>
                         </ExperienceItem>
                     </Section>
@@ -412,11 +444,15 @@ const About: React.FC<AboutProps> = ({ isDark }) => {
                     <Section data-testid="achievements-section">
                         <SectionTitle data-testid="achievements-title" $isDark={isDark}>Notable Achievements</SectionTitle>
                         <ul data-testid="achievements-list">
-                            <li data-testid="achievement-3a">Developed and implemented AI-driven testing strategies</li>
-                            <li data-testid="achievement-3b">Reduced manual efforts by 60% and accelerated test automation creation by a factor of 10</li>
+                            <li data-testid="achievement-1">In each role I was building and improving QA processes, often from scratch</li>
+                            <li data-testid="achievement-2">Always played a key role on all projects with unwavering responsibility and ownership mindset</li>
+                            <li data-testid="achievement-3">The main quality is responsibility - always thinking like an owner of a company and being genuinely interested in success</li>
                             <li data-testid="achievement-4">Built and led multiple QA teams from ground up in startup and enterprise settings</li>
-                            <li data-testid="achievement-1">Co-founded TechStart.dev, an educational startup for developers and testers</li>
-                            <li data-testid="achievement-2">Achieved 95% employment rate for training program graduates</li>
+                            <li data-testid="achievement-5">Co-founded TechStart.dev, an educational startup for developers and testers</li>
+                            <li data-testid="achievement-6">Achieved 95% employment rate for training program graduates</li>
+                            <li data-testid="achievement-7">Developed and implemented AI-driven testing strategies across multiple organizations</li>
+                            <li data-testid="achievement-8">Successfully led QA initiatives that directly contributed to millions in company revenue</li>
+                            <li data-testid="achievement-9">Pioneered adoption of cutting-edge automation tools and frameworks in enterprise environments</li>
                         </ul>
                     </Section>
                 </div>
