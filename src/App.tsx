@@ -5,6 +5,7 @@ import Contact from './components/Contact';
 import Layout from './components/Layout';
 import AboutApp from './components/AboutApp';
 import LiveTestAutomation from './components/LiveTestAutomation';
+import BackToTop from './components/BackToTop';
 import { ThemeProvider, useTheme } from './components/ThemeProvider';
 import { ThemeProvider as StyledThemeProvider } from 'styled-components';
 
@@ -35,6 +36,7 @@ const AppContent: React.FC = () => {
       <Layout>
         {PageComponent}
       </Layout>
+      <BackToTop />
     </StyledThemeProvider>
   );
 };
