@@ -142,8 +142,8 @@ const ThemeToggle = styled.button<{ $theme: any }>`
 `;
 
 interface HeaderProps {
-    currentPage: 'about' | 'about-app' | 'automation' | 'contact';
-    setCurrentPage: (page: 'about' | 'about-app' | 'automation' | 'contact') => void;
+    currentPage: 'about' | 'about-app' | 'automation' | 'projects' | 'contact';
+    setCurrentPage: (page: 'about' | 'about-app' | 'automation' | 'projects' | 'contact') => void;
 }
 
 const Header: React.FC<HeaderProps> = ({ currentPage, setCurrentPage }) => {
@@ -158,6 +158,8 @@ const Header: React.FC<HeaderProps> = ({ currentPage, setCurrentPage }) => {
                 return 'About This App';
             case 'automation':
                 return 'Live Automation';
+            case 'projects':
+                return 'Projects';
             case 'contact':
                 return 'Contact';
             default:
@@ -189,6 +191,7 @@ const Header: React.FC<HeaderProps> = ({ currentPage, setCurrentPage }) => {
                             <LiveDot />
                         </NavButton>
                     </li>
+                    <li><NavButton data-testid="nav-link-projects" $isActive={currentPage === 'projects'} onClick={() => { setCurrentPage('projects'); setIsOpen(false); }}>Projects</NavButton></li>
                     <li><NavButton data-testid="nav-link-contact" $isActive={currentPage === 'contact'} onClick={() => { setCurrentPage('contact'); setIsOpen(false); }}>Contact</NavButton></li>
                 </NavList>
                 <ThemeToggle

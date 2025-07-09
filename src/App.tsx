@@ -5,12 +5,13 @@ import Contact from './components/Contact';
 import Layout from './components/Layout';
 import AboutApp from './components/AboutApp';
 import LiveTestAutomation from './components/LiveTestAutomation';
+import Projects from './components/Projects';
 import { ThemeProvider, useTheme } from './components/ThemeProvider';
 import { ThemeProvider as StyledThemeProvider } from 'styled-components';
 
 const AppContent: React.FC = () => {
   const { isDarkMode, theme } = useTheme();
-  const [currentPage, setCurrentPage] = useState<'about' | 'about-app' | 'automation' | 'contact'>('about');
+  const [currentPage, setCurrentPage] = useState<'about' | 'about-app' | 'automation' | 'projects' | 'contact'>('about');
 
   let PageComponent;
   switch (currentPage) {
@@ -19,6 +20,9 @@ const AppContent: React.FC = () => {
       break;
     case 'automation':
       PageComponent = <LiveTestAutomation isDark={isDarkMode} />;
+      break;
+    case 'projects':
+      PageComponent = <Projects isDark={isDarkMode} />;
       break;
     case 'contact':
       PageComponent = <Contact isDark={isDarkMode} />;
