@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
-import { useTheme } from './ThemeProvider';
 
 const BackToTopButton = styled.button<{ $isVisible: boolean }>`
     position: fixed;
@@ -50,7 +49,6 @@ const BackToTopButton = styled.button<{ $isVisible: boolean }>`
 
 const BackToTop: React.FC = () => {
     const [isVisible, setIsVisible] = useState(false);
-    const { theme } = useTheme();
 
     useEffect(() => {
         const toggleVisibility = () => {
