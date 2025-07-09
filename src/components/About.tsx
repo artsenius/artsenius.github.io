@@ -444,10 +444,10 @@ const About: React.FC<AboutProps> = ({ isDark, setCurrentPage }) => {
                         <SectionTitle data-testid="achievements-title" $isDark={isDark}>Notable Achievements</SectionTitle>
                         <ul data-testid="achievements-list">
                             <li>Built and scaled QA teams and processes from the ground up in both startup and enterprise environments.</li>
-                            <li>Co-founded TechStart.dev, helping developers and testers launch their careers with a 95% graduate employment rate.</li>
                             <li>Consistently played a pivotal role on every project, demonstrating unwavering responsibility, ownership, and commitment to success.</li>
                             <li>Successfully led QA initiatives that delivered measurable business value, directly contributing to millions in company revenue.</li>
                             <li>Pioneered the adoption of advanced automation tools and frameworks, driving innovation in enterprise environments.</li>
+                            <li>Co-founded TechStart.dev, helping developers and testers launch their careers with a 95% graduate employment rate.</li>
                         </ul>
                     </Section>
                 </div>
