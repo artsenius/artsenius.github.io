@@ -142,8 +142,8 @@ const ThemeToggle = styled.button<{ $theme: any }>`
 `;
 
 interface HeaderProps {
-    currentPage: 'about' | 'about-app' | 'automation' | 'contact';
-    setCurrentPage: (page: 'about' | 'about-app' | 'automation' | 'contact') => void;
+    currentPage: 'about' | 'projects' | 'about-app' | 'automation' | 'contact';
+    setCurrentPage: (page: 'about' | 'projects' | 'about-app' | 'automation' | 'contact') => void;
 }
 
 const Header: React.FC<HeaderProps> = ({ currentPage, setCurrentPage }) => {
@@ -154,6 +154,8 @@ const Header: React.FC<HeaderProps> = ({ currentPage, setCurrentPage }) => {
         switch (currentPage) {
             case 'about':
                 return 'About Me';
+            case 'projects':
+                return 'Projects';
             case 'about-app':
                 return 'About This App';
             case 'automation':
@@ -182,6 +184,7 @@ const Header: React.FC<HeaderProps> = ({ currentPage, setCurrentPage }) => {
                 </MobileTitle>
                 <NavList data-testid="nav-list" $isOpen={isOpen}>
                     <li><NavButton data-testid="nav-link-about" $isActive={currentPage === 'about'} onClick={() => { setCurrentPage('about'); setIsOpen(false); }}>About Me</NavButton></li>
+                    <li><NavButton data-testid="nav-link-projects" $isActive={currentPage === 'projects'} onClick={() => { setCurrentPage('projects'); setIsOpen(false); }}>Projects</NavButton></li>
                     <li><NavButton data-testid="nav-link-about-app" $isActive={currentPage === 'about-app'} onClick={() => { setCurrentPage('about-app'); setIsOpen(false); }}>About This App</NavButton></li>
                     <li>
                         <NavButton data-testid="nav-link-automation" $isActive={currentPage === 'automation'} onClick={() => { setCurrentPage('automation'); setIsOpen(false); }}>
