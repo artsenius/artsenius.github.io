@@ -6,6 +6,7 @@ import Layout from './components/Layout';
 import AboutApp from './components/AboutApp';
 import LiveTestAutomation from './components/LiveTestAutomation';
 import BackToTop from './components/BackToTop';
+import PageTransition from './components/PageTransition';
 import { ThemeProvider, useTheme } from './components/ThemeProvider';
 import { ThemeProvider as StyledThemeProvider } from 'styled-components';
 
@@ -34,7 +35,9 @@ const AppContent: React.FC = () => {
     <StyledThemeProvider theme={theme}>
       <Header currentPage={currentPage} setCurrentPage={setCurrentPage} />
       <Layout>
-        {PageComponent}
+        <PageTransition pageKey={currentPage} duration={400}>
+          {PageComponent}
+        </PageTransition>
       </Layout>
       <BackToTop />
     </StyledThemeProvider>
