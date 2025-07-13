@@ -1,4 +1,5 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 
 const AboutAppSection = styled.section`
@@ -102,41 +103,13 @@ const GithubLink = styled.a`
     }
 `;
 
-const LiveButton = styled.button`
-    color: #e74c3c;
-    background: none;
-    border: none;
-    font-weight: 500;
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
-    transition: color 0.3s;
-    cursor: pointer;
-    font-size: 1rem;
-    padding: 0;
-
-    &:hover {
-        color: #c0392b;
-    }
-
-    &::after {
-        content: '🔴';
-        animation: pulse 2s infinite;
-    }
-
-    @keyframes pulse {
-        0% { transform: scale(1); opacity: 1; }
-        50% { transform: scale(1.2); opacity: 0.7; }
-        100% { transform: scale(1); opacity: 1; }
-    }
-`;
-
 interface AboutAppProps {
     isDark: boolean;
-    onGoToAutomation?: () => void;
 }
 
-const AboutApp: React.FC<AboutAppProps> = ({ isDark, onGoToAutomation }) => {
+const AboutApp: React.FC<AboutAppProps> = ({ isDark }) => {
+    const navigate = useNavigate();
+
     return (
         <AboutAppSection data-testid="about-app-section">
             <Content>
@@ -266,27 +239,26 @@ const AboutApp: React.FC<AboutAppProps> = ({ isDark, onGoToAutomation }) => {
                             <p>
                                 The test automation framework generates comprehensive reports after each run, uploads results to the backend server, 
                                 and provides a live dashboard where you can view all recent test executions, detailed results, and historical trends 
-                                on the Live Automation page.
+                                on the <button
+                                    type="button"
+                                    onClick={(e) => {
+                                        e.preventDefault();
+                                        navigate('/automation');
+                                    }}
+                                    style={{ color: '#3498db', textDecoration: 'underline', cursor: 'pointer', background: 'none', border: 'none', padding: 0, font: 'inherit' }}
+                                >
+                                    Live Automation
+                                </button> page.
                             </p>
 
-                            <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap', alignItems: 'center', marginTop: '1rem' }}>
-                                <GithubLink
-                                    href="https://github.com/artsenius/about-me-automation"
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    data-testid="about-app-automation-link"
-                                >
-                                    View Automation Code →
-                                </GithubLink>
-                                
-                                <LiveButton
-                                    type="button"
-                                    onClick={onGoToAutomation}
-                                    data-testid="live-automation-link"
-                                >
-                                    View Live Test Results
-                                </LiveButton>
-                            </div>
+                            <GithubLink
+                                href="https://github.com/artsenius/about-me-automation"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                data-testid="github-automation-link"
+                            >
+                                View Automation Framework →
+                            </GithubLink>
                         </TechItem>
                     </TechStack>
                 </Section>

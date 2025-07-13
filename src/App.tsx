@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Header from './components/Header';
 import About from './components/About';
 import Contact from './components/Contact';
@@ -11,32 +12,21 @@ import { ThemeProvider as StyledThemeProvider } from 'styled-components';
 
 const AppContent: React.FC = () => {
   const { isDarkMode, theme } = useTheme();
-  const [currentPage, setCurrentPage] = useState<'about' | 'about-app' | 'automation' | 'contact'>('about');
-
-  let PageComponent;
-  switch (currentPage) {
-    case 'about-app':
-      PageComponent = <AboutApp isDark={isDarkMode} onGoToAutomation={() => setCurrentPage('automation')} />;
-      break;
-    case 'automation':
-      PageComponent = <LiveTestAutomation isDark={isDarkMode} />;
-      break;
-    case 'contact':
-      PageComponent = <Contact isDark={isDarkMode} />;
-      break;
-    case 'about':
-    default:
-      PageComponent = <About isDark={isDarkMode} setCurrentPage={setCurrentPage} />;
-      break;
-  }
 
   return (
     <StyledThemeProvider theme={theme}>
-      <Header currentPage={currentPage} setCurrentPage={setCurrentPage} />
-      <Layout>
-        {PageComponent}
-      </Layout>
-      <BackToTop />
+      <Router basename="/about">
+        <Header />
+        <Layout>
+          <Routes>
+            <Route path="/" element={<About isDark={isDarkMode} />} />
+            <Route path="/about-app" element={<AboutApp isDark={isDarkMode} />} />
+            <Route path="/automation" element={<LiveTestAutomation isDark={isDarkMode} />} />
+            <Route path="/contact" element={<Contact isDark={isDarkMode} />} />
+          </Routes>
+        </Layout>
+        <BackToTop />
+      </Router>
     </StyledThemeProvider>
   );
 };

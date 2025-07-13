@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import { useTheme } from './ThemeProvider';
 
@@ -142,27 +143,37 @@ const ThemeToggle = styled.button<{ $theme: any }>`
 `;
 
 interface HeaderProps {
-    currentPage: 'about' | 'about-app' | 'automation' | 'contact';
-    setCurrentPage: (page: 'about' | 'about-app' | 'automation' | 'contact') => void;
+  // No props needed now - using React Router hooks
 }
 
-const Header: React.FC<HeaderProps> = ({ currentPage, setCurrentPage }) => {
+const Header: React.FC<HeaderProps> = () => {
     const [isOpen, setIsOpen] = useState(false);
     const { theme, isDarkMode, toggleTheme } = useTheme();
+    const location = useLocation();
+    const navigate = useNavigate();
 
     const getPageTitle = () => {
-        switch (currentPage) {
-            case 'about':
+        switch (location.pathname) {
+            case '/':
                 return 'About Me';
-            case 'about-app':
+            case '/about-app':
                 return 'About This App';
-            case 'automation':
+            case '/automation':
                 return 'Live Automation';
-            case 'contact':
+            case '/contact':
                 return 'Contact';
             default:
-                return '';
+                return 'About Me';
         }
+    };
+
+    const isActivePage = (path: string) => {
+        return location.pathname === path;
+    };
+
+    const navigateTo = (path: string) => {
+        navigate(path);
+        setIsOpen(false);
     };
 
     const toggleMenu = () => setIsOpen(!isOpen);
@@ -181,15 +192,15 @@ const Header: React.FC<HeaderProps> = ({ currentPage, setCurrentPage }) => {
                     {getPageTitle()}
                 </MobileTitle>
                 <NavList data-testid="nav-list" $isOpen={isOpen}>
-                    <li><NavButton data-testid="nav-link-about" $isActive={currentPage === 'about'} onClick={() => { setCurrentPage('about'); setIsOpen(false); }}>About Me</NavButton></li>
-                    <li><NavButton data-testid="nav-link-about-app" $isActive={currentPage === 'about-app'} onClick={() => { setCurrentPage('about-app'); setIsOpen(false); }}>About This App</NavButton></li>
+                    <li><NavButton data-testid="nav-link-about" $isActive={isActivePage('/')} onClick={() => navigateTo('/')}>About Me</NavButton></li>
+                    <li><NavButton data-testid="nav-link-about-app" $isActive={isActivePage('/about-app')} onClick={() => navigateTo('/about-app')}>About This App</NavButton></li>
                     <li>
-                        <NavButton data-testid="nav-link-automation" $isActive={currentPage === 'automation'} onClick={() => { setCurrentPage('automation'); setIsOpen(false); }}>
+                        <NavButton data-testid="nav-link-automation" $isActive={isActivePage('/automation')} onClick={() => navigateTo('/automation')}>
                             Live Automation
                             <LiveDot />
                         </NavButton>
                     </li>
-                    <li><NavButton data-testid="nav-link-contact" $isActive={currentPage === 'contact'} onClick={() => { setCurrentPage('contact'); setIsOpen(false); }}>Contact</NavButton></li>
+                    <li><NavButton data-testid="nav-link-contact" $isActive={isActivePage('/contact')} onClick={() => navigateTo('/contact')}>Contact</NavButton></li>
                 </NavList>
                 <ThemeToggle
                     onClick={toggleTheme}
