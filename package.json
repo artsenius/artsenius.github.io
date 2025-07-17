@@ -4,6 +4,7 @@
   "description": "A simple 'About Me' website built with React to showcase various features of React and web development.",
   "main": "src/index.tsx",
   "scripts": {
+    "prepare": "husky install",
     "start": "cross-env NODE_OPTIONS=--openssl-legacy-provider react-scripts start",
     "build": "cross-env NODE_OPTIONS=--openssl-legacy-provider react-scripts build",
     "test": "react-scripts test",
@@ -31,7 +32,9 @@
   "devDependencies": {
     "@types/styled-components": "^5.1.26",
     "cross-env": "^7.0.3",
-    "gh-pages": "^5.0.0"
+    "gh-pages": "^5.0.0",
+    "husky": "^9.1.7",
+    "lint-staged": "^16.1.2"
   },
   "keywords": [
     "react",
@@ -108,5 +111,11 @@
   },
   "eslintConfig": {
     "extends": "react-app"
+  },
+  "lint-staged": {
+    "src/**/*.{js,jsx,ts,tsx}": [
+      "eslint --fix",
+      "git add"
+    ]
   }
 }
