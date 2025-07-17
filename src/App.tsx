@@ -33,8 +33,7 @@ const AppContent: React.FC = () => {
 
   return (
     <StyledThemeProvider theme={theme}>
-      <Header currentPage={currentPage} setCurrentPage={setCurrentPage} />
-      <Layout>
+      <Layout currentPage={currentPage} setCurrentPage={setCurrentPage}>
         <PageTransition pageKey={currentPage} duration={400}>
           {PageComponent}
         </PageTransition>

@@ -1,6 +1,13 @@
 import React from 'react';
 import styled from 'styled-components';
 import Footer from './Footer';
+import Header from './Header';
+
+interface LayoutProps {
+    children: React.ReactNode;
+    currentPage: 'about' | 'about-app' | 'automation' | 'contact';
+    setCurrentPage: (page: 'about' | 'about-app' | 'automation' | 'contact') => void;
+}
 
 const LayoutWrapper = styled.div`
     display: flex;
@@ -20,9 +27,10 @@ const Main = styled.main`
     }
 `;
 
-const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+const Layout: React.FC<LayoutProps> = ({ children, currentPage, setCurrentPage }) => {
     return (
         <LayoutWrapper data-testid="layout-wrapper">
+            <Header currentPage={currentPage} setCurrentPage={setCurrentPage} />
             <Main data-testid="main-content">{children}</Main>
             <Footer />
         </LayoutWrapper>
