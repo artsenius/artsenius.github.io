@@ -332,7 +332,7 @@ const About: React.FC<AboutProps> = ({ isDark, setCurrentPage }) => {
                 </ProfileSection>
                 <div data-testid="about-details">
                     <InfoBox data-testid="app-info-box" $isDark={isDark}>
-                        <strong>App Info:</strong> This site is powered by a React frontend, with an Express.js and MongoDB backend. Automated Playwright tests run on both desktop and mobile after every deployment.
+                        <strong>App info:</strong> This website is powered by a React frontend, with an Express.js and MongoDB backend. Automated Playwright tests run on both desktop and mobile after every deployment.
                         To learn more about this E2E solution, see the <button
                             type="button"
                             onClick={(e) => {
