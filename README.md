@@ -15,7 +15,7 @@ Visit the live site at: [https://artsenius.github.io/about](https://artsenius.gi
 - Dynamic routing with React Router v6
 - Component-based architecture
 - Easy to customize and extend
-- Accessibility-focused design
+- **♿ Enhanced Accessibility** - WCAG 2.1 AA compliant with skip navigation, keyboard support, and screen reader optimizations
 
 ## 🛠 Tech Stack
 

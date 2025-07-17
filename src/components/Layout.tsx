@@ -2,6 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import Footer from './Footer';
 import Header from './Header';
+import SkipNavigation from './SkipNavigation';
 
 interface LayoutProps {
     children: React.ReactNode;
@@ -22,6 +23,11 @@ const Main = styled.main`
     padding: 0 2rem 2rem;
     width: 100%;
 
+    &:focus {
+        outline: 2px solid #3498db;
+        outline-offset: 4px;
+    }
+
     @media (max-width: 768px) {
         padding: 0 1rem 1rem;
     }
@@ -30,8 +36,17 @@ const Main = styled.main`
 const Layout: React.FC<LayoutProps> = ({ children, currentPage, setCurrentPage }) => {
     return (
         <LayoutWrapper data-testid="layout-wrapper">
+            <SkipNavigation />
             <Header currentPage={currentPage} setCurrentPage={setCurrentPage} />
-            <Main data-testid="main-content">{children}</Main>
+            <Main 
+                id="main-content" 
+                data-testid="main-content"
+                tabIndex={-1} 
+                role="main" 
+                aria-label="Main content"
+            >
+                {children}
+            </Main>
             <Footer />
         </LayoutWrapper>
     );

@@ -125,25 +125,40 @@ const Contact: React.FC<ContactProps> = ({ isDark }) => {
         <ContactSection data-testid="contact-section">
             <Content>
                 <ContactGrid data-testid="contact-grid">
-                    <ContactCard data-testid="contact-card-email" $isDark={isDark}>
-                        <ContactIcon data-testid="contact-icon-email">📧</ContactIcon>
-                        <ContactLabel data-testid="contact-label-email" $isDark={isDark}>Email</ContactLabel>
+                    <ContactCard 
+                        data-testid="contact-card-email" 
+                        $isDark={isDark}
+                        role="group"
+                        aria-labelledby="email-label"
+                    >
+                        <ContactIcon data-testid="contact-icon-email" aria-hidden="true">📧</ContactIcon>
+                        <ContactLabel 
+                            data-testid="contact-label-email" 
+                            $isDark={isDark}
+                            id="email-label"
+                        >
+                            Email
+                        </ContactLabel>
                         <ContactLink
                             data-testid="contact-link-email"
                             href={`mailto:${contactInfo.email}`}
                             $isDark={isDark}
+                            aria-label={`Send email to ${contactInfo.email}`}
                         >
                             {contactInfo.email}
                         </ContactLink>
                         <CopyButton
                             data-testid="copy-button-email"
                             onClick={() => handleCopy(contactInfo.email, 'email')}
+                            aria-label={`Copy email address ${contactInfo.email} to clipboard`}
                         >
                             Copy Email
                         </CopyButton>
                         <CopyMessage
                             data-testid="copy-message-email"
                             visible={copyMessages.email}
+                            role="status"
+                            aria-live="polite"
                         >
                             Copied!
                         </CopyMessage>

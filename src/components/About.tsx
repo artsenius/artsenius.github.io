@@ -312,6 +312,15 @@ const About: React.FC<AboutProps> = ({ isDark, setCurrentPage }) => {
     const clearFilters = () => {
         setSearchTerm('');
         setActiveFilter('all');
+        // Announce filter clear to screen readers
+        const announcement = document.createElement('div');
+        announcement.setAttribute('aria-live', 'polite');
+        announcement.setAttribute('aria-atomic', 'true');
+        announcement.style.position = 'absolute';
+        announcement.style.left = '-10000px';
+        announcement.textContent = 'Filters cleared. Showing all skills.';
+        document.body.appendChild(announcement);
+        setTimeout(() => document.body.removeChild(announcement), 1000);
     };
 
     return (
@@ -411,17 +420,27 @@ const About: React.FC<AboutProps> = ({ isDark, setCurrentPage }) => {
                                 )}
                             </FilterButtons>
                             
-                            <ResultsCounter data-testid="results-counter">
+                            <ResultsCounter 
+                                data-testid="results-counter"
+                                role="status"
+                                aria-live="polite"
+                                aria-atomic="true"
+                            >
                                 Showing {filteredSkills.length} of {getAllSkills().length} skills
                             </ResultsCounter>
                         </SkillsFilterContainer>
 
-                        <SkillsGrid data-testid="skills-grid">
+                        <SkillsGrid 
+                            data-testid="skills-grid"
+                            role="list"
+                            aria-label={`Technical skills. ${filteredSkills.length} skills displayed.`}
+                        >
                             {filteredSkills.map(({ skill }, index) => (
                                 <SkillItem 
                                     data-testid={`skill-item-${index}`} 
                                     key={`${skill}-${index}`}
                                     $isVisible={true}
+                                    role="listitem"
                                 >
                                     {skill}
                                 </SkillItem>
