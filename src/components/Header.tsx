@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import styled from 'styled-components';
 import { useTheme } from './ThemeProvider';
 
@@ -149,6 +149,8 @@ interface HeaderProps {
 const Header: React.FC<HeaderProps> = ({ currentPage, setCurrentPage }) => {
     const [isOpen, setIsOpen] = useState(false);
     const { theme, isDarkMode, toggleTheme } = useTheme();
+    const navRef = useRef<HTMLUListElement>(null);
+    const menuButtonRef = useRef<HTMLButtonElement>(null);
 
     const getPageTitle = () => {
         switch (currentPage) {
@@ -165,14 +167,80 @@ const Header: React.FC<HeaderProps> = ({ currentPage, setCurrentPage }) => {
         }
     };
 
-    const toggleMenu = () => setIsOpen(!isOpen);
+    const toggleMenu = () => {
+        setIsOpen(prev => {
+            if (!prev) {
+                // Opening menu - focus first nav item after DOM update
+                setTimeout(() => {
+                    const firstNavItem = navRef.current?.querySelector('button');
+                    firstNavItem?.focus();
+                }, 10);
+            }
+            return !prev;
+        });
+    };
+
+    // Handle keyboard navigation in mobile menu
+    useEffect(() => {
+        if (!isOpen) return;
+
+        const handleKeyDown = (e: KeyboardEvent) => {
+            if (e.key === 'Escape') {
+                setIsOpen(false);
+                menuButtonRef.current?.focus();
+            }
+
+            if (e.key === 'Tab') {
+                const navItems = navRef.current?.querySelectorAll('button');
+                if (!navItems) return;
+
+                const firstItem = navItems[0];
+                const lastItem = navItems[navItems.length - 1];
+
+                if (e.shiftKey && document.activeElement === firstItem) {
+                    e.preventDefault();
+                    lastItem.focus();
+                } else if (!e.shiftKey && document.activeElement === lastItem) {
+                    e.preventDefault();
+                    firstItem.focus();
+                }
+            }
+        };
+
+        document.addEventListener('keydown', handleKeyDown);
+        return () => document.removeEventListener('keydown', handleKeyDown);
+    }, [isOpen]);
+
+    const handleNavItemClick = (page: 'about' | 'about-app' | 'automation' | 'contact') => {
+        setCurrentPage(page);
+        setIsOpen(false);
+        // Announce page change to screen readers
+        const announcement = document.createElement('div');
+        announcement.setAttribute('aria-live', 'polite');
+        announcement.setAttribute('aria-atomic', 'true');
+        announcement.style.position = 'absolute';
+        announcement.style.left = '-10000px';
+        announcement.textContent = `Navigated to ${getPageTitle()} page`;
+        document.body.appendChild(announcement);
+        setTimeout(() => document.body.removeChild(announcement), 1000);
+    };
 
     return (
-        <Nav data-testid="header-nav" $theme={theme} $isDark={isDarkMode}>
+        <Nav 
+            data-testid="header-nav" 
+            $theme={theme} 
+            $isDark={isDarkMode}
+            id="navigation"
+            role="banner"
+            aria-label="Main navigation"
+        >
             <NavContainer data-testid="nav-container">
                 <MenuButton
+                    ref={menuButtonRef}
                     onClick={toggleMenu}
                     aria-label="Toggle navigation menu"
+                    aria-expanded={isOpen}
+                    aria-controls="main-navigation"
                     data-testid="nav-menu-button"
                 >
                     {isOpen ? '✕' : '☰'}
@@ -180,16 +248,59 @@ const Header: React.FC<HeaderProps> = ({ currentPage, setCurrentPage }) => {
                 <MobileTitle data-testid="mobile-page-title">
                     {getPageTitle()}
                 </MobileTitle>
-                <NavList data-testid="nav-list" $isOpen={isOpen}>
-                    <li><NavButton data-testid="nav-link-about" $isActive={currentPage === 'about'} onClick={() => { setCurrentPage('about'); setIsOpen(false); }}>About Me</NavButton></li>
-                    <li><NavButton data-testid="nav-link-about-app" $isActive={currentPage === 'about-app'} onClick={() => { setCurrentPage('about-app'); setIsOpen(false); }}>About This App</NavButton></li>
-                    <li>
-                        <NavButton data-testid="nav-link-automation" $isActive={currentPage === 'automation'} onClick={() => { setCurrentPage('automation'); setIsOpen(false); }}>
-                            Live Automation
-                            <LiveDot />
+                <NavList 
+                    ref={navRef}
+                    data-testid="nav-list" 
+                    $isOpen={isOpen}
+                    id="main-navigation"
+                    role="menu"
+                    aria-label="Main navigation menu"
+                >
+                    <li role="none">
+                        <NavButton 
+                            data-testid="nav-link-about" 
+                            $isActive={currentPage === 'about'} 
+                            onClick={() => handleNavItemClick('about')}
+                            role="menuitem"
+                            aria-current={currentPage === 'about' ? 'page' : undefined}
+                        >
+                            About Me
                         </NavButton>
                     </li>
-                    <li><NavButton data-testid="nav-link-contact" $isActive={currentPage === 'contact'} onClick={() => { setCurrentPage('contact'); setIsOpen(false); }}>Contact</NavButton></li>
+                    <li role="none">
+                        <NavButton 
+                            data-testid="nav-link-about-app" 
+                            $isActive={currentPage === 'about-app'} 
+                            onClick={() => handleNavItemClick('about-app')}
+                            role="menuitem"
+                            aria-current={currentPage === 'about-app' ? 'page' : undefined}
+                        >
+                            About This App
+                        </NavButton>
+                    </li>
+                    <li role="none">
+                        <NavButton 
+                            data-testid="nav-link-automation" 
+                            $isActive={currentPage === 'automation'} 
+                            onClick={() => handleNavItemClick('automation')}
+                            role="menuitem"
+                            aria-current={currentPage === 'automation' ? 'page' : undefined}
+                        >
+                            Live Automation
+                            <LiveDot aria-hidden="true" />
+                        </NavButton>
+                    </li>
+                    <li role="none">
+                        <NavButton 
+                            data-testid="nav-link-contact" 
+                            $isActive={currentPage === 'contact'} 
+                            onClick={() => handleNavItemClick('contact')}
+                            role="menuitem"
+                            aria-current={currentPage === 'contact' ? 'page' : undefined}
+                        >
+                            Contact
+                        </NavButton>
+                    </li>
                 </NavList>
                 <ThemeToggle
                     onClick={toggleTheme}
