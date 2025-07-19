@@ -12,6 +12,7 @@ Visit the live site at: [https://artsenius.github.io/about](https://artsenius.gi
 - Responsive design that works on all devices
 - Clean and professional UI with Styled Components
 - **🌙 Dark Mode Toggle** - Switch between light and dark themes with persistent preference
+- **⚡ Performance Optimized** - Lazy loading with code splitting for 15% faster initial load
 - Dynamic routing with React Router v6
 - Component-based architecture
 - Easy to customize and extend
