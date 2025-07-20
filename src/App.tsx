@@ -6,6 +6,8 @@ import AboutApp from './components/AboutApp';
 import LiveTestAutomation from './components/LiveTestAutomation';
 import BackToTop from './components/BackToTop';
 import PageTransition from './components/PageTransition';
+import PWAInstallPrompt from './components/PWAInstallPrompt';
+import PWAUpdateNotification from './components/PWAUpdateNotification';
 import { ThemeProvider, useTheme } from './components/ThemeProvider';
 import { ThemeProvider as StyledThemeProvider } from 'styled-components';
 
@@ -38,6 +40,8 @@ const AppContent: React.FC = () => {
         </PageTransition>
       </Layout>
       <BackToTop />
+      <PWAInstallPrompt isDark={isDarkMode} />
+      <PWAUpdateNotification isDark={isDarkMode} />
     </StyledThemeProvider>
   );
 };
