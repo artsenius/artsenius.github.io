@@ -1,6 +1,7 @@
 {
     "short_name": "About Me",
     "name": "About Me | Portfolio Project",
+    "description": "A modern, responsive portfolio website showcasing web development projects and skills",
     "icons": [
         {
             "src": "favicon.ico",
@@ -11,10 +12,54 @@
             "src": "logo192.png",
             "type": "image/png",
             "sizes": "192x192"
+        },
+        {
+            "src": "logo512.png",
+            "type": "image/png",
+            "sizes": "512x512"
+        },
+        {
+            "src": "logo512.png",
+            "type": "image/png",
+            "sizes": "512x512",
+            "purpose": "maskable"
         }
     ],
     "start_url": ".",
     "display": "standalone",
-    "theme_color": "#000000",
-    "background_color": "#ffffff"
+    "orientation": "portrait-primary",
+    "theme_color": "#3498db",
+    "background_color": "#ffffff",
+    "scope": "./",
+    "categories": ["portfolio", "personal", "technology"],
+    "screenshots": [
+        {
+            "src": "screenshot-wide.png",
+            "sizes": "1280x720",
+            "type": "image/png",
+            "form_factor": "wide"
+        },
+        {
+            "src": "screenshot-narrow.png", 
+            "sizes": "640x1136",
+            "type": "image/png",
+            "form_factor": "narrow"
+        }
+    ],
+    "shortcuts": [
+        {
+            "name": "About",
+            "short_name": "About",
+            "description": "View about section",
+            "url": ".",
+            "icons": [{ "src": "logo192.png", "sizes": "192x192" }]
+        },
+        {
+            "name": "Contact",
+            "short_name": "Contact",
+            "description": "Contact information",
+            "url": ".",
+            "icons": [{ "src": "logo192.png", "sizes": "192x192" }]
+        }
+    ]
 }

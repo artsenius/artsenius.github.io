@@ -104,7 +104,7 @@ self.addEventListener('message', (event) => {
 });
 
 // Background sync for form submissions
-self.addEventListener('sync', (event) => {
+self.addEventListener('sync', (event: any) => {
   if (event.tag === 'contact-form') {
     event.waitUntil(handleContactFormSync());
   }
@@ -145,7 +145,7 @@ async function removeOfflineSubmission(id: string): Promise<void> {
 }
 
 // Handle PWA installation
-self.addEventListener('beforeinstallprompt', (event) => {
+self.addEventListener('beforeinstallprompt', (event: any) => {
   // Prevent the mini-infobar from appearing on mobile
   event.preventDefault();
   // Save the event so it can be triggered later
@@ -159,13 +159,13 @@ self.addEventListener('appinstalled', () => {
 });
 
 // Handle notification clicks
-self.addEventListener('notificationclick', (event) => {
+self.addEventListener('notificationclick', (event: any) => {
   event.notification.close();
   
   event.waitUntil(
     self.clients.matchAll().then((clientList) => {
       if (clientList.length > 0) {
-        return clientList[0].focus();
+        return (clientList[0] as any).focus();
       }
       return self.clients.openWindow('/');
     })

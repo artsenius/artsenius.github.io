@@ -1,10 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
 
-interface PWAUpdateAvailable {
-  isUpdateAvailable: boolean;
-  updateServiceWorker: () => void;
-}
-
 interface PWAStatus {
   isOnline: boolean;
   isInstalled: boolean;
