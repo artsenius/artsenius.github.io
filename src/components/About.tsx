@@ -388,10 +388,11 @@ const About: React.FC<AboutProps> = ({ isDark, setCurrentPage }) => {
                 </ProfileSection>
                 <div data-testid="about-details">
                     <ExpandableInfoBox data-testid="app-info-box" $isDark={isDark}>
-                        <InfoIcon>ℹ️</InfoIcon>
-                        <InfoText>App Info</InfoText>
-                        <ExpandedContent $isDark={isDark}>
+                        <InfoIcon data-testid="app-info-icon">ℹ️</InfoIcon>
+                        <InfoText data-testid="app-info-text">App Info</InfoText>
+                        <ExpandedContent data-testid="app-info-expanded-content" $isDark={isDark}>
                             A modern React application built by me from scratch with TypeScript. Features a robust Express.js backend with MongoDB database, comprehensive Playwright E2E testing, and automated CI/CD deployment. See <button
+                                data-testid="about-app-link"
                                 type="button"
                                 onClick={(e) => {
                                     e.preventDefault();
@@ -419,7 +420,7 @@ const About: React.FC<AboutProps> = ({ isDark, setCurrentPage }) => {
                         <SectionTitle data-testid="current-role-title" $isDark={isDark}>Current Role</SectionTitle>
                         <ExperienceItem data-testid="experience-item">
                             <CompanyName data-testid="company-name" $isDark={isDark}>
-                                Lead QA Engineer @ <CompanyLink href="https://www.allerganaesthetics.com/" target="_blank" rel="noopener noreferrer">Allergan Aesthetics</CompanyLink>, an <CompanyLink href="https://www.abbvie.com/" target="_blank" rel="noopener noreferrer">AbbVie Company</CompanyLink>
+                                <span data-testid="position-title">Lead QA Engineer</span> @ <CompanyLink data-testid="allergan-link" href="https://www.allerganaesthetics.com/" target="_blank" rel="noopener noreferrer">Allergan Aesthetics</CompanyLink>, an <CompanyLink data-testid="abbvie-link" href="https://www.abbvie.com/" target="_blank" rel="noopener noreferrer">AbbVie Company</CompanyLink>
                             </CompanyName>
                             <Duration data-testid="role-duration">June 2022 – Present | Remote</Duration>
                             <ul data-testid="role-achievements">

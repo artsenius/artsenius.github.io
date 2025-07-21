@@ -23,11 +23,6 @@ const Main = styled.main`
     padding: 0 2rem 2rem;
     width: 100%;
 
-    &:focus {
-        outline: 2px solid #3498db;
-        outline-offset: 4px;
-    }
-
     @media (max-width: 768px) {
         padding: 0 1rem 1rem;
     }
