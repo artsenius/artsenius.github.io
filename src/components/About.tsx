@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import profilePhoto from '../media/art.jpg';
-import resumePDF from '../media/A_Senko_QA_Leader_SDET_AI_Enthusiast.pdf';
+import resumePDF from '../media/A_Senko_Lead_SDET.pdf';
 import { useTheme } from './ThemeProvider';
 
 const AboutSection = styled.section`
