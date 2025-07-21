@@ -1,20 +1,19 @@
 {
     "short_name": "About Me",
     "name": "About Me | Portfolio Project",
+    "description": "A modern, responsive portfolio website showcasing web development projects and skills",
     "icons": [
         {
             "src": "favicon.ico",
             "sizes": "64x64 32x32 24x24 16x16",
             "type": "image/x-icon"
-        },
-        {
-            "src": "logo192.png",
-            "type": "image/png",
-            "sizes": "192x192"
         }
     ],
     "start_url": ".",
     "display": "standalone",
-    "theme_color": "#000000",
-    "background_color": "#ffffff"
+    "orientation": "portrait-primary",
+    "theme_color": "#3498db",
+    "background_color": "#ffffff",
+    "scope": "./",
+    "categories": ["portfolio", "personal", "technology"]
 }
