@@ -4,7 +4,7 @@ A modern, responsive portfolio website built with React, TypeScript, and Styled 
 
 ## 🚀 Live Demo
 
-Visit the live site at: [https://artsenius.github.io/about](https://artsenius.github.io/about)
+Visit the live site at: [https://www.arthursenko.com/](https://www.arthursenko.com/)
 
 ## ✨ Features
 
@@ -12,10 +12,13 @@ Visit the live site at: [https://artsenius.github.io/about](https://artsenius.gi
 - Responsive design that works on all devices
 - Clean and professional UI with Styled Components
 - **🌙 Dark Mode Toggle** - Switch between light and dark themes with persistent preference
+- **⚡ Performance Optimized** - Lazy loading with code splitting for 15% faster initial load
+- **📱 Sticky Footer Layout** - Header and footer always visible, even on short pages
 - Dynamic routing with React Router v6
 - Component-based architecture
 - Easy to customize and extend
 - **♿ Enhanced Accessibility** - WCAG 2.1 AA compliant with skip navigation, keyboard support, and screen reader optimizations
+- **🔧 Code Quality** - ESLint with pre-commit hooks and automated CI/CD
 
 ## 🛠 Tech Stack
 
@@ -23,7 +26,9 @@ Visit the live site at: [https://artsenius.github.io/about](https://artsenius.gi
 - TypeScript
 - Styled Components
 - React Router v6
+- ESLint with Husky pre-commit hooks
 - GitHub Pages for hosting
+- Node.js 20.17+ for optimal compatibility
 
 ## 📦 Project Structure
 
@@ -31,12 +36,17 @@ Visit the live site at: [https://artsenius.github.io/about](https://artsenius.gi
 src/
 ├── components/         # React components
 │   ├── About.tsx      # About section component
+│   ├── AboutApp.tsx   # About this app component
 │   ├── Contact.tsx    # Contact form component
 │   ├── Header.tsx     # Navigation header
-│   ├── Layout.tsx     # Main layout wrapper
-│   └── Projects.tsx   # Projects showcase
+│   ├── Layout.tsx     # Main layout wrapper with sticky footer
+│   ├── LiveTestAutomation.tsx # Live automation showcase
+│   ├── Projects.tsx   # Projects showcase
+│   ├── ThemeProvider.tsx # Theme context provider
+│   └── BackToTop.tsx  # Back to top button
 ├── styles/            # Global styles
 ├── types/             # TypeScript type definitions
+├── config/            # Configuration files
 ├── App.tsx           # Main App component
 └── index.tsx         # Application entry point
 ```
@@ -67,19 +77,42 @@ To get a local copy up and running, follow these steps:
 
 The application will start in development mode and open in your default browser at [http://localhost:3000](http://localhost:3000).
 
+## 🔧 Development
+
+### Code Quality
+- **ESLint** is configured to maintain code quality
+- **Pre-commit hooks** automatically run ESLint on staged files
+- **Pre-push hooks** run full ESLint check on the entire codebase
+- All linting errors must be resolved before commits are allowed
+
+### Available Scripts
+- `npm start` - Start development server
+- `npm run build` - Build for production
+- `npm test` - Run tests
+- `npm run deploy` - Deploy to GitHub Pages
+
 ## 📝 Development Notes
 
 - The application uses Node.js legacy OpenSSL provider for compatibility
 - Custom routing configuration for GitHub Pages deployment
 - Responsive design implementation with styled-components
+- Sticky footer layout ensures header and footer are always visible
+- ESLint configuration excludes build files and configuration files
 
 ## 🚀 Deployment
 
-To deploy the application to GitHub Pages:
+The application is automatically deployed to GitHub Pages via GitHub Actions:
+
+1. **Automatic Deployment**: Every push to the `main` branch triggers a build and deployment
+2. **Node.js 20.17+**: CI/CD uses the latest Node.js for optimal compatibility
+3. **Custom Domain**: Configured with `www.arthursenko.com`
+
+### Manual Deployment
+To manually deploy the application to GitHub Pages:
 
 1. Ensure the homepage in `package.json` is set correctly:
    ```json
-   "homepage": "https://artsenius.github.io/about"
+   "homepage": "https://www.arthursenko.com/"
    ```
 
 2. Build and deploy the application:

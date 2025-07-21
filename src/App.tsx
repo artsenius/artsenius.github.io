@@ -1,14 +1,17 @@
-import React, { useState } from 'react';
-import About from './components/About';
-import Contact from './components/Contact';
+import React, { useState, Suspense } from 'react';
 import Layout from './components/Layout';
-import AboutApp from './components/AboutApp';
-import LiveTestAutomation from './components/LiveTestAutomation';
 import BackToTop from './components/BackToTop';
 import PageTransition from './components/PageTransition';
 import ErrorBoundary from './components/ErrorBoundary';
+import LoadingSpinner from './components/LoadingSpinner';
 import { ThemeProvider, useTheme } from './components/ThemeProvider';
 import { ThemeProvider as StyledThemeProvider } from 'styled-components';
+
+// Lazy load page components for better performance
+const About = React.lazy(() => import('./components/About'));
+const Contact = React.lazy(() => import('./components/Contact'));
+const AboutApp = React.lazy(() => import('./components/AboutApp'));
+const LiveTestAutomation = React.lazy(() => import('./components/LiveTestAutomation'));
 
 const AppContent: React.FC = () => {
   const { isDarkMode, theme } = useTheme();
@@ -51,7 +54,9 @@ const AppContent: React.FC = () => {
     <StyledThemeProvider theme={theme}>
       <Layout currentPage={currentPage} setCurrentPage={setCurrentPage}>
         <PageTransition pageKey={currentPage} duration={400}>
-          {PageComponent}
+          <Suspense fallback={<LoadingSpinner isDark={isDarkMode} text="Loading page..." />}>
+            {PageComponent}
+          </Suspense>
         </PageTransition>
       </Layout>
       <BackToTop />
