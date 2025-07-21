@@ -88,17 +88,7 @@ const DocumentLink = styled.a`
     }
 `;
 
-const InfoBox = styled.div<{ $isDark: boolean }>`
-    background: ${props => props.$isDark ? '#2c3e50' : '#f8f9fa'};
-    border: 1px solid ${props => props.$isDark ? '#34495e' : '#e9ecef'};
-    border-radius: 8px;
-    padding: 1rem;
-    margin-bottom: 2rem;
-    font-size: 0.9rem;
-    line-height: 1.5;
-    color: ${props => props.$isDark ? '#ecf0f1' : '#495057'};
-    transition: all 0.3s ease;
-`;
+
 
 const ExpandableInfoBox = styled.div<{ $isDark: boolean }>`
     position: relative;
