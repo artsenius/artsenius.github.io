@@ -142,15 +142,15 @@ const AboutApp: React.FC<AboutAppProps> = ({ isDark, onGoToAutomation }) => {
             <Content>
                 <Section data-testid="about-app-description">
                     <p>
-                        This portfolio website demonstrates a complete end-to-end solution architecture, showcasing modern development practices, 
+                        This website build from scratch by me demonstrates a complete end-to-end solution architecture, showcasing modern development practices, 
                         AI-powered development workflows, and comprehensive automation testing. The project consists of a <strong>React frontend</strong> hosted on 
                         <strong> GitHub Pages</strong>, an <strong>Express.js + MongoDB backend</strong> hosted on <strong>Azure Cloud</strong>, and 
                         <strong> Playwright test automation</strong> running in <strong>GitHub Actions</strong> with a robust CI/CD pipeline.
                     </p>
                     <p>
                         The entire solution was developed using modern AI-powered tools including <strong>Cursor IDE</strong> with Background Agents 
-                        integrated with <strong>Slack</strong>, <strong>GitHub Copilot</strong> for code generation, and <strong>Playwright's Model Context Protocol (MCP) </strong> 
-                        for intelligent test automation. This demonstrates how AI can accelerate development while maintaining high quality standards.
+                        integrated with <strong>Slack</strong> and <strong>Playwright's Model Context Protocol (MCP) </strong> 
+                        for intelligent test automation.
                     </p>
                 </Section>
 
@@ -190,14 +190,16 @@ const AboutApp: React.FC<AboutAppProps> = ({ isDark, onGoToAutomation }) => {
                         <TechItem data-testid="about-app-frontend" $isDark={isDark}>
                             <SubSectionTitle $isDark={isDark}>Frontend Application</SubSectionTitle>
                             <p>
-                                A sophisticated React application built with TypeScript and modern web technologies, 
-                                featuring comprehensive responsive design and user experience enhancements.
+                                A modern React application built from scratch with TypeScript, featuring PWA capabilities, 
+                                comprehensive responsive design, and advanced user experience enhancements.
                             </p>
                             
                             <h4>Key Features:</h4>
                             <FeatureList>
                                 <FeatureItem><strong>Responsive Mobile Design:</strong> Fully optimized for mobile devices with adaptive layouts, touch-friendly interactions, and mobile-first CSS media queries</FeatureItem>
                                 <FeatureItem><strong>Dark Mode Implementation:</strong> Complete theme system with persistent user preferences, smooth transitions, and system preference detection</FeatureItem>
+                                <FeatureItem><strong>Sticky Footer Layout:</strong> Header and footer always visible, even on short pages, ensuring optimal user experience</FeatureItem>
+                                <FeatureItem><strong>Code Quality Tools:</strong> ESLint with pre-commit hooks, automated CI/CD checks, and comprehensive TypeScript integration</FeatureItem>
                                 <FeatureItem><strong>Advanced Animations:</strong> CSS keyframe animations, hover effects, loading shimmer effects, and smooth page transitions</FeatureItem>
                                 <FeatureItem><strong>Interactive Components:</strong> Collapsible navigation, expandable content sections, live status indicators with pulse animations</FeatureItem>
                                 <FeatureItem><strong>Accessibility Features:</strong> ARIA labels, keyboard navigation support, focus management, and semantic HTML structure</FeatureItem>
@@ -301,7 +303,6 @@ const AboutApp: React.FC<AboutAppProps> = ({ isDark, onGoToAutomation }) => {
                     <FeatureList>
                         <FeatureItem><strong>Cursor IDE:</strong> AI-powered code editor with intelligent code suggestions and refactoring capabilities</FeatureItem>
                         <FeatureItem><strong>Background Agents:</strong> Automated AI agents integrated with Slack for continuous monitoring and notifications</FeatureItem>
-                        <FeatureItem><strong>GitHub Copilot:</strong> AI pair programming for rapid code generation and problem-solving</FeatureItem>
                         <FeatureItem><strong>Playwright MCP:</strong> Model Context Protocol integration enabling AI to directly interact with browser automation tools</FeatureItem>
                         <FeatureItem><strong>TypeScript:</strong> Full type safety and enhanced developer experience with IntelliSense</FeatureItem>
                         <FeatureItem><strong>GitHub Actions:</strong> Automated CI/CD pipeline with parallel job execution and dependency management</FeatureItem>

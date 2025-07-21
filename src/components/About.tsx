@@ -89,13 +89,70 @@ const DocumentLink = styled.a`
 `;
 
 const InfoBox = styled.div<{ $isDark: boolean }>`
-    background: ${props => props.$isDark ? '#23272f' : '#e8f4fd'};
-    border-left: 4px solid ${props => props.$isDark ? props.theme.colors.accent : '#2196f3'};
-    padding: 12px 16px;
-    margin-bottom: 24px;
-    color: ${props => props.$isDark ? props.theme.colors.text : '#0d47a1'};
-    font-size: 1rem;
-    border-radius: 4px;
+    background: ${props => props.$isDark ? '#2c3e50' : '#f8f9fa'};
+    border: 1px solid ${props => props.$isDark ? '#34495e' : '#e9ecef'};
+    border-radius: 8px;
+    padding: 1rem;
+    margin-bottom: 2rem;
+    font-size: 0.9rem;
+    line-height: 1.5;
+    color: ${props => props.$isDark ? '#ecf0f1' : '#495057'};
+    transition: all 0.3s ease;
+`;
+
+const ExpandableInfoBox = styled.div<{ $isDark: boolean }>`
+    position: relative;
+    background: ${props => props.$isDark ? '#2c3e50' : '#f8f9fa'};
+    border: 1px solid ${props => props.$isDark ? '#34495e' : '#e9ecef'};
+    border-radius: 8px;
+    padding: 0.75rem 1rem;
+    margin-bottom: 2rem;
+    font-size: 0.9rem;
+    line-height: 1.5;
+    color: ${props => props.$isDark ? '#ecf0f1' : '#495057'};
+    transition: all 0.3s ease;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+
+    &:hover {
+        background: ${props => props.$isDark ? '#34495e' : '#e9ecef'};
+        border-color: ${props => props.$isDark ? '#3498db' : '#007bff'};
+    }
+`;
+
+const InfoIcon = styled.span`
+    font-size: 1.1rem;
+    opacity: 0.8;
+`;
+
+const InfoText = styled.span`
+    font-weight: 500;
+`;
+
+const ExpandedContent = styled.div<{ $isDark: boolean }>`
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: ${props => props.$isDark ? '#2c3e50' : '#f8f9fa'};
+    border: 1px solid ${props => props.$isDark ? '#34495e' : '#e9ecef'};
+    border-top: none;
+    border-radius: 0 0 8px 8px;
+    padding: 1rem;
+    z-index: 10;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-10px);
+    transition: all 0.3s ease;
+
+    ${ExpandableInfoBox}:hover & {
+        opacity: 1;
+        visibility: visible;
+        transform: translateY(0);
+    }
 `;
 
 const Bio = styled.div`
@@ -265,7 +322,7 @@ const About: React.FC<AboutProps> = ({ isDark, setCurrentPage }) => {
     const [activeFilter, setActiveFilter] = React.useState<string>('all');
 
     const skills = React.useMemo(() => ({
-        automation: ['WebdriverIO', 'Cypress', 'Playwright', 'Selenium', 'Appium', 'Model Context Protocol', 'Artillery Pro', 'KaneAI', 'SmartUI'],
+        automation: ['WebdriverIO', 'Cypress', 'Playwright', 'Selenium', 'Appium', 'Model Context Protocol', 'Artillery', 'KaneAI', 'SmartUI'],
         technologies: ['JavaScript/TypeScript', 'React', 'React Native', 'Express.js', 'MongoDB', 'RESTful APIs', 'GraphQL'],
         cloud: ['BrowserStack', 'LambdaTest', 'SauceLabs', 'AWS'],
         tools: ['Azure DevOps', 'GitHub Actions', 'Docker', 'Jenkins', 'Visual QA', 'Accessibility Testing'],
@@ -329,7 +386,7 @@ const About: React.FC<AboutProps> = ({ isDark, setCurrentPage }) => {
                 <ProfileSection data-testid="profile-section">
                     <ProfileImage data-testid="profile-image" src={profilePhoto} alt="Arthur Senko" />
                     <Name data-testid="profile-name">Arthur Senko</Name>
-                    <Position data-testid="profile-position">QA Leader<br />AI Enthusiast</Position>
+                    <Position data-testid="profile-position">Lead QA Engineer, SDET<br />AI Enthusiast</Position>
                     <DocumentLink
                         data-testid="resume-link"
                         href={resumePDF}
@@ -340,23 +397,26 @@ const About: React.FC<AboutProps> = ({ isDark, setCurrentPage }) => {
                     </DocumentLink>
                 </ProfileSection>
                 <div data-testid="about-details">
-                    <InfoBox data-testid="app-info-box" $isDark={isDark}>
-                        <strong>App info:</strong> This website is powered by a React frontend, with an Express.js and MongoDB backend. Automated Playwright tests run on both desktop and mobile after every deployment.
-                        To learn more about this E2E solution, see the <button
-                            type="button"
-                            onClick={(e) => {
-                                e.preventDefault();
-                                setCurrentPage?.('about-app');
-                            }}
-                            style={{ color: theme.colors.accent, textDecoration: 'underline', cursor: 'pointer', background: 'none', border: 'none', padding: 0, font: 'inherit' }}
-                        >
-                            About This App
-                        </button> page.
-                    </InfoBox>
+                    <ExpandableInfoBox data-testid="app-info-box" $isDark={isDark}>
+                        <InfoIcon>ℹ️</InfoIcon>
+                        <InfoText>App Info</InfoText>
+                        <ExpandedContent $isDark={isDark}>
+                            A modern React application built by me from scratch with TypeScript. Features a robust Express.js backend with MongoDB database, comprehensive Playwright E2E testing, and automated CI/CD deployment. See <button
+                                type="button"
+                                onClick={(e) => {
+                                    e.preventDefault();
+                                    setCurrentPage?.('about-app');
+                                }}
+                                style={{ color: theme.colors.accent, textDecoration: 'underline', cursor: 'pointer', background: 'none', border: 'none', padding: 0, font: 'inherit' }}
+                            >
+                                About This App
+                            </button> page to learn more.
+                        </ExpandedContent>
+                    </ExpandableInfoBox>
 
                     <Bio data-testid="about-bio">
                         <p>
-                            A results-driven QA Leader and Test Automation Architect with expertise in AI testing and modern automation.
+                            A results-driven Lead QA Engineer, SDET, and Test Automation Architect with expertise in AI testing and modern automation.
                             Proven track record of building and leading high-performing QA teams, implementing
                             efficient testing processes, and driving quality improvements across organizations.
                             Experienced in building comprehensive testing solutions and continuous integration pipelines from the ground up,
@@ -369,15 +429,15 @@ const About: React.FC<AboutProps> = ({ isDark, setCurrentPage }) => {
                         <SectionTitle data-testid="current-role-title" $isDark={isDark}>Current Role</SectionTitle>
                         <ExperienceItem data-testid="experience-item">
                             <CompanyName data-testid="company-name" $isDark={isDark}>
-                                QA Leader @ <CompanyLink href="https://www.allerganaesthetics.com/" target="_blank" rel="noopener noreferrer">Allergan Aesthetics</CompanyLink>, an <CompanyLink href="https://www.abbvie.com/" target="_blank" rel="noopener noreferrer">AbbVie Company</CompanyLink>
+                                Lead QA Engineer @ <CompanyLink href="https://www.allerganaesthetics.com/" target="_blank" rel="noopener noreferrer">Allergan Aesthetics</CompanyLink>, an <CompanyLink href="https://www.abbvie.com/" target="_blank" rel="noopener noreferrer">AbbVie Company</CompanyLink>
                             </CompanyName>
                             <Duration data-testid="role-duration">June 2022 – Present | Remote</Duration>
                             <ul data-testid="role-achievements">
-                                <li>Led QA for a project responsible for ~90% of company revenue, driving quality improvements and significant business impact.</li>
-                                <li>Introduced AI-driven automation (Playwright MCP, GitHub Copilot), reducing test development time by 80% and boosting coverage.</li>
-                                <li>Designed and executed test procedures for infrastructure preparation for high-traffic tentpole events (e.g., Mother's Day, Botox Day), supporting $20M+ in single-day gift card transactions.</li>
-                                <li>Implemented cloud-based cross-browser and visual testing, and the company's first comprehensive load testing strategy.</li>
-                                <li>Fostered a high-performance, inclusive QA culture through mentorship and process innovation.</li>
+                                <li>Helped to enable $20M+ in single-day gift card sales.</li>
+                                <li>Introduced AI tools to improve testing processes and reduce test creation time by 80%.</li>
+                                <li>Built automation frameworks from scratch and scaled cross-browser/device testing.</li>
+                                <li>Established company-wide load and high availability testing strategy.</li>
+                                <li>Launched Slack-integrated Cursor AI agents for to automate many routine tasks.</li>
                             </ul>
                         </ExperienceItem>
                     </Section>
@@ -462,11 +522,11 @@ const About: React.FC<AboutProps> = ({ isDark, setCurrentPage }) => {
                     <Section data-testid="achievements-section">
                         <SectionTitle data-testid="achievements-title" $isDark={isDark}>Notable Achievements</SectionTitle>
                         <ul data-testid="achievements-list">
-                            <li>Built and scaled QA teams and processes from the ground up in both startup and enterprise environments.</li>
-                            <li>Consistently played a pivotal role on every project, demonstrating unwavering responsibility, ownership, and commitment to success.</li>
-                            <li>Successfully led QA initiatives that delivered measurable business value, directly contributing to millions in company revenue.</li>
-                            <li>Pioneered the adoption of advanced automation tools and frameworks, driving innovation in enterprise environments.</li>
-                            <li>Co-founded TechStart.dev, helping developers and testers launch their careers with a 95% graduate employment rate.</li>
+                            <li>Built QA teams and processes from the ground up in startup and enterprise environments.</li>
+                            <li>Played a key role on every project, demonstrating responsibility and commitment to success.</li>
+                            <li>Successfully led QA initiatives directly contributing to millions in company revenue.</li>
+                            <li>Pioneered the adoption of advanced automation tools and frameworks, driving innovation.</li>
+                            <li>Co-founded a startup, helping people launch careers with a 95% graduate employment rate.</li>
                         </ul>
                     </Section>
                 </div>
