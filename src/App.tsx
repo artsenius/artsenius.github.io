@@ -6,6 +6,7 @@ import AboutApp from './components/AboutApp';
 import LiveTestAutomation from './components/LiveTestAutomation';
 import BackToTop from './components/BackToTop';
 import PageTransition from './components/PageTransition';
+import ErrorBoundary from './components/ErrorBoundary';
 import { ThemeProvider, useTheme } from './components/ThemeProvider';
 import { ThemeProvider as StyledThemeProvider } from 'styled-components';
 
@@ -16,17 +17,33 @@ const AppContent: React.FC = () => {
   let PageComponent;
   switch (currentPage) {
     case 'about-app':
-      PageComponent = <AboutApp isDark={isDarkMode} onGoToAutomation={() => setCurrentPage('automation')} />;
+      PageComponent = (
+        <ErrorBoundary>
+          <AboutApp isDark={isDarkMode} onGoToAutomation={() => setCurrentPage('automation')} />
+        </ErrorBoundary>
+      );
       break;
     case 'automation':
-      PageComponent = <LiveTestAutomation isDark={isDarkMode} />;
+      PageComponent = (
+        <ErrorBoundary>
+          <LiveTestAutomation isDark={isDarkMode} />
+        </ErrorBoundary>
+      );
       break;
     case 'contact':
-      PageComponent = <Contact isDark={isDarkMode} />;
+      PageComponent = (
+        <ErrorBoundary>
+          <Contact isDark={isDarkMode} />
+        </ErrorBoundary>
+      );
       break;
     case 'about':
     default:
-      PageComponent = <About isDark={isDarkMode} setCurrentPage={setCurrentPage} />;
+      PageComponent = (
+        <ErrorBoundary>
+          <About isDark={isDarkMode} setCurrentPage={setCurrentPage} />
+        </ErrorBoundary>
+      );
       break;
   }
 
@@ -44,9 +61,11 @@ const AppContent: React.FC = () => {
 
 const App: React.FC = () => {
   return (
-    <ThemeProvider>
-      <AppContent />
-    </ThemeProvider>
+    <ErrorBoundary>
+      <ThemeProvider>
+        <AppContent />
+      </ThemeProvider>
+    </ErrorBoundary>
   );
 };
 
