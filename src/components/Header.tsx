@@ -128,6 +128,102 @@ const MenuButton = styled.button`
     }
 `;
 
+const SearchButton = styled.button`
+    background: none;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    color: white;
+    font-size: 0.9rem;
+    cursor: pointer;
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    margin-left: 1rem;
+    transition: all 0.3s;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+
+    &:hover {
+        background-color: rgba(255, 255, 255, 0.1);
+        border-color: rgba(255, 255, 255, 0.5);
+    }
+
+    @media (max-width: 768px) {
+        display: none;
+    }
+`;
+
+const SearchKeyHint = styled.span`
+    font-size: 0.75rem;
+    background-color: rgba(255, 255, 255, 0.2);
+    padding: 0.2rem 0.4rem;
+    border-radius: 3px;
+    font-family: monospace;
+`;
+
+const SearchModal = styled.div<{ $isOpen: boolean; $isDark: boolean }>`
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: ${props => props.$isOpen ? 'flex' : 'none'};
+    align-items: flex-start;
+    justify-content: center;
+    z-index: 2000;
+    padding-top: 10vh;
+`;
+
+const SearchContainer = styled.div<{ $isDark: boolean }>`
+    background-color: ${props => props.$isDark ? '#2c3e50' : '#ffffff'};
+    border-radius: 12px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+    width: 90%;
+    max-width: 500px;
+    overflow: hidden;
+`;
+
+const SearchInput = styled.input<{ $isDark: boolean }>`
+    width: 100%;
+    padding: 1rem 1.5rem;
+    border: none;
+    font-size: 1rem;
+    background-color: transparent;
+    color: ${props => props.$isDark ? '#ecf0f1' : '#2c3e50'};
+    outline: none;
+
+    &::placeholder {
+        color: ${props => props.$isDark ? '#7f8c8d' : '#95a5a6'};
+    }
+`;
+
+const SearchResults = styled.div`
+    max-height: 300px;
+    overflow-y: auto;
+`;
+
+const SearchResult = styled.div<{ $isDark: boolean }>`
+    padding: 1rem 1.5rem;
+    border-top: 1px solid ${props => props.$isDark ? '#34495e' : '#e0e0e0'};
+    cursor: pointer;
+    transition: background-color 0.2s;
+
+    &:hover {
+        background-color: ${props => props.$isDark ? '#34495e' : '#f8f9fa'};
+    }
+`;
+
+const ResultTitle = styled.div<{ $isDark: boolean }>`
+    font-weight: 600;
+    color: ${props => props.$isDark ? '#ecf0f1' : '#2c3e50'};
+    margin-bottom: 0.3rem;
+`;
+
+const ResultDescription = styled.div<{ $isDark: boolean }>`
+    font-size: 0.9rem;
+    color: ${props => props.$isDark ? '#bdc3c7' : '#7f8c8d'};
+`;
+
 const ThemeToggle = styled.button<{ $theme: any }>`
     background: none;
     border: none;
@@ -148,9 +244,12 @@ interface HeaderProps {
 
 const Header: React.FC<HeaderProps> = ({ currentPage, setCurrentPage }) => {
     const [isOpen, setIsOpen] = useState(false);
+    const [isSearchOpen, setIsSearchOpen] = useState(false);
+    const [searchQuery, setSearchQuery] = useState('');
     const { theme, isDarkMode, toggleTheme } = useTheme();
     const navRef = useRef<HTMLUListElement>(null);
     const menuButtonRef = useRef<HTMLButtonElement>(null);
+    const searchInputRef = useRef<HTMLInputElement>(null);
 
     const getPageTitle = () => {
         switch (currentPage) {
@@ -210,6 +309,70 @@ const Header: React.FC<HeaderProps> = ({ currentPage, setCurrentPage }) => {
         document.addEventListener('keydown', handleKeyDown);
         return () => document.removeEventListener('keydown', handleKeyDown);
     }, [isOpen]);
+
+    // Handle global keyboard shortcuts for search
+    useEffect(() => {
+        const handleKeyDown = (e: KeyboardEvent) => {
+            if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+                e.preventDefault();
+                setIsSearchOpen(true);
+            }
+        };
+
+        document.addEventListener('keydown', handleKeyDown);
+        return () => document.removeEventListener('keydown', handleKeyDown);
+    }, []);
+
+    const handleSearchClick = () => {
+        setIsSearchOpen(true);
+    };
+
+    const handleSearchClose = () => {
+        setIsSearchOpen(false);
+        setSearchQuery('');
+    };
+
+    const handleSearchNavigate = (page: string) => {
+        const validPages = ['about', 'about-app', 'automation', 'contact'] as const;
+        if (validPages.includes(page as any)) {
+            setCurrentPage(page as any);
+        }
+        handleSearchClose();
+    };
+
+    // Focus search input when modal opens
+    useEffect(() => {
+        if (isSearchOpen && searchInputRef.current) {
+            searchInputRef.current.focus();
+        }
+    }, [isSearchOpen]);
+
+    // Search data
+    const searchData = [
+        { title: 'TypeScript', description: 'Modern JavaScript with static typing', page: 'about' },
+        { title: 'React', description: 'JavaScript library for building user interfaces', page: 'about' },
+        { title: 'Test Automation', description: 'Playwright and Selenium automation', page: 'about' },
+        { title: 'Node.js', description: 'JavaScript runtime environment', page: 'about' },
+        { title: 'Azure Cloud', description: 'Microsoft cloud computing platform', page: 'about' },
+        { title: 'Live Automation', description: 'Real-time test automation dashboard', page: 'automation' },
+        { title: 'About This App', description: 'Full-stack React portfolio application', page: 'about-app' },
+        { title: 'Contact', description: 'Get in touch for opportunities', page: 'contact' },
+        { title: 'Dark Mode', description: 'Toggle between light and dark themes', page: 'about' },
+        { title: 'Accessibility', description: 'WCAG 2.1 AA compliant features', page: 'about-app' },
+    ];
+
+    const filteredResults = searchQuery.trim() 
+        ? searchData.filter(item => 
+            item.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+            item.description.toLowerCase().includes(searchQuery.toLowerCase())
+          ).slice(0, 6)
+        : [];
+
+    const handleSearchKeyDown = (e: React.KeyboardEvent) => {
+        if (e.key === 'Escape') {
+            handleSearchClose();
+        }
+    };
 
     const handleNavItemClick = (page: 'about' | 'about-app' | 'automation' | 'contact') => {
         setCurrentPage(page);
@@ -302,6 +465,14 @@ const Header: React.FC<HeaderProps> = ({ currentPage, setCurrentPage }) => {
                         </NavButton>
                     </li>
                 </NavList>
+                <SearchButton 
+                    onClick={handleSearchClick}
+                    aria-label="Search portfolio content"
+                    data-testid="search-button"
+                >
+                    🔍 Search
+                    <SearchKeyHint>⌘K</SearchKeyHint>
+                </SearchButton>
                 <ThemeToggle
                     onClick={toggleTheme}
                     aria-label={`Switch to ${isDarkMode ? 'light' : 'dark'} mode`}
@@ -312,6 +483,48 @@ const Header: React.FC<HeaderProps> = ({ currentPage, setCurrentPage }) => {
                 </ThemeToggle>
             </NavContainer>
         </Nav>
+        
+        <SearchModal 
+            $isOpen={isSearchOpen} 
+            $isDark={isDarkMode} 
+            onClick={handleSearchClose}
+        >
+            <SearchContainer 
+                $isDark={isDarkMode} 
+                onClick={(e) => e.stopPropagation()}
+            >
+                <SearchInput
+                    ref={searchInputRef}
+                    type="text"
+                    placeholder="Search portfolio content..."
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    onKeyDown={handleSearchKeyDown}
+                    $isDark={isDarkMode}
+                />
+                <SearchResults>
+                    {filteredResults.map((result, index) => (
+                        <SearchResult
+                            key={index}
+                            $isDark={isDarkMode}
+                            onClick={() => handleSearchNavigate(result.page)}
+                        >
+                            <ResultTitle $isDark={isDarkMode}>{result.title}</ResultTitle>
+                            <ResultDescription $isDark={isDarkMode}>
+                                {result.description}
+                            </ResultDescription>
+                        </SearchResult>
+                    ))}
+                    {searchQuery.trim() && filteredResults.length === 0 && (
+                        <SearchResult $isDark={isDarkMode}>
+                            <ResultDescription $isDark={isDarkMode}>
+                                No results found for "{searchQuery}"
+                            </ResultDescription>
+                        </SearchResult>
+                    )}
+                </SearchResults>
+            </SearchContainer>
+        </SearchModal>
     );
 };
 
