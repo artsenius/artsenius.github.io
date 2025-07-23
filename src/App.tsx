@@ -12,13 +12,21 @@ const About = React.lazy(() => import('./components/About'));
 const Contact = React.lazy(() => import('./components/Contact'));
 const AboutApp = React.lazy(() => import('./components/AboutApp'));
 const LiveTestAutomation = React.lazy(() => import('./components/LiveTestAutomation'));
+const Projects = React.lazy(() => import('./components/Projects'));
 
 const AppContent: React.FC = () => {
   const { isDarkMode, theme } = useTheme();
-  const [currentPage, setCurrentPage] = useState<'about' | 'about-app' | 'automation' | 'contact'>('about');
+  const [currentPage, setCurrentPage] = useState<'about' | 'projects' | 'about-app' | 'automation' | 'contact'>('about');
 
   let PageComponent;
   switch (currentPage) {
+    case 'projects':
+      PageComponent = (
+        <ErrorBoundary>
+          <Projects isDark={isDarkMode} />
+        </ErrorBoundary>
+      );
+      break;
     case 'about-app':
       PageComponent = (
         <ErrorBoundary>

@@ -142,8 +142,8 @@ const ThemeToggle = styled.button<{ $theme: any }>`
 `;
 
 interface HeaderProps {
-    currentPage: 'about' | 'about-app' | 'automation' | 'contact';
-    setCurrentPage: (page: 'about' | 'about-app' | 'automation' | 'contact') => void;
+    currentPage: 'about' | 'projects' | 'about-app' | 'automation' | 'contact';
+    setCurrentPage: (page: 'about' | 'projects' | 'about-app' | 'automation' | 'contact') => void;
 }
 
 const Header: React.FC<HeaderProps> = ({ currentPage, setCurrentPage }) => {
@@ -156,6 +156,8 @@ const Header: React.FC<HeaderProps> = ({ currentPage, setCurrentPage }) => {
         switch (currentPage) {
             case 'about':
                 return 'About Me';
+            case 'projects':
+                return 'Projects';
             case 'about-app':
                 return 'About This App';
             case 'automation':
@@ -265,6 +267,17 @@ const Header: React.FC<HeaderProps> = ({ currentPage, setCurrentPage }) => {
                             aria-current={currentPage === 'about' ? 'page' : undefined}
                         >
                             About Me
+                        </NavButton>
+                    </li>
+                    <li role="none">
+                        <NavButton 
+                            data-testid="nav-link-projects" 
+                            $isActive={currentPage === 'projects'} 
+                            onClick={() => handleNavItemClick('projects')}
+                            role="menuitem"
+                            aria-current={currentPage === 'projects' ? 'page' : undefined}
+                        >
+                            Projects
                         </NavButton>
                     </li>
                     <li role="none">

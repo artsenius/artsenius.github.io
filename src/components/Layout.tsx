@@ -6,8 +6,8 @@ import SkipNavigation from './SkipNavigation';
 
 interface LayoutProps {
     children: React.ReactNode;
-    currentPage: 'about' | 'about-app' | 'automation' | 'contact';
-    setCurrentPage: (page: 'about' | 'about-app' | 'automation' | 'contact') => void;
+    currentPage: 'about' | 'projects' | 'about-app' | 'automation' | 'contact';
+    setCurrentPage: (page: 'about' | 'projects' | 'about-app' | 'automation' | 'contact') => void;
 }
 
 const LayoutWrapper = styled.div`
