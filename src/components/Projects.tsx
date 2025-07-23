@@ -1,6 +1,5 @@
 import React from 'react';
 import styled from 'styled-components';
-import { useTheme } from './ThemeProvider';
 
 interface ProjectsProps {
     isDark: boolean;
@@ -163,7 +162,6 @@ const ProjectLink = styled.a<{ $isDark: boolean; $primary?: boolean }>`
 `;
 
 const Projects: React.FC<ProjectsProps> = ({ isDark }) => {
-    const { theme } = useTheme();
 
     const projectList = [
         {
