@@ -1,4 +1,5 @@
-import React, { useState, Suspense } from 'react';
+import React, { Suspense } from 'react';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import Layout from './components/Layout';
 import BackToTop from './components/BackToTop';
 import PageTransition from './components/PageTransition';
@@ -15,51 +16,66 @@ const LiveTestAutomation = React.lazy(() => import('./components/LiveTestAutomat
 
 const AppContent: React.FC = () => {
   const { isDarkMode, theme } = useTheme();
-  const [currentPage, setCurrentPage] = useState<'about' | 'about-app' | 'automation' | 'contact'>('about');
-
-  let PageComponent;
-  switch (currentPage) {
-    case 'about-app':
-      PageComponent = (
-        <ErrorBoundary>
-          <AboutApp isDark={isDarkMode} onGoToAutomation={() => setCurrentPage('automation')} />
-        </ErrorBoundary>
-      );
-      break;
-    case 'automation':
-      PageComponent = (
-        <ErrorBoundary>
-          <LiveTestAutomation isDark={isDarkMode} />
-        </ErrorBoundary>
-      );
-      break;
-    case 'contact':
-      PageComponent = (
-        <ErrorBoundary>
-          <Contact isDark={isDarkMode} />
-        </ErrorBoundary>
-      );
-      break;
-    case 'about':
-    default:
-      PageComponent = (
-        <ErrorBoundary>
-          <About isDark={isDarkMode} setCurrentPage={setCurrentPage} />
-        </ErrorBoundary>
-      );
-      break;
-  }
 
   return (
     <StyledThemeProvider theme={theme}>
-      <Layout currentPage={currentPage} setCurrentPage={setCurrentPage}>
-        <PageTransition pageKey={currentPage} duration={400}>
-          <Suspense fallback={<LoadingSpinner isDark={isDarkMode} text="Loading page..." />}>
-            {PageComponent}
-          </Suspense>
-        </PageTransition>
-      </Layout>
-      <BackToTop />
+      <Router>
+        <Layout>
+          <Routes>
+            <Route 
+              path="/" 
+              element={
+                <PageTransition pageKey="about" duration={400}>
+                  <Suspense fallback={<LoadingSpinner isDark={isDarkMode} text="Loading page..." />}>
+                    <ErrorBoundary>
+                      <About isDark={isDarkMode} />
+                    </ErrorBoundary>
+                  </Suspense>
+                </PageTransition>
+              } 
+            />
+            <Route 
+              path="/about-app" 
+              element={
+                <PageTransition pageKey="about-app" duration={400}>
+                  <Suspense fallback={<LoadingSpinner isDark={isDarkMode} text="Loading page..." />}>
+                    <ErrorBoundary>
+                      <AboutApp isDark={isDarkMode} />
+                    </ErrorBoundary>
+                  </Suspense>
+                </PageTransition>
+              } 
+            />
+            <Route 
+              path="/automation" 
+              element={
+                <PageTransition pageKey="automation" duration={400}>
+                  <Suspense fallback={<LoadingSpinner isDark={isDarkMode} text="Loading page..." />}>
+                    <ErrorBoundary>
+                      <LiveTestAutomation isDark={isDarkMode} />
+                    </ErrorBoundary>
+                  </Suspense>
+                </PageTransition>
+              } 
+            />
+            <Route 
+              path="/contact" 
+              element={
+                <PageTransition pageKey="contact" duration={400}>
+                  <Suspense fallback={<LoadingSpinner isDark={isDarkMode} text="Loading page..." />}>
+                    <ErrorBoundary>
+                      <Contact isDark={isDarkMode} />
+                    </ErrorBoundary>
+                  </Suspense>
+                </PageTransition>
+              } 
+            />
+            {/* Redirect any unknown routes to home */}
+            <Route path="*" element={<Navigate to="/" replace />} />
+          </Routes>
+        </Layout>
+        <BackToTop />
+      </Router>
     </StyledThemeProvider>
   );
 };

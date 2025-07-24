@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import styled from 'styled-components';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { useTheme } from './ThemeProvider';
 
 const Nav = styled.nav<{ $theme: any, $isDark: boolean }>`
@@ -142,15 +143,33 @@ const ThemeToggle = styled.button<{ $theme: any }>`
 `;
 
 interface HeaderProps {
-    currentPage: 'about' | 'about-app' | 'automation' | 'contact';
-    setCurrentPage: (page: 'about' | 'about-app' | 'automation' | 'contact') => void;
+    // Removed currentPage and setCurrentPage props
 }
 
-const Header: React.FC<HeaderProps> = ({ currentPage, setCurrentPage }) => {
+const Header: React.FC<HeaderProps> = () => {
     const [isOpen, setIsOpen] = useState(false);
     const { theme, isDarkMode, toggleTheme } = useTheme();
+    const location = useLocation();
+    const navigate = useNavigate();
     const navRef = useRef<HTMLUListElement>(null);
     const menuButtonRef = useRef<HTMLButtonElement>(null);
+
+    // Map URL paths to page identifiers
+    const getCurrentPage = (): 'about' | 'about-app' | 'automation' | 'contact' => {
+        switch (location.pathname) {
+            case '/about-app':
+                return 'about-app';
+            case '/automation':
+                return 'automation';
+            case '/contact':
+                return 'contact';
+            case '/':
+            default:
+                return 'about';
+        }
+    };
+
+    const currentPage = getCurrentPage();
 
     const getPageTitle = () => {
         switch (currentPage) {
@@ -211,8 +230,8 @@ const Header: React.FC<HeaderProps> = ({ currentPage, setCurrentPage }) => {
         return () => document.removeEventListener('keydown', handleKeyDown);
     }, [isOpen]);
 
-    const handleNavItemClick = (page: 'about' | 'about-app' | 'automation' | 'contact') => {
-        setCurrentPage(page);
+    const handleNavItemClick = (path: string) => {
+        navigate(path);
         setIsOpen(false);
         // Announce page change to screen readers
         const announcement = document.createElement('div');
@@ -260,7 +279,7 @@ const Header: React.FC<HeaderProps> = ({ currentPage, setCurrentPage }) => {
                         <NavButton 
                             data-testid="nav-link-about" 
                             $isActive={currentPage === 'about'} 
-                            onClick={() => handleNavItemClick('about')}
+                            onClick={() => handleNavItemClick('/')}
                             role="menuitem"
                             aria-current={currentPage === 'about' ? 'page' : undefined}
                         >
@@ -271,7 +290,7 @@ const Header: React.FC<HeaderProps> = ({ currentPage, setCurrentPage }) => {
                         <NavButton 
                             data-testid="nav-link-about-app" 
                             $isActive={currentPage === 'about-app'} 
-                            onClick={() => handleNavItemClick('about-app')}
+                            onClick={() => handleNavItemClick('/about-app')}
                             role="menuitem"
                             aria-current={currentPage === 'about-app' ? 'page' : undefined}
                         >
@@ -282,7 +301,7 @@ const Header: React.FC<HeaderProps> = ({ currentPage, setCurrentPage }) => {
                         <NavButton 
                             data-testid="nav-link-automation" 
                             $isActive={currentPage === 'automation'} 
-                            onClick={() => handleNavItemClick('automation')}
+                            onClick={() => handleNavItemClick('/automation')}
                             role="menuitem"
                             aria-current={currentPage === 'automation' ? 'page' : undefined}
                         >
@@ -294,7 +313,7 @@ const Header: React.FC<HeaderProps> = ({ currentPage, setCurrentPage }) => {
                         <NavButton 
                             data-testid="nav-link-contact" 
                             $isActive={currentPage === 'contact'} 
-                            onClick={() => handleNavItemClick('contact')}
+                            onClick={() => handleNavItemClick('/contact')}
                             role="menuitem"
                             aria-current={currentPage === 'contact' ? 'page' : undefined}
                         >

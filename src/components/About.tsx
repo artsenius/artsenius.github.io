@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import profilePhoto from '../media/art.jpg';
 import resumePDF from '../media/A_Senko_Lead_SDET.pdf';
 import { useTheme } from './ThemeProvider';
+import { useNavigate } from 'react-router-dom';
 
 const AboutSection = styled.section`
     padding: 2rem;
@@ -302,12 +303,13 @@ const CompanyLink = styled.a`
 `;
 
 interface AboutProps {
-  isDark: boolean;
-  setCurrentPage?: (page: 'about' | 'about-app' | 'automation' | 'contact') => void;
+    isDark: boolean;
+    // Removed setCurrentPage prop
 }
 
-const About: React.FC<AboutProps> = ({ isDark, setCurrentPage }) => {
+const About: React.FC<AboutProps> = ({ isDark }) => {
     const { theme } = useTheme();
+    const navigate = useNavigate();
     const [searchTerm, setSearchTerm] = React.useState('');
     const [activeFilter, setActiveFilter] = React.useState<string>('all');
 
@@ -396,7 +398,7 @@ const About: React.FC<AboutProps> = ({ isDark, setCurrentPage }) => {
                                 type="button"
                                 onClick={(e) => {
                                     e.preventDefault();
-                                    setCurrentPage?.('about-app');
+                                    navigate('/about-app');
                                 }}
                                 style={{ color: theme.colors.accent, textDecoration: 'underline', cursor: 'pointer', background: 'none', border: 'none', padding: 0, font: 'inherit' }}
                             >

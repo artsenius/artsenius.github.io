@@ -1,5 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
+import { useNavigate } from 'react-router-dom';
 
 const AboutAppSection = styled.section`
     padding: 2rem;
@@ -102,41 +103,36 @@ const GithubLink = styled.a`
     }
 `;
 
-const LiveButton = styled.button`
-    color: #e74c3c;
-    background: none;
+
+
+const TestAutomationCTA = styled.button<{ $isDark: boolean }>`
+    background-color: #3498db;
+    color: white;
+    padding: 0.8rem 1.5rem;
     border: none;
-    font-weight: 500;
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
-    transition: color 0.3s;
+    border-radius: 8px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    transition: background-color 0.3s;
     cursor: pointer;
-    font-size: 1rem;
-    padding: 0;
 
     &:hover {
-        color: #c0392b;
+        background-color: #2980b9;
     }
 
     &::after {
-        content: '🔴';
-        animation: pulse 2s infinite;
-    }
-
-    @keyframes pulse {
-        0% { transform: scale(1); opacity: 1; }
-        50% { transform: scale(1.2); opacity: 0.7; }
-        100% { transform: scale(1); opacity: 1; }
+        content: none;
     }
 `;
 
 interface AboutAppProps {
     isDark: boolean;
-    onGoToAutomation?: () => void;
+    // Removed onGoToAutomation prop
 }
 
-const AboutApp: React.FC<AboutAppProps> = ({ isDark, onGoToAutomation }) => {
+const AboutApp: React.FC<AboutAppProps> = ({ isDark }) => {
+    const navigate = useNavigate();
+    
     return (
         <AboutAppSection data-testid="about-app-section">
             <Content>
@@ -281,13 +277,13 @@ const AboutApp: React.FC<AboutAppProps> = ({ isDark, onGoToAutomation }) => {
                                     View Automation Code →
                                 </GithubLink>
                                 
-                                <LiveButton
-                                    type="button"
-                                    onClick={onGoToAutomation}
-                                    data-testid="live-automation-link"
+                                <TestAutomationCTA 
+                                    data-testid="test-automation-cta" 
+                                    $isDark={isDark}
+                                    onClick={() => navigate('/automation')}
                                 >
                                     View Live Test Results
-                                </LiveButton>
+                                </TestAutomationCTA>
                             </div>
                         </TechItem>
                     </TechStack>
