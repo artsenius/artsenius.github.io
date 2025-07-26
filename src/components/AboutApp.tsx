@@ -1,5 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
+import { useNavigate } from 'react-router-dom';
 
 const AboutAppSection = styled.section`
     padding: 2rem;
@@ -133,10 +134,11 @@ const LiveButton = styled.button`
 
 interface AboutAppProps {
     isDark: boolean;
-    onGoToAutomation?: () => void;
 }
 
-const AboutApp: React.FC<AboutAppProps> = ({ isDark, onGoToAutomation }) => {
+const AboutApp: React.FC<AboutAppProps> = ({ isDark }) => {
+    const navigate = useNavigate();
+
     return (
         <AboutAppSection data-testid="about-app-section">
             <Content>
@@ -283,7 +285,7 @@ const AboutApp: React.FC<AboutAppProps> = ({ isDark, onGoToAutomation }) => {
                                 
                                 <LiveButton
                                     type="button"
-                                    onClick={onGoToAutomation}
+                                    onClick={() => navigate('/automation')}
                                     data-testid="live-automation-link"
                                 >
                                     View Live Test Results

@@ -6,8 +6,6 @@ import SkipNavigation from './SkipNavigation';
 
 interface LayoutProps {
     children: React.ReactNode;
-    currentPage: 'about' | 'about-app' | 'automation' | 'contact';
-    setCurrentPage: (page: 'about' | 'about-app' | 'automation' | 'contact') => void;
 }
 
 const LayoutWrapper = styled.div`
@@ -28,11 +26,11 @@ const Main = styled.main`
     }
 `;
 
-const Layout: React.FC<LayoutProps> = ({ children, currentPage, setCurrentPage }) => {
+const Layout: React.FC<LayoutProps> = ({ children }) => {
     return (
         <LayoutWrapper data-testid="layout-wrapper">
             <SkipNavigation />
-            <Header currentPage={currentPage} setCurrentPage={setCurrentPage} />
+            <Header />
             <Main 
                 id="main-content" 
                 data-testid="main-content"

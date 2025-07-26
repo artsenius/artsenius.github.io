@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import styled from 'styled-components';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { useTheme } from './ThemeProvider';
 
 const Nav = styled.nav<{ $theme: any, $isDark: boolean }>`
@@ -141,16 +142,30 @@ const ThemeToggle = styled.button<{ $theme: any }>`
     }
 `;
 
-interface HeaderProps {
-    currentPage: 'about' | 'about-app' | 'automation' | 'contact';
-    setCurrentPage: (page: 'about' | 'about-app' | 'automation' | 'contact') => void;
-}
-
-const Header: React.FC<HeaderProps> = ({ currentPage, setCurrentPage }) => {
+const Header: React.FC = () => {
     const [isOpen, setIsOpen] = useState(false);
     const { theme, isDarkMode, toggleTheme } = useTheme();
     const navRef = useRef<HTMLUListElement>(null);
     const menuButtonRef = useRef<HTMLButtonElement>(null);
+    const location = useLocation();
+    const navigate = useNavigate();
+
+    const getCurrentPage = () => {
+        switch (location.pathname) {
+            case '/':
+                return 'about';
+            case '/about-app':
+                return 'about-app';
+            case '/automation':
+                return 'automation';
+            case '/contact':
+                return 'contact';
+            default:
+                return 'about';
+        }
+    };
+
+    const currentPage = getCurrentPage();
 
     const getPageTitle = () => {
         switch (currentPage) {
@@ -211,8 +226,8 @@ const Header: React.FC<HeaderProps> = ({ currentPage, setCurrentPage }) => {
         return () => document.removeEventListener('keydown', handleKeyDown);
     }, [isOpen]);
 
-    const handleNavItemClick = (page: 'about' | 'about-app' | 'automation' | 'contact') => {
-        setCurrentPage(page);
+    const handleNavItemClick = (path: string, pageName: string) => {
+        navigate(path);
         setIsOpen(false);
         // Announce page change to screen readers
         const announcement = document.createElement('div');
@@ -220,7 +235,7 @@ const Header: React.FC<HeaderProps> = ({ currentPage, setCurrentPage }) => {
         announcement.setAttribute('aria-atomic', 'true');
         announcement.style.position = 'absolute';
         announcement.style.left = '-10000px';
-        announcement.textContent = `Navigated to ${getPageTitle()} page`;
+        announcement.textContent = `Navigated to ${pageName} page`;
         document.body.appendChild(announcement);
         setTimeout(() => document.body.removeChild(announcement), 1000);
     };
@@ -260,7 +275,7 @@ const Header: React.FC<HeaderProps> = ({ currentPage, setCurrentPage }) => {
                         <NavButton 
                             data-testid="nav-link-about" 
                             $isActive={currentPage === 'about'} 
-                            onClick={() => handleNavItemClick('about')}
+                            onClick={() => handleNavItemClick('/', 'About Me')}
                             role="menuitem"
                             aria-current={currentPage === 'about' ? 'page' : undefined}
                         >
@@ -271,7 +286,7 @@ const Header: React.FC<HeaderProps> = ({ currentPage, setCurrentPage }) => {
                         <NavButton 
                             data-testid="nav-link-about-app" 
                             $isActive={currentPage === 'about-app'} 
-                            onClick={() => handleNavItemClick('about-app')}
+                            onClick={() => handleNavItemClick('/about-app', 'About This App')}
                             role="menuitem"
                             aria-current={currentPage === 'about-app' ? 'page' : undefined}
                         >
@@ -282,7 +297,7 @@ const Header: React.FC<HeaderProps> = ({ currentPage, setCurrentPage }) => {
                         <NavButton 
                             data-testid="nav-link-automation" 
                             $isActive={currentPage === 'automation'} 
-                            onClick={() => handleNavItemClick('automation')}
+                            onClick={() => handleNavItemClick('/automation', 'Live Automation')}
                             role="menuitem"
                             aria-current={currentPage === 'automation' ? 'page' : undefined}
                         >
@@ -294,7 +309,7 @@ const Header: React.FC<HeaderProps> = ({ currentPage, setCurrentPage }) => {
                         <NavButton 
                             data-testid="nav-link-contact" 
                             $isActive={currentPage === 'contact'} 
-                            onClick={() => handleNavItemClick('contact')}
+                            onClick={() => handleNavItemClick('/contact', 'Contact')}
                             role="menuitem"
                             aria-current={currentPage === 'contact' ? 'page' : undefined}
                         >
