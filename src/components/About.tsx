@@ -1,35 +1,124 @@
 import React from 'react';
-import styled from 'styled-components';
+import styled, { keyframes, css } from 'styled-components';
 import profilePhoto from '../media/art.jpg';
 import resumePDF from '../media/A_Senko_Lead_SDET.pdf';
 import { useTheme } from './ThemeProvider';
 
+// Animation keyframes
+const fadeInUp = keyframes`
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+`;
+
+const slideInLeft = keyframes`
+  from {
+    opacity: 0;
+    transform: translateX(-30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+`;
+
+const slideInRight = keyframes`
+  from {
+    opacity: 0;
+    transform: translateX(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+`;
+
+const pulse = keyframes`
+  0% {
+    box-shadow: 0 0 0 0 rgba(52, 152, 219, 0.4);
+  }
+  70% {
+    box-shadow: 0 0 0 10px rgba(52, 152, 219, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(52, 152, 219, 0);
+  }
+`;
+
 const AboutSection = styled.section`
-    padding: 2rem;
+    padding: 3rem 2rem;
     max-width: 1200px;
     margin: 0 auto;
     background-color: ${props => props.theme.colors.background};
     color: ${props => props.theme.colors.text};
     transition: background-color 0.3s ease, color 0.3s ease;
+    position: relative;
+
+    /* Respect user motion preferences */
+    @media (prefers-reduced-motion: reduce) {
+        * {
+            animation-duration: 0.01ms !important;
+            animation-iteration-count: 1 !important;
+            transition-duration: 0.01ms !important;
+        }
+    }
 
     @media (max-width: 768px) {
-        padding: 1rem;
+        padding: 2rem 1rem;
+    }
+
+    /* Add subtle background pattern */
+    &::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: radial-gradient(circle at 20% 20%, ${props => props.theme.colors.accent}05 0%, transparent 50%),
+                    radial-gradient(circle at 80% 80%, ${props => props.theme.colors.accent}03 0%, transparent 50%);
+        pointer-events: none;
+        z-index: 0;
+    }
+
+    > * {
+        position: relative;
+        z-index: 1;
     }
 `;
 
 const Content = styled.div`
     display: grid;
     grid-template-columns: 1fr 2fr;
-    gap: 3rem;
+    gap: 4rem;
     align-items: start;
+    animation: ${fadeInUp} 0.8s ease-out;
 
     @media (max-width: 768px) {
         grid-template-columns: 1fr;
+        gap: 2rem;
     }
 `;
 
 const ProfileSection = styled.div`
     text-align: center;
+    animation: ${slideInLeft} 0.8s ease-out 0.2s both;
+    background: ${props => props.theme.colors.surface};
+    padding: 2rem;
+    border-radius: 16px;
+    box-shadow: 0 8px 32px ${props => props.theme.colors.shadow};
+    border: 1px solid ${props => props.theme.colors.surface};
+    backdrop-filter: blur(10px);
+
+    @media (max-width: 768px) {
+        animation: ${fadeInUp} 0.8s ease-out 0.1s both;
+        padding: 1.5rem;
+    }
 `;
 
 const ProfileImage = styled.img`
@@ -37,54 +126,84 @@ const ProfileImage = styled.img`
     height: 250px;
     border-radius: 50%;
     object-fit: cover;
-    margin-bottom: 2rem;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    transition: all 0.3s ease-in-out;
+    margin-bottom: 1.5rem;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     cursor: pointer;
+    border: 3px solid transparent;
+    background: linear-gradient(${props => props.theme.colors.surface}, ${props => props.theme.colors.surface}) padding-box,
+                linear-gradient(45deg, ${props => props.theme.colors.accent}, ${props => props.theme.colors.accent}80) border-box;
 
     &:hover {
-        transform: scale(1.05);
-        box-shadow: 0 8px 15px rgba(52, 73, 94, 0.2);
-        filter: brightness(1.05);
+        transform: scale(1.05) rotate(2deg);
+        box-shadow: 0 12px 40px rgba(52, 152, 219, 0.3);
+        animation: ${pulse} 2s infinite;
     }
-`;
 
-const Name = styled.h2`
-    color: ${props => props.theme.colors.text};
-    font-size: 1.8rem;
-    margin-bottom: 1rem;
-    transition: color 0.3s ease;
+    &:focus {
+        outline: 3px solid ${props => props.theme.colors.accent};
+        outline-offset: 4px;
+    }
 
     @media (max-width: 768px) {
-        font-size: 1.4rem;
+        width: 200px;
+        height: 200px;
     }
 `;
 
-const Position = styled.h3`
+const Name = styled.h1`
+    color: ${props => props.theme.colors.text};
+    font-size: 2.2rem;
+    margin-bottom: 0.5rem;
+    transition: color 0.3s ease;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+
+    @media (max-width: 768px) {
+        font-size: 1.8rem;
+    }
+`;
+
+const Position = styled.h2`
     color: ${props => props.theme.colors.textSecondary};
-    font-size: 1.2rem;
+    font-size: 1.3rem;
     margin-bottom: 1.5rem;
     transition: color 0.3s ease;
+    font-weight: 500;
+    line-height: 1.4;
 
     @media (max-width: 768px) {
-        font-size: 1rem;
+        font-size: 1.1rem;
     }
 `;
 
 const DocumentLink = styled.a`
-    display: inline-block;
-    padding: 0.75rem 1.5rem;
-    background-color: ${props => props.theme.colors.accent};
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.875rem 1.75rem;
+    background: linear-gradient(135deg, ${props => props.theme.colors.accent}, ${props => props.theme.colors.accent}CC);
     color: white;
     text-decoration: none;
-    border-radius: 4px;
-    transition: all 0.3s ease;
+    border-radius: 8px;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     margin-bottom: 1rem;
-    width: 200px;
+    font-weight: 600;
+    box-shadow: 0 4px 12px ${props => props.theme.colors.accent}33;
 
     &:hover {
-        background-color: #2980b9;
+        background: linear-gradient(135deg, #2980b9, #3498db);
         transform: translateY(-2px);
+        box-shadow: 0 8px 20px ${props => props.theme.colors.accent}40;
+    }
+
+    &:focus {
+        outline: 3px solid ${props => props.theme.colors.accent}66;
+        outline-offset: 2px;
+    }
+
+    &:active {
+        transform: translateY(0);
     }
 `;
 
@@ -94,31 +213,39 @@ const ExpandableInfoBox = styled.div<{ $isDark: boolean }>`
     position: relative;
     background: ${props => props.$isDark ? '#2c3e50' : '#f8f9fa'};
     border: 1px solid ${props => props.$isDark ? '#34495e' : '#e9ecef'};
-    border-radius: 8px;
-    padding: 0.75rem 1rem;
+    border-radius: 12px;
+    padding: 1rem 1.25rem;
     margin-bottom: 2rem;
-    font-size: 0.9rem;
-    line-height: 1.5;
+    font-size: 0.95rem;
+    line-height: 1.6;
     color: ${props => props.$isDark ? '#ecf0f1' : '#495057'};
-    transition: all 0.3s ease;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     cursor: pointer;
     display: flex;
     align-items: center;
-    gap: 0.5rem;
+    gap: 0.75rem;
+    animation: ${slideInRight} 0.8s ease-out 0.4s both;
 
     &:hover {
         background: ${props => props.$isDark ? '#34495e' : '#e9ecef'};
         border-color: ${props => props.$isDark ? '#3498db' : '#007bff'};
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px ${props => props.$isDark ? 'rgba(52, 152, 219, 0.2)' : 'rgba(0, 123, 255, 0.15)'};
+    }
+
+    &:focus-within {
+        outline: 2px solid ${props => props.$isDark ? '#3498db' : '#007bff'};
+        outline-offset: 2px;
     }
 `;
 
 const InfoIcon = styled.span`
-    font-size: 1.1rem;
-    opacity: 0.8;
+    font-size: 1.2rem;
+    opacity: 0.9;
 `;
 
 const InfoText = styled.span`
-    font-weight: 500;
+    font-weight: 600;
 `;
 
 const ExpandedContent = styled.div<{ $isDark: boolean }>`
@@ -129,16 +256,17 @@ const ExpandedContent = styled.div<{ $isDark: boolean }>`
     background: ${props => props.$isDark ? '#2c3e50' : '#f8f9fa'};
     border: 1px solid ${props => props.$isDark ? '#34495e' : '#e9ecef'};
     border-top: none;
-    border-radius: 0 0 8px 8px;
-    padding: 1rem;
+    border-radius: 0 0 12px 12px;
+    padding: 1.25rem;
     z-index: 10;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
     opacity: 0;
     visibility: hidden;
     transform: translateY(-10px);
-    transition: all 0.3s ease;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 
-    ${ExpandableInfoBox}:hover & {
+    ${ExpandableInfoBox}:hover &,
+    ${ExpandableInfoBox}:focus-within & {
         opacity: 1;
         visibility: visible;
         transform: translateY(0);
@@ -146,52 +274,95 @@ const ExpandedContent = styled.div<{ $isDark: boolean }>`
 `;
 
 const Bio = styled.div`
-    font-size: 1.1rem;
-    line-height: 1.6;
-    margin-bottom: 2rem;
+    font-size: 1.15rem;
+    line-height: 1.7;
+    margin-bottom: 2.5rem;
+    animation: ${slideInRight} 0.8s ease-out 0.3s both;
+    color: ${props => props.theme.colors.text};
+    
+    p {
+        margin-bottom: 1rem;
+        
+        &:last-child {
+            margin-bottom: 0;
+        }
+    }
 
     @media (max-width: 768px) {
-        font-size: 1rem;
-        line-height: 1.5;
+        font-size: 1.05rem;
+        line-height: 1.6;
+        margin-bottom: 2rem;
     }
 `;
 
-const Section = styled.div`
-    margin-bottom: 2rem;
+const Section = styled.div<{ $delay?: number }>`
+    margin-bottom: 3rem;
+    animation: ${slideInRight} 0.8s ease-out ${props => props.$delay || 0.5}s both;
+
+    &:last-child {
+        margin-bottom: 0;
+    }
+
+    @media (max-width: 768px) {
+        margin-bottom: 2rem;
+    }
 `;
 
 const SectionTitle = styled.h3<{ $isDark: boolean }>`
     color: ${props => props.$isDark ? props.theme.colors.text : '#2c3e50'};
-    margin-bottom: 1rem;
-    font-size: 1.4rem;
+    margin-bottom: 1.5rem;
+    font-size: 1.6rem;
     transition: color 0.3s;
+    font-weight: 700;
+    position: relative;
+    letter-spacing: -0.01em;
+
+    &::after {
+        content: '';
+        position: absolute;
+        bottom: -0.5rem;
+        left: 0;
+        width: 3rem;
+        height: 3px;
+        background: linear-gradient(90deg, ${props => props.theme.colors.accent}, ${props => props.theme.colors.accent}66);
+        border-radius: 2px;
+    }
 
     @media (max-width: 768px) {
-        font-size: 1.2rem;
+        font-size: 1.4rem;
     }
 `;
 
 const SkillsGrid = styled.div`
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
     gap: 1rem;
     margin-bottom: 2rem;
+
+    @media (max-width: 768px) {
+        grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+        gap: 0.75rem;
+    }
 `;
 
 const SkillsFilterContainer = styled.div`
-    margin-bottom: 1.5rem;
+    margin-bottom: 2rem;
+    padding: 1.5rem;
+    background: ${props => props.theme.colors.surface};
+    border-radius: 12px;
+    box-shadow: 0 2px 8px ${props => props.theme.colors.shadow};
 `;
 
 const SearchInput = styled.input`
     width: 100%;
-    padding: 0.75rem;
+    padding: 0.875rem 1rem;
     border: 2px solid ${props => props.theme.colors.surface};
-    border-radius: 8px;
+    border-radius: 10px;
     font-size: 1rem;
-    background-color: ${props => props.theme.colors.surface};
+    background-color: ${props => props.theme.colors.background};
     color: ${props => props.theme.colors.text};
-    margin-bottom: 1rem;
-    transition: all 0.3s ease;
+    margin-bottom: 1.25rem;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 
     &:focus {
         outline: none;
@@ -207,97 +378,173 @@ const SearchInput = styled.input`
 const FilterButtons = styled.div`
     display: flex;
     flex-wrap: wrap;
-    gap: 0.5rem;
-    margin-bottom: 1rem;
+    gap: 0.75rem;
+    margin-bottom: 1.25rem;
 `;
 
 const FilterButton = styled.button<{ $isActive: boolean }>`
-    padding: 0.5rem 1rem;
+    padding: 0.625rem 1.25rem;
     border: 2px solid ${props => props.$isActive ? props.theme.colors.accent : props.theme.colors.surface};
     background-color: ${props => props.$isActive ? props.theme.colors.accent : props.theme.colors.surface};
     color: ${props => props.$isActive ? 'white' : props.theme.colors.text};
-    border-radius: 20px;
+    border-radius: 24px;
     font-size: 0.9rem;
+    font-weight: 500;
     cursor: pointer;
-    transition: all 0.3s ease;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 
     &:hover {
         border-color: ${props => props.theme.colors.accent};
         background-color: ${props => props.$isActive ? '#2980b9' : props.theme.colors.hover};
+        transform: translateY(-1px);
     }
 
     &:focus {
-        outline: none;
-        box-shadow: 0 0 0 3px ${props => props.theme.colors.accent}33;
+        outline: 2px solid ${props => props.theme.colors.accent}66;
+        outline-offset: 2px;
+    }
+
+    &:active {
+        transform: translateY(0);
     }
 `;
 
-const SkillItem = styled.div<{ $isVisible: boolean }>`
-    background-color: ${props => props.theme.colors.surface};
-    padding: 0.75rem;
-    border-radius: 4px;
-    font-size: 0.9rem;
+const SkillItem = styled.div<{ $isVisible: boolean; $index?: number }>`
+    background: linear-gradient(135deg, ${props => props.theme.colors.surface}, ${props => props.theme.colors.surface}F0);
+    padding: 1rem;
+    border-radius: 10px;
+    font-size: 0.95rem;
+    font-weight: 500;
     text-align: center;
-    box-shadow: 0 2px 4px ${props => props.theme.colors.shadow};
-    transition: all 0.3s ease-in-out;
+    box-shadow: 0 2px 8px ${props => props.theme.colors.shadow};
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     border: 1px solid transparent;
     color: ${props => props.theme.colors.text};
     opacity: ${props => props.$isVisible ? 1 : 0};
     transform: ${props => props.$isVisible ? 'scale(1)' : 'scale(0.8)'};
     display: ${props => props.$isVisible ? 'block' : 'none'};
+    animation: ${props => props.$isVisible ? css`${fadeInUp} 0.6s ease-out ${(props.$index || 0) * 0.05}s both` : 'none'};
+    position: relative;
+    overflow: hidden;
+
+    &::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, ${props => props.theme.colors.accent}20, transparent);
+        transition: left 0.6s;
+    }
 
     @media (max-width: 768px) {
-        font-size: 0.85rem;
-        padding: 0.6rem;
+        font-size: 0.9rem;
+        padding: 0.875rem;
     }
 
     &:hover {
-        transform: translateY(-2px) ${props => props.$isVisible ? 'scale(1)' : 'scale(0.8)'};
-        background-color: ${props => props.theme.colors.hover};
+        transform: translateY(-4px) ${props => props.$isVisible ? 'scale(1.02)' : 'scale(0.8)'};
+        background: linear-gradient(135deg, ${props => props.theme.colors.hover}, ${props => props.theme.colors.hover}F0);
         border-color: ${props => props.theme.colors.accent};
-        box-shadow: 0 4px 8px ${props => props.theme.colors.accent}33;
+        box-shadow: 0 8px 24px ${props => props.theme.colors.accent}33;
+
+        &::before {
+            left: 100%;
+        }
     }
 `;
 
 const ResultsCounter = styled.p`
     color: ${props => props.theme.colors.textSecondary};
     font-size: 0.9rem;
-    margin-bottom: 0.5rem;
+    margin-bottom: 0;
+    font-weight: 500;
 `;
 
 const ExperienceItem = styled.div`
-    margin-bottom: 1.5rem;
+    margin-bottom: 2rem;
+    padding: 1.5rem;
+    background: ${props => props.theme.colors.surface};
+    border-radius: 12px;
+    box-shadow: 0 2px 8px ${props => props.theme.colors.shadow};
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+
+    &:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 16px ${props => props.theme.colors.shadow};
+    }
+
+    &:last-child {
+        margin-bottom: 0;
+    }
 `;
 
 const CompanyName = styled.h4<{ $isDark: boolean }>`
     color: ${props => props.$isDark ? props.theme.colors.text : '#2c3e50'};
-    font-size: 1.2rem;
+    font-size: 1.3rem;
     margin-bottom: 0.5rem;
     transition: color 0.3s;
+    font-weight: 600;
 
     @media (max-width: 768px) {
-        font-size: 1rem;
+        font-size: 1.1rem;
     }
 `;
 
 const Duration = styled.p`
     color: #7f8c8d;
-    font-size: 0.9rem;
-    margin-bottom: 0.5rem;
+    font-size: 0.95rem;
+    margin-bottom: 1rem;
+    font-weight: 500;
 
     @media (max-width: 768px) {
-        font-size: 0.85rem;
+        font-size: 0.9rem;
     }
 `;
 
 const CompanyLink = styled.a`
     color: #3498db;
     text-decoration: none;
-    transition: color 0.3s ease;
+    transition: all 0.3s ease;
+    font-weight: 600;
 
     &:hover {
         color: #2980b9;
         text-decoration: underline;
+    }
+
+    &:focus {
+        outline: 2px solid #3498db66;
+        outline-offset: 2px;
+        border-radius: 2px;
+    }
+`;
+
+const AchievementsList = styled.ul`
+    list-style: none;
+    padding: 0;
+    margin: 0;
+
+    li {
+        position: relative;
+        padding-left: 2rem;
+        margin-bottom: 1rem;
+        line-height: 1.6;
+        color: ${props => props.theme.colors.text};
+
+        &::before {
+            content: '✨';
+            position: absolute;
+            left: 0;
+            top: 0;
+            font-size: 1.1rem;
+            color: ${props => props.theme.colors.accent};
+        }
+
+        &:last-child {
+            margin-bottom: 0;
+        }
     }
 `;
 
@@ -371,26 +618,47 @@ const About: React.FC<AboutProps> = ({ isDark, setCurrentPage }) => {
     };
 
     return (
-        <AboutSection data-testid="about-section">
+        <AboutSection data-testid="about-section" role="main" aria-labelledby="about-heading">
             <Content data-testid="about-content">
-                <ProfileSection data-testid="profile-section">
-                    <ProfileImage data-testid="profile-image" src={profilePhoto} alt="Arthur Senko" />
-                    <Name data-testid="profile-name">Arthur Senko</Name>
-                    <Position data-testid="profile-position">Lead QA Engineer, SDET<br />AI Enthusiast</Position>
+                <ProfileSection 
+                    data-testid="profile-section" 
+                    role="banner"
+                    aria-labelledby="profile-name"
+                    aria-describedby="profile-position"
+                >
+                    <ProfileImage 
+                        data-testid="profile-image" 
+                        src={profilePhoto} 
+                        alt="Arthur Senko - Professional headshot" 
+                        tabIndex={0}
+                        role="img"
+                    />
+                    <Name data-testid="profile-name" id="profile-name">Arthur Senko</Name>
+                    <Position data-testid="profile-position" id="profile-position">
+                        Lead QA Engineer, SDET<br />AI Enthusiast
+                    </Position>
                     <DocumentLink
                         data-testid="resume-link"
                         href={resumePDF}
                         target="_blank"
                         rel="noopener noreferrer"
+                        aria-label="Download Arthur Senko's resume (opens in new tab)"
                     >
                         Download Resume ↗
                     </DocumentLink>
                 </ProfileSection>
-                <div data-testid="about-details">
-                    <ExpandableInfoBox data-testid="app-info-box" $isDark={isDark}>
-                        <InfoIcon data-testid="app-info-icon">ℹ️</InfoIcon>
+                <div data-testid="about-details" role="complementary">
+                    <ExpandableInfoBox 
+                        data-testid="app-info-box" 
+                        $isDark={isDark}
+                        role="button"
+                        tabIndex={0}
+                        aria-label="App information - hover or focus to expand"
+                        aria-expanded="false"
+                    >
+                        <InfoIcon data-testid="app-info-icon" aria-hidden="true">ℹ️</InfoIcon>
                         <InfoText data-testid="app-info-text">App Info</InfoText>
-                        <ExpandedContent data-testid="app-info-expanded-content" $isDark={isDark}>
+                        <ExpandedContent data-testid="app-info-expanded-content" $isDark={isDark} role="tooltip">
                             A modern React application built by me from scratch with TypeScript. Features a robust Express.js backend with MongoDB database, comprehensive Playwright E2E testing, and automated CI/CD deployment. See <button
                                 data-testid="about-app-link"
                                 type="button"
@@ -398,14 +666,24 @@ const About: React.FC<AboutProps> = ({ isDark, setCurrentPage }) => {
                                     e.preventDefault();
                                     setCurrentPage?.('about-app');
                                 }}
-                                style={{ color: theme.colors.accent, textDecoration: 'underline', cursor: 'pointer', background: 'none', border: 'none', padding: 0, font: 'inherit' }}
+                                style={{ 
+                                    color: theme.colors.accent, 
+                                    textDecoration: 'underline', 
+                                    cursor: 'pointer', 
+                                    background: 'none', 
+                                    border: 'none', 
+                                    padding: 0, 
+                                    font: 'inherit' 
+                                }}
+                                aria-label="Navigate to About This App page"
                             >
                                 About This App
                             </button> page to learn more.
                         </ExpandedContent>
                     </ExpandableInfoBox>
 
-                    <Bio data-testid="about-bio">
+                    <Bio data-testid="about-bio" role="article" aria-labelledby="bio-heading">
+                        <h2 id="bio-heading" className="sr-only">Biography</h2>
                         <p>
                             A results-driven Lead QA Engineer, SDET, and Test Automation Architect with expertise in AI testing and modern automation.
                             Proven track record of building and leading high-performing QA teams, implementing
@@ -416,54 +694,77 @@ const About: React.FC<AboutProps> = ({ isDark, setCurrentPage }) => {
                         </p>
                     </Bio>
 
-                    <Section data-testid="current-role-section">
-                        <SectionTitle data-testid="current-role-title" $isDark={isDark}>Current Role</SectionTitle>
+                    <Section data-testid="current-role-section" $delay={0.6} role="region" aria-labelledby="current-role-heading">
+                        <SectionTitle data-testid="current-role-title" $isDark={isDark} id="current-role-heading">Current Role</SectionTitle>
                         <ExperienceItem data-testid="experience-item">
                             <CompanyName data-testid="company-name" $isDark={isDark}>
-                                <span data-testid="position-title">Lead QA Engineer</span> @ <CompanyLink data-testid="allergan-link" href="https://www.allerganaesthetics.com/" target="_blank" rel="noopener noreferrer">Allergan Aesthetics</CompanyLink>, an <CompanyLink data-testid="abbvie-link" href="https://www.abbvie.com/" target="_blank" rel="noopener noreferrer">AbbVie Company</CompanyLink>
+                                <span data-testid="position-title">Lead QA Engineer</span> @ <CompanyLink 
+                                    data-testid="allergan-link" 
+                                    href="https://www.allerganaesthetics.com/" 
+                                    target="_blank" 
+                                    rel="noopener noreferrer"
+                                    aria-label="Allergan Aesthetics website (opens in new tab)"
+                                >
+                                    Allergan Aesthetics
+                                </CompanyLink>, an <CompanyLink 
+                                    data-testid="abbvie-link" 
+                                    href="https://www.abbvie.com/" 
+                                    target="_blank" 
+                                    rel="noopener noreferrer"
+                                    aria-label="AbbVie Company website (opens in new tab)"
+                                >
+                                    AbbVie Company
+                                </CompanyLink>
                             </CompanyName>
                             <Duration data-testid="role-duration">June 2022 – Present | Remote</Duration>
-                            <ul data-testid="role-achievements">
+                            <AchievementsList data-testid="role-achievements" role="list" aria-label="Role achievements">
                                 <li>Helped to enable $20M+ in single-day gift card sales.</li>
                                 <li>Introduced AI tools to improve testing processes and reduce test creation time by 80%.</li>
                                 <li>Built automation frameworks from scratch and scaled cross-browser/device testing.</li>
                                 <li>Established company-wide load and high availability testing strategy.</li>
                                 <li>Launched Slack-integrated Cursor AI agents for to automate many routine tasks.</li>
-                            </ul>
+                            </AchievementsList>
                         </ExperienceItem>
                     </Section>
 
-                    <Section data-testid="skills-section">
-                        <SectionTitle data-testid="skills-title" $isDark={isDark}>Technical Skills</SectionTitle>
+                    <Section data-testid="skills-section" $delay={0.7} role="region" aria-labelledby="skills-heading">
+                        <SectionTitle data-testid="skills-title" $isDark={isDark} id="skills-heading">Technical Skills</SectionTitle>
                         
-                        <SkillsFilterContainer data-testid="skills-filter-container">
+                        <SkillsFilterContainer data-testid="skills-filter-container" role="search" aria-labelledby="skills-search-heading">
+                            <h4 id="skills-search-heading" className="sr-only">Search and filter skills</h4>
                             <SearchInput
                                 data-testid="skills-search"
+                                data-has-value={searchTerm.length > 0}
+                                data-results-count={filteredSkills.length}
                                 type="text"
                                 placeholder="Search skills... (e.g., React, JavaScript, Cypress)"
                                 value={searchTerm}
                                 onChange={handleSearchChange}
                                 aria-label="Search technical skills"
+                                aria-describedby="results-counter"
                             />
                             
-                            <FilterButtons data-testid="filter-buttons">
+                            <FilterButtons data-testid="filter-buttons" role="group" aria-label="Filter skills by category">
                                 {skillCategories.map(({ key, label }) => (
                                     <FilterButton
                                         key={key}
-                                        data-testid={`filter-${key}`}
+                                        data-testid={`filter-${key}-${activeFilter === key ? 'active' : 'inactive'}`}
+                                        data-category={key}
+                                        data-selected={activeFilter === key}
                                         $isActive={activeFilter === key}
                                         onClick={() => handleFilterChange(key)}
                                         aria-label={`Filter by ${label}`}
+                                        aria-pressed={activeFilter === key}
                                     >
                                         {label}
                                     </FilterButton>
                                 ))}
                                 {(searchTerm || activeFilter !== 'all') && (
                                     <FilterButton
-                                        data-testid="clear-filters"
+                                        data-testid="clear-filters-button"
                                         $isActive={false}
                                         onClick={clearFilters}
-                                        aria-label="Clear all filters"
+                                        aria-label="Clear all filters and show all skills"
                                         style={{ marginLeft: '0.5rem', fontWeight: 'bold' }}
                                     >
                                         Clear ✕
@@ -473,6 +774,7 @@ const About: React.FC<AboutProps> = ({ isDark, setCurrentPage }) => {
                             
                             <ResultsCounter 
                                 data-testid="results-counter"
+                                id="results-counter"
                                 role="status"
                                 aria-live="polite"
                                 aria-atomic="true"
@@ -485,13 +787,20 @@ const About: React.FC<AboutProps> = ({ isDark, setCurrentPage }) => {
                             data-testid="skills-grid"
                             role="list"
                             aria-label={`Technical skills. ${filteredSkills.length} skills displayed.`}
+                            aria-describedby="results-counter"
                         >
-                            {filteredSkills.map(({ skill }, index) => (
+                            {filteredSkills.map(({ skill, category }, index) => (
                                 <SkillItem 
-                                    data-testid={`skill-item-${index}`} 
+                                    data-testid={`skill-item-${skill.toLowerCase().replace(/[\s\/]/g, '-')}`}
+                                    data-category={category}
+                                    data-skill-name={skill}
+                                    data-index={index}
                                     key={`${skill}-${index}`}
                                     $isVisible={true}
+                                    $index={index}
                                     role="listitem"
+                                    tabIndex={0}
+                                    aria-label={`Skill: ${skill} in ${category} category`}
                                 >
                                     {skill}
                                 </SkillItem>
@@ -499,26 +808,31 @@ const About: React.FC<AboutProps> = ({ isDark, setCurrentPage }) => {
                         </SkillsGrid>
                         
                         {filteredSkills.length === 0 && (
-                            <p data-testid="no-results" style={{ 
-                                textAlign: 'center', 
-                                color: theme.colors.textSecondary,
-                                fontStyle: 'italic',
-                                padding: '2rem'
-                            }}>
+                            <p 
+                                data-testid="no-results" 
+                                role="status"
+                                aria-live="polite"
+                                style={{ 
+                                    textAlign: 'center', 
+                                    color: theme.colors.textSecondary,
+                                    fontStyle: 'italic',
+                                    padding: '2rem'
+                                }}
+                            >
                                 No skills found matching your criteria. Try adjusting your search or filters.
                             </p>
                         )}
                     </Section>
 
-                    <Section data-testid="achievements-section">
-                        <SectionTitle data-testid="achievements-title" $isDark={isDark}>Notable Achievements</SectionTitle>
-                        <ul data-testid="achievements-list">
+                    <Section data-testid="achievements-section" $delay={0.8} role="region" aria-labelledby="achievements-heading">
+                        <SectionTitle data-testid="achievements-title" $isDark={isDark} id="achievements-heading">Notable Achievements</SectionTitle>
+                        <AchievementsList data-testid="achievements-list" role="list" aria-label="Notable achievements">
                             <li>Built QA teams and processes from the ground up in startup and enterprise environments.</li>
                             <li>Played a key role on every project, demonstrating responsibility and commitment to success.</li>
                             <li>Successfully led QA initiatives directly contributing to millions in company revenue.</li>
                             <li>Pioneered the adoption of advanced automation tools and frameworks, driving innovation.</li>
                             <li>Co-founded a startup, helping people launch careers with a 95% graduate employment rate.</li>
-                        </ul>
+                        </AchievementsList>
                     </Section>
                 </div>
             </Content>
