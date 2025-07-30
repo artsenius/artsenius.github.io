@@ -752,7 +752,7 @@ const About: React.FC<AboutProps> = ({ isDark, setCurrentPage }) => {
                         >
                             {filteredSkills.map(({ skill, category }, index) => (
                                 <SkillItem 
-                                    data-testid={`skill-item-${skill.toLowerCase().replace(/[\s\/]/g, '-')}`}
+                                    data-testid={`skill-item-${skill.toLowerCase().replace(/[\s/]/g, '-')}`}
                                     data-category={category}
                                     data-skill-name={skill}
                                     data-index={index}
