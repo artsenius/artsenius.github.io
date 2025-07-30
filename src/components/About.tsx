@@ -51,53 +51,23 @@ const pulse = keyframes`
 `;
 
 const AboutSection = styled.section`
-    padding: 3rem 2rem;
+    padding: 2rem;
     max-width: 1200px;
     margin: 0 auto;
     background-color: ${props => props.theme.colors.background};
     color: ${props => props.theme.colors.text};
     transition: background-color 0.3s ease, color 0.3s ease;
-    position: relative;
-
-    /* Respect user motion preferences */
-    @media (prefers-reduced-motion: reduce) {
-        * {
-            animation-duration: 0.01ms !important;
-            animation-iteration-count: 1 !important;
-            transition-duration: 0.01ms !important;
-        }
-    }
 
     @media (max-width: 768px) {
-        padding: 2rem 1rem;
-    }
-
-    /* Add subtle background pattern */
-    &::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background: radial-gradient(circle at 20% 20%, ${props => props.theme.colors.accent}05 0%, transparent 50%),
-                    radial-gradient(circle at 80% 80%, ${props => props.theme.colors.accent}03 0%, transparent 50%);
-        pointer-events: none;
-        z-index: 0;
-    }
-
-    > * {
-        position: relative;
-        z-index: 1;
+        padding: 1rem;
     }
 `;
 
 const Content = styled.div`
     display: grid;
     grid-template-columns: 1fr 2fr;
-    gap: 4rem;
+    gap: 3rem;
     align-items: start;
-    animation: ${fadeInUp} 0.8s ease-out;
 
     @media (max-width: 768px) {
         grid-template-columns: 1fr;
@@ -213,29 +183,21 @@ const ExpandableInfoBox = styled.div<{ $isDark: boolean }>`
     position: relative;
     background: ${props => props.$isDark ? '#2c3e50' : '#f8f9fa'};
     border: 1px solid ${props => props.$isDark ? '#34495e' : '#e9ecef'};
-    border-radius: 12px;
-    padding: 1rem 1.25rem;
+    border-radius: 8px;
+    padding: 0.75rem 1rem;
     margin-bottom: 2rem;
-    font-size: 0.95rem;
-    line-height: 1.6;
+    font-size: 0.9rem;
+    line-height: 1.5;
     color: ${props => props.$isDark ? '#ecf0f1' : '#495057'};
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: all 0.3s ease;
     cursor: pointer;
     display: flex;
     align-items: center;
-    gap: 0.75rem;
-    animation: ${slideInRight} 0.8s ease-out 0.4s both;
+    gap: 0.5rem;
 
     &:hover {
         background: ${props => props.$isDark ? '#34495e' : '#e9ecef'};
         border-color: ${props => props.$isDark ? '#3498db' : '#007bff'};
-        transform: translateY(-2px);
-        box-shadow: 0 4px 12px ${props => props.$isDark ? 'rgba(52, 152, 219, 0.2)' : 'rgba(0, 123, 255, 0.15)'};
-    }
-
-    &:focus-within {
-        outline: 2px solid ${props => props.$isDark ? '#3498db' : '#007bff'};
-        outline-offset: 2px;
     }
 `;
 
@@ -256,17 +218,16 @@ const ExpandedContent = styled.div<{ $isDark: boolean }>`
     background: ${props => props.$isDark ? '#2c3e50' : '#f8f9fa'};
     border: 1px solid ${props => props.$isDark ? '#34495e' : '#e9ecef'};
     border-top: none;
-    border-radius: 0 0 12px 12px;
-    padding: 1.25rem;
+    border-radius: 8px 8px 8px 8px;
+    padding: 1rem;
     z-index: 10;
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
     opacity: 0;
     visibility: hidden;
     transform: translateY(-10px);
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: all 0.3s ease;
 
-    ${ExpandableInfoBox}:hover &,
-    ${ExpandableInfoBox}:focus-within & {
+    ${ExpandableInfoBox}:hover & {
         opacity: 1;
         visibility: visible;
         transform: translateY(0);
