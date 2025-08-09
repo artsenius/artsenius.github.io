@@ -255,7 +255,7 @@ const DateBadge = styled(StatItem)`
     width: 260px;
     font-variant-numeric: tabular-nums;
     @media (max-width: 768px) {
-        width: 220px;
+        width: 260px;
     }
 `;
 
