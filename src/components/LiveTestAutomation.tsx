@@ -141,15 +141,30 @@ const StatusBadge = styled.span<{ status: string; $isDark: boolean }>`
         if (props.$isDark) {
             return isSuccess ? 'rgba(34, 197, 94, 0.2)' : 'rgba(239, 68, 68, 0.2)';
         }
-        return isSuccess ? 'rgba(34, 197, 94, 0.1)' : 'rgba(239, 68, 68, 0.1)';
+        // Light mode: stronger background for better contrast
+        if (isSuccess) return '#d1fae5'; // emerald-100
+        if (props.status === 'failed') return '#fee2e2'; // red-100
+        return '#e5e7eb'; // gray-200 for other statuses
     }};
     color: ${props => {
         const isSuccess = props.status === 'completed' || props.status === 'passed';
-        return isSuccess ? '#10b981' : '#ef4444';
+        if (props.$isDark) {
+            return isSuccess ? '#10b981' : '#ef4444';
+        }
+        // Light mode: darker text for readability
+        if (isSuccess) return '#065f46'; // emerald-900
+        if (props.status === 'failed') return '#991b1b'; // red-900
+        return '#374151'; // gray-700
     }};
     border: 1px solid ${props => {
         const isSuccess = props.status === 'completed' || props.status === 'passed';
-        return isSuccess ? '#10b981' : '#ef4444';
+        if (props.$isDark) {
+            return isSuccess ? '#10b981' : '#ef4444';
+        }
+        // Light mode borders
+        if (isSuccess) return '#34d399'; // emerald-400
+        if (props.status === 'failed') return '#f87171'; // red-400
+        return '#9ca3af'; // gray-400
     }};
     
     &::before {
