@@ -124,6 +124,7 @@ const TestRunHeader = styled.div<{ status: string; passed: number; failed: numbe
 const StatusBadge = styled.span<{ status: string; $isDark: boolean }>`
     display: inline-flex;
     align-items: center;
+    justify-content: center;
     gap: 0.375rem;
     padding: 0.25rem 0.75rem;
     border-radius: 9999px;
@@ -131,6 +132,10 @@ const StatusBadge = styled.span<{ status: string; $isDark: boolean }>`
     font-weight: 600;
     text-transform: uppercase;
     letter-spacing: 0.025em;
+    min-width: 90px;
+    white-space: nowrap;
+    text-align: center;
+    box-sizing: border-box;
     background-color: ${props => {
         const isSuccess = props.status === 'completed' || props.status === 'passed';
         if (props.$isDark) {
@@ -153,6 +158,10 @@ const StatusBadge = styled.span<{ status: string; $isDark: boolean }>`
         height: 6px;
         border-radius: 50%;
         background-color: currentColor;
+    }
+
+    @media (max-width: 768px) {
+        min-width: 80px;
     }
 `;
 
@@ -202,6 +211,7 @@ const TestRunStats = styled.div`
 const StatItem = styled.div`
     display: flex;
     align-items: center;
+    justify-content: center;
     gap: 0.5rem;
     padding: 0.25rem 0.75rem;
     background-color: rgba(255, 255, 255, 0.1);
@@ -209,6 +219,9 @@ const StatItem = styled.div`
     font-size: 0.875rem;
     font-weight: 500;
     backdrop-filter: blur(4px);
+    min-width: 210px;
+    box-sizing: border-box;
+    white-space: nowrap;
     
     &:first-child {
         border: 1px solid rgba(34, 197, 94, 0.3);
@@ -217,10 +230,17 @@ const StatItem = styled.div`
     &:nth-child(2) {
         border: 1px solid rgba(239, 68, 68, 0.3);
     }
-
+    
     @media (max-width: 768px) {
-        font-size: 0.8rem;
-        padding: 0.2rem 0.6rem;
+        min-width: 180px;
+    }
+`;
+
+const DateBadge = styled(StatItem)`
+    width: 260px;
+    font-variant-numeric: tabular-nums;
+    @media (max-width: 768px) {
+        width: 220px;
     }
 `;
 
@@ -652,14 +672,13 @@ const LiveTestAutomation: React.FC<LiveTestAutomationProps> = ({ isDark }) => {
                 aria-label="Loading test automation results"
                 aria-busy="true"
             >
-                <div 
+                <VisuallyHidden 
                     data-testid="loading-announcement" 
                     aria-live="polite" 
                     aria-atomic="true"
-                    className="sr-only"
                 >
                     Loading test automation results, please wait.
-                </div>
+                </VisuallyHidden>
                 <LoadingPlaceholder />
             </TestAutomationSection>
         );
@@ -693,15 +712,14 @@ const LiveTestAutomation: React.FC<LiveTestAutomationProps> = ({ isDark }) => {
             aria-label="Test Automation Results"
         >
             {/* Screen reader announcements */}
-            <div
+            <VisuallyHidden
                 ref={announcementRef}
                 aria-live="polite"
                 aria-atomic="true"
-                className="sr-only"
                 data-testid="screen-reader-announcements"
             >
                 {announceText}
-            </div>
+            </VisuallyHidden>
 
             <TestRunList 
                 data-testid="test-run-list"
@@ -754,9 +772,9 @@ const LiveTestAutomation: React.FC<LiveTestAutomationProps> = ({ isDark }) => {
                                 >
                                     {run.status}
                                 </StatusBadge>
-                                <StatItem data-testid={`date-stat-${run._id}`} aria-label={`Started at ${formatDate(run.startedAt)}`}>
+                                <DateBadge data-testid={`date-stat-${run._id}`} aria-label={`Started at ${formatDate(run.startedAt)}`}>
                                     🕒 {formatDate(run.startedAt)}
-                                </StatItem>
+                                </DateBadge>
                             </TestRunStats>
                         </TestRunHeader>
                         <TestRunContent 
@@ -1173,6 +1191,18 @@ const Tooltip = styled.div`
 const ErrorWrapper = styled.div`
     position: relative;
     width: 100%;
+`;
+
+const VisuallyHidden = styled.div`
+    position: absolute !important;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
 `;
 
 const LoadMoreWrapper = styled.div`
