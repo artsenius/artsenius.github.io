@@ -224,54 +224,14 @@ const StatItem = styled.div`
     }
 `;
 
-const slideDown = keyframes`
-    from {
-        opacity: 0;
-        max-height: 0;
-        transform: translateY(-10px);
-    }
-    to {
-        opacity: 1;
-        max-height: 1000px;
-        transform: translateY(0);
-    }
-`;
-
-const slideUp = keyframes`
-    from {
-        opacity: 1;
-        max-height: 1000px;
-        transform: translateY(0);
-    }
-    to {
-        opacity: 0;
-        max-height: 0;
-        transform: translateY(-10px);
-    }
-`;
-
 const TestRunContent = styled.div<{ isExpanded: boolean; $isDark: boolean }>`
-    overflow: hidden;
     background-color: ${props => props.$isDark ? '#111827' : '#f9fafb'};
     border-top: 1px solid ${props => props.$isDark ? '#374151' : '#e5e7eb'};
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    
-    ${props => props.isExpanded ? css`
-        animation: ${slideDown} 0.3s ease-out forwards;
-        padding: 1.5rem;
-        max-height: none;
-    ` : css`
-        animation: ${slideUp} 0.2s ease-in forwards;
-        padding: 0;
-        max-height: 0;
-    `}
-    
+    padding: ${props => props.isExpanded ? '1.5rem' : '0'};
+    display: ${props => props.isExpanded ? 'block' : 'none'};
+
     @media (max-width: 768px) {
-        ${props => props.isExpanded ? css`
-            padding: 1rem;
-        ` : css`
-            padding: 0;
-        `}
+        padding: ${props => props.isExpanded ? '1rem' : '0'};
     }
 `;
 
@@ -781,6 +741,11 @@ const LiveTestAutomation: React.FC<LiveTestAutomationProps> = ({ isDark }) => {
                                 <TestRunTitle data-testid={`test-run-title-${run._id}`}>
                                     {run.project}
                                 </TestRunTitle>
+                            </TestRunTitleWrapper>
+                            <TestRunStats 
+                                id={`test-run-stats-${run._id}`}
+                                data-testid={`test-run-stats-${run._id}`}
+                            >
                                 <StatusBadge 
                                     status={run.status} 
                                     $isDark={isDark}
@@ -789,17 +754,6 @@ const LiveTestAutomation: React.FC<LiveTestAutomationProps> = ({ isDark }) => {
                                 >
                                     {run.status}
                                 </StatusBadge>
-                            </TestRunTitleWrapper>
-                            <TestRunStats 
-                                id={`test-run-stats-${run._id}`}
-                                data-testid={`test-run-stats-${run._id}`}
-                            >
-                                <StatItem data-testid={`passed-stat-${run._id}`} aria-label={`${run.results.passed} tests passed`}>
-                                    ✅ {run.results.passed}
-                                </StatItem>
-                                <StatItem data-testid={`failed-stat-${run._id}`} aria-label={`${run.results.failed} tests failed`}>
-                                    ❌ {run.results.failed}
-                                </StatItem>
                                 <StatItem data-testid={`date-stat-${run._id}`} aria-label={`Started at ${formatDate(run.startedAt)}`}>
                                     🕒 {formatDate(run.startedAt)}
                                 </StatItem>
@@ -1219,31 +1173,6 @@ const Tooltip = styled.div`
 const ErrorWrapper = styled.div`
     position: relative;
     width: 100%;
-`;
-
-// Screen reader only utility class
-const ScreenReaderOnly = styled.div`
-    position: absolute;
-    width: 1px;
-    height: 1px;
-    padding: 0;
-    margin: -1px;
-    overflow: hidden;
-    clip: rect(0, 0, 0, 0);
-    white-space: nowrap;
-    border: 0;
-    
-    &.sr-only {
-        position: absolute;
-        width: 1px;
-        height: 1px;
-        padding: 0;
-        margin: -1px;
-        overflow: hidden;
-        clip: rect(0, 0, 0, 0);
-        white-space: nowrap;
-        border: 0;
-    }
 `;
 
 const LoadMoreWrapper = styled.div`
