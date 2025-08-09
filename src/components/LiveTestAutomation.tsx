@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import styled, { keyframes, css } from 'styled-components';
 import { API_ENDPOINTS, fetchWithErrorHandling } from '../config/api';
 
@@ -59,18 +59,29 @@ const TestAutomationSection = styled.section`
 const TestRunList = styled.div`
     display: flex;
     flex-direction: column;
-    gap: 1rem;
-    min-height: 400px; /* Ensure consistent height even when loading */
+    gap: 1.5rem;
+    min-height: 400px;
     width: 100%;
     overflow-x: hidden;
     box-sizing: border-box;
 `;
 
 const TestRunCard = styled.div<{ $isDark: boolean }>`
-    background-color: ${props => props.$isDark ? 'transparent' : 'white'};
-    border-radius: 8px;
-    box-shadow: ${props => props.$isDark ? 'none' : '0 2px 4px rgba(0, 0, 0, 0.1)'};
+    background-color: ${props => props.$isDark ? '#1f2937' : 'white'};
+    border-radius: 12px;
+    box-shadow: ${props => props.$isDark 
+        ? '0 4px 6px -1px rgba(0, 0, 0, 0.3), 0 2px 4px -1px rgba(0, 0, 0, 0.2)' 
+        : '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)'};
+    border: ${props => props.$isDark ? '1px solid #374151' : '1px solid #e5e7eb'};
     overflow: hidden;
+    transition: all 0.2s ease-in-out;
+    
+    &:hover {
+        transform: translateY(-2px);
+        box-shadow: ${props => props.$isDark 
+            ? '0 10px 15px -3px rgba(0, 0, 0, 0.4), 0 4px 6px -2px rgba(0, 0, 0, 0.3)' 
+            : '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)'};
+    }
 `;
 
 const getStatusColor = (status: string, passed: number, failed: number, isDark: boolean) => {
@@ -85,25 +96,106 @@ const getStatusColor = (status: string, passed: number, failed: number, isDark: 
 const TestRunHeader = styled.div<{ status: string; passed: number; failed: number; $isDark: boolean }>`
     background-color: ${props => getStatusColor(props.status, props.passed, props.failed, props.$isDark)};
     color: white;
-    padding: 1rem;
+    padding: 1.25rem;
     cursor: pointer;
     display: flex;
     justify-content: space-between;
     align-items: center;
+    transition: all 0.2s ease-in-out;
+    position: relative;
+    
+    &:hover {
+        opacity: 0.9;
+    }
+    
+    &:focus-visible {
+        outline: 3px solid ${props => props.$isDark ? '#60a5fa' : '#3b82f6'};
+        outline-offset: 2px;
+    }
 
     @media (max-width: 768px) {
         flex-direction: column;
         align-items: flex-start;
         gap: 0.5rem;
+        padding: 1rem;
+    }
+`;
+
+const StatusBadge = styled.span<{ status: string; $isDark: boolean }>`
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.375rem;
+    padding: 0.25rem 0.75rem;
+    border-radius: 9999px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.025em;
+    min-width: 90px;
+    white-space: nowrap;
+    text-align: center;
+    box-sizing: border-box;
+    background-color: ${props => {
+        const isSuccess = props.status === 'completed' || props.status === 'passed';
+        if (props.$isDark) {
+            return isSuccess ? 'rgba(34, 197, 94, 0.2)' : 'rgba(239, 68, 68, 0.2)';
+        }
+        // Light mode: stronger background for better contrast
+        if (isSuccess) return '#d1fae5'; // emerald-100
+        if (props.status === 'failed') return '#fee2e2'; // red-100
+        return '#e5e7eb'; // gray-200 for other statuses
+    }};
+    color: ${props => {
+        const isSuccess = props.status === 'completed' || props.status === 'passed';
+        if (props.$isDark) {
+            return isSuccess ? '#10b981' : '#ef4444';
+        }
+        // Light mode: darker text for readability
+        if (isSuccess) return '#065f46'; // emerald-900
+        if (props.status === 'failed') return '#991b1b'; // red-900
+        return '#374151'; // gray-700
+    }};
+    border: 1px solid ${props => {
+        const isSuccess = props.status === 'completed' || props.status === 'passed';
+        if (props.$isDark) {
+            return isSuccess ? '#10b981' : '#ef4444';
+        }
+        // Light mode borders
+        if (isSuccess) return '#34d399'; // emerald-400
+        if (props.status === 'failed') return '#f87171'; // red-400
+        return '#9ca3af'; // gray-400
+    }};
+    
+    &::before {
+        content: '';
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background-color: currentColor;
+    }
+
+    @media (max-width: 768px) {
+        min-width: 80px;
     }
 `;
 
 const ChevronIcon = styled.span<{ isExpanded: boolean }>`
-    display: inline-block;
-    margin-right: 0.5rem;
-    transition: transform 0.3s ease;
-    transform: ${props => props.isExpanded ? 'rotate(-180deg)' : 'rotate(0)'};
-    font-size: 0.8rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 0.75rem;
+    width: 20px;
+    height: 20px;
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    transform: ${props => props.isExpanded ? 'rotate(180deg)' : 'rotate(0deg)'};
+    font-size: 0.875rem;
+    border-radius: 4px;
+    background-color: rgba(255, 255, 255, 0.1);
+    
+    &:hover {
+        background-color: rgba(255, 255, 255, 0.2);
+    }
 `;
 
 const TestRunTitleWrapper = styled.div`
@@ -122,34 +214,59 @@ const TestRunTitle = styled.h3`
 
 const TestRunStats = styled.div`
     display: flex;
-    gap: 1rem;
+    align-items: center;
+    gap: 1.5rem;
 
     @media (max-width: 768px) {
         flex-wrap: wrap;
-        gap: 0.75rem;
+        gap: 1rem;
     }
 `;
 
 const StatItem = styled.div`
     display: flex;
     align-items: center;
-    gap: 0.25rem;
-
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 0.25rem 0.75rem;
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 20px;
+    font-size: 0.875rem;
+    font-weight: 500;
+    backdrop-filter: blur(4px);
+    min-width: 210px;
+    box-sizing: border-box;
+    white-space: nowrap;
+    
+    &:first-child {
+        border: 1px solid rgba(34, 197, 94, 0.3);
+    }
+    
+    &:nth-child(2) {
+        border: 1px solid rgba(239, 68, 68, 0.3);
+    }
+    
     @media (max-width: 768px) {
-        font-size: 0.9rem;
+        min-width: 180px;
+    }
+`;
+
+const DateBadge = styled(StatItem)`
+    width: 260px;
+    font-variant-numeric: tabular-nums;
+    @media (max-width: 768px) {
+        width: 220px;
     }
 `;
 
 const TestRunContent = styled.div<{ isExpanded: boolean; $isDark: boolean }>`
-    height: auto;
-    max-height: ${props => props.isExpanded ? 'none' : '0'};
-    overflow: hidden;
-    transition: padding 0.3s ease-in-out, background-color 0.3s;
-    padding: ${props => props.isExpanded ? '1rem' : '0'};
-    background-color: ${props => props.$isDark ? '#23272f' : '#fff'};
-    
+    background-color: ${props => props.$isDark ? '#111827' : '#f9fafb'};
+    border-top: 1px solid ${props => props.$isDark ? '#374151' : '#e5e7eb'};
+    padding: ${props => props.isExpanded ? '1.5rem' : '0'};
+    display: ${props => props.isExpanded ? 'block' : 'none'};
+
     @media (max-width: 768px) {
-        padding: ${props => props.isExpanded ? '0.75rem' : '0'};
+        padding: ${props => props.isExpanded ? '1rem' : '0'};
     }
 `;
 
@@ -423,11 +540,25 @@ const LiveTestAutomation: React.FC<LiveTestAutomationProps> = ({ isDark }) => {
     const [hoveredError, setHoveredError] = useState<{ id: string; error: string } | null>(null);
     const [limit, setLimit] = useState(PAGE_SIZE);
     const [loadingMore, setLoadingMore] = useState(false);
+    const [announceText, setAnnounceText] = useState<string>('');
+    const announcementRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
         fetchTestRuns(limit);
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [limit]);
+
+    const announceToScreenReader = useCallback((message: string) => {
+        setAnnounceText(message);
+        setTimeout(() => setAnnounceText(''), 1000);
+    }, []);
+
+    const handleKeyDown = useCallback((event: React.KeyboardEvent, action: () => void) => {
+        if (event.key === 'Enter' || event.key === ' ') {
+            event.preventDefault();
+            action();
+        }
+    }, []);
 
     const fetchTestRuns = async (currentLimit: number) => {
         setLoading(currentLimit === PAGE_SIZE); // Only show main loader on first load
@@ -447,15 +578,20 @@ const LiveTestAutomation: React.FC<LiveTestAutomationProps> = ({ isDark }) => {
     };
 
     const toggleRunDetails = async (id: string) => {
+        const testRun = testRuns.find(run => run._id === id);
+        const projectName = testRun?.project || 'test run';
+        
         if (expandedRuns[id]) {
             const newExpandedRuns = { ...expandedRuns };
             delete newExpandedRuns[id];
             setExpandedRuns(newExpandedRuns);
+            announceToScreenReader(`Collapsed details for ${projectName}`);
             return;
         }
 
         // Set loading state immediately
         setLoadingDetails(prev => ({ ...prev, [id]: true }));
+        announceToScreenReader(`Loading details for ${projectName}`);
 
         try {
             const data = await fetchWithErrorHandling(API_ENDPOINTS.TEST_RUN_DETAILS(id));
@@ -463,8 +599,11 @@ const LiveTestAutomation: React.FC<LiveTestAutomationProps> = ({ isDark }) => {
                 ...prev,
                 [id]: data
             }));
+            announceToScreenReader(`Loaded details for ${projectName}. ${data.results.passed} tests passed, ${data.results.failed} tests failed.`);
         } catch (err) {
-            setError('Failed to load test run details. Please try again.');
+            const errorMessage = 'Failed to load test run details. Please try again.';
+            setError(errorMessage);
+            announceToScreenReader(errorMessage);
         } finally {
             setLoadingDetails(prev => {
                 const next = { ...prev };
@@ -542,7 +681,19 @@ const LiveTestAutomation: React.FC<LiveTestAutomationProps> = ({ isDark }) => {
 
     if (loading) {
         return (
-            <TestAutomationSection>
+            <TestAutomationSection 
+                data-testid="test-automation-section-loading"
+                role="main"
+                aria-label="Loading test automation results"
+                aria-busy="true"
+            >
+                <VisuallyHidden 
+                    data-testid="loading-announcement" 
+                    aria-live="polite" 
+                    aria-atomic="true"
+                >
+                    Loading test automation results, please wait.
+                </VisuallyHidden>
                 <LoadingPlaceholder />
             </TestAutomationSection>
         );
@@ -550,8 +701,19 @@ const LiveTestAutomation: React.FC<LiveTestAutomationProps> = ({ isDark }) => {
 
     if (error) {
         return (
-            <TestAutomationSection>
-                <ErrorMessage>{error}</ErrorMessage>
+            <TestAutomationSection 
+                data-testid="test-automation-section-error"
+                role="main"
+                aria-label="Test automation error"
+            >
+                <ErrorMessage 
+                    data-testid="error-message"
+                    role="alert"
+                    aria-live="assertive"
+                    tabIndex={0}
+                >
+                    {error}
+                </ErrorMessage>
             </TestAutomationSection>
         );
     }
@@ -559,86 +721,208 @@ const LiveTestAutomation: React.FC<LiveTestAutomationProps> = ({ isDark }) => {
     const canLoadMore = testRuns.length >= limit && limit < MAX_RESULTS;
 
     return (
-        <TestAutomationSection data-testid="test-automation-section">
-            <TestRunList data-testid="test-run-list">
-                {testRuns.map((run) => (
-                    <TestRunCard key={run._id} data-testid={`test-run-card-${run._id}`} $isDark={isDark}>
+        <TestAutomationSection 
+            data-testid="test-automation-section"
+            role="main"
+            aria-label="Test Automation Results"
+        >
+            {/* Screen reader announcements */}
+            <VisuallyHidden
+                ref={announcementRef}
+                aria-live="polite"
+                aria-atomic="true"
+                data-testid="screen-reader-announcements"
+            >
+                {announceText}
+            </VisuallyHidden>
+
+            <TestRunList 
+                data-testid="test-run-list"
+                role="list"
+                aria-label={`${testRuns.length} test runs available`}
+            >
+                {testRuns.map((run, index) => (
+                    <TestRunCard 
+                        key={run._id} 
+                        data-testid={`test-run-card-${run._id}`} 
+                        $isDark={isDark}
+                        role="listitem"
+                    >
                         <TestRunHeader
                             status={run.status}
                             passed={run.results.passed}
                             failed={run.results.failed}
                             $isDark={isDark}
                             onClick={() => toggleRunDetails(run._id)}
+                            onKeyDown={(e) => handleKeyDown(e, () => toggleRunDetails(run._id))}
                             data-testid={`test-run-header-${run._id}`}
+                            role="button"
+                            tabIndex={0}
+                            aria-expanded={!!expandedRuns[run._id] || !!loadingDetails[run._id]}
+                            aria-controls={`test-run-content-${run._id}`}
+                            aria-describedby={`test-run-stats-${run._id}`}
+                            aria-label={`${run.project} test run. ${run.results.passed} passed, ${run.results.failed} failed. ${!!expandedRuns[run._id] ? 'Expanded' : 'Collapsed'}. Press Enter or Space to toggle details.`}
                         >
                             <TestRunTitleWrapper>
-                                <ChevronIcon isExpanded={!!expandedRuns[run._id] || !!loadingDetails[run._id]}>▼</ChevronIcon>
-                                <TestRunTitle>{run.project}</TestRunTitle>
+                                <ChevronIcon 
+                                    isExpanded={!!expandedRuns[run._id] || !!loadingDetails[run._id]}
+                                    aria-hidden="true"
+                                    data-testid={`chevron-icon-${run._id}`}
+                                >
+                                    ▼
+                                </ChevronIcon>
+                                <TestRunTitle data-testid={`test-run-title-${run._id}`}>
+                                    {run.project}
+                                </TestRunTitle>
                             </TestRunTitleWrapper>
-                            <TestRunStats>
-                                <StatItem>✅ {run.results.passed}</StatItem>
-                                <StatItem>❌ {run.results.failed}</StatItem>
-                                <StatItem>{formatDate(run.startedAt)}</StatItem>
+                            <TestRunStats 
+                                id={`test-run-stats-${run._id}`}
+                                data-testid={`test-run-stats-${run._id}`}
+                            >
+                                <StatusBadge 
+                                    status={run.status} 
+                                    $isDark={isDark}
+                                    data-testid={`status-badge-${run._id}`}
+                                    aria-label={`Status: ${run.status}`}
+                                >
+                                    {run.status}
+                                </StatusBadge>
+                                <DateBadge data-testid={`date-stat-${run._id}`} aria-label={`Started at ${formatDate(run.startedAt)}`}>
+                                    🕒 {formatDate(run.startedAt)}
+                                </DateBadge>
                             </TestRunStats>
                         </TestRunHeader>
-                        <TestRunContent data-testid="test-run-content" isExpanded={!!expandedRuns[run._id] || !!loadingDetails[run._id]} $isDark={isDark}>
-                            {loadingDetails[run._id] && renderLoadingExpandedContent()}
+                        <TestRunContent 
+                            id={`test-run-content-${run._id}`}
+                            data-testid={`test-run-content-${run._id}`}
+                            isExpanded={!!expandedRuns[run._id] || !!loadingDetails[run._id]} 
+                            $isDark={isDark}
+                            role="region"
+                            aria-labelledby={`test-run-title-${run._id}`}
+                            aria-hidden={!expandedRuns[run._id] && !loadingDetails[run._id]}
+                        >
+                            {loadingDetails[run._id] && (
+                                <div data-testid={`loading-details-${run._id}`} aria-label="Loading test details">
+                                    {renderLoadingExpandedContent()}
+                                </div>
+                            )}
                             {expandedRuns[run._id] && (
-                                <ExpandedContent data-testid={`expanded-content-${run._id}`}>
-                                    <TestSummary data-testid={`test-summary-${run._id}`} $isDark={isDark}>
-                                        <SummaryItem data-testid="test-run-duration">
+                                <ExpandedContent 
+                                    data-testid={`expanded-content-${run._id}`}
+                                    role="tabpanel"
+                                    aria-labelledby={`test-run-title-${run._id}`}
+                                >
+                                    <TestSummary 
+                                        data-testid={`test-summary-${run._id}`} 
+                                        $isDark={isDark}
+                                        role="group"
+                                        aria-label="Test run summary statistics"
+                                    >
+                                        <SummaryItem data-testid={`duration-${run._id}`}>
                                             <SummaryLabel>Duration</SummaryLabel>
-                                            <SummaryValue>{(expandedRuns[run._id].duration / 1000).toFixed(2)}s</SummaryValue>
+                                            <SummaryValue aria-label={`Total duration: ${(expandedRuns[run._id].duration / 1000).toFixed(2)} seconds`}>
+                                                {(expandedRuns[run._id].duration / 1000).toFixed(2)}s
+                                            </SummaryValue>
                                         </SummaryItem>
-                                        <SummaryItem data-testid="test-run-success-rate">
+                                        <SummaryItem data-testid={`success-rate-${run._id}`}>
                                             <SummaryLabel>Success Rate</SummaryLabel>
-                                            <SummaryValue>
+                                            <SummaryValue aria-label={`Success rate: ${Math.round((expandedRuns[run._id].results.passed / (expandedRuns[run._id].results.passed + expandedRuns[run._id].results.failed)) * 100)} percent`}>
                                                 {Math.round((expandedRuns[run._id].results.passed /
                                                     (expandedRuns[run._id].results.passed + expandedRuns[run._id].results.failed)) * 100)}%
                                             </SummaryValue>
                                         </SummaryItem>
-                                        <SummaryItem data-testid="test-run-passed-tests">
+                                        <SummaryItem data-testid={`passed-tests-${run._id}`}>
                                             <SummaryLabel>Passed Tests</SummaryLabel>
-                                            <SummaryValue>{expandedRuns[run._id].results.passed}</SummaryValue>
+                                            <SummaryValue aria-label={`${expandedRuns[run._id].results.passed} tests passed`}>
+                                                {expandedRuns[run._id].results.passed}
+                                            </SummaryValue>
                                         </SummaryItem>
-                                        <SummaryItem data-testid="test-run-failed-tests">
+                                        <SummaryItem data-testid={`failed-tests-${run._id}`}>
                                             <SummaryLabel>Failed Tests</SummaryLabel>
-                                            <SummaryValue>{expandedRuns[run._id].results.failed}</SummaryValue>
+                                            <SummaryValue aria-label={`${expandedRuns[run._id].results.failed} tests failed`}>
+                                                {expandedRuns[run._id].results.failed}
+                                            </SummaryValue>
                                         </SummaryItem>
-                                        <SummaryItem>
+                                        <SummaryItem data-testid={`skipped-tests-${run._id}`}>
                                             <SummaryLabel>Skipped Tests</SummaryLabel>
-                                            <SummaryValue>{expandedRuns[run._id].results.skipped || 0}</SummaryValue>
+                                            <SummaryValue aria-label={`${expandedRuns[run._id].results.skipped || 0} tests skipped`}>
+                                                {expandedRuns[run._id].results.skipped || 0}
+                                            </SummaryValue>
                                         </SummaryItem>
-                                        <SummaryItem>
+                                        <SummaryItem data-testid={`blocked-tests-${run._id}`}>
                                             <SummaryLabel>Blocked Tests</SummaryLabel>
-                                            <SummaryValue>{expandedRuns[run._id].results.blocked || 0}</SummaryValue>
+                                            <SummaryValue aria-label={`${expandedRuns[run._id].results.blocked || 0} tests blocked`}>
+                                                {expandedRuns[run._id].results.blocked || 0}
+                                            </SummaryValue>
                                         </SummaryItem>
                                     </TestSummary>
-                                    <TestDetails data-testid={`test-details-${run._id}`}>
+                                    <TestDetails 
+                                        data-testid={`test-details-${run._id}`}
+                                        role="group"
+                                        aria-label="Individual test case results"
+                                    >
                                         {expandedRuns[run._id].results.tests?.map((test: any, index: number) => (
-                                            <TestSuite data-testid={`test-suite-${run._id}`} key={index} $isDark={isDark}>
-                                                <SuiteTitle data-testid={`test-suite-title-${run._id}`} $isDark={isDark}>{test.suite}</SuiteTitle>
-                                                <TestCase status={test.status} $isDark={isDark}>
+                                            <TestSuite 
+                                                data-testid={`test-suite-${run._id}-${index}`} 
+                                                key={index} 
+                                                $isDark={isDark}
+                                                role="group"
+                                                aria-labelledby={`suite-title-${run._id}-${index}`}
+                                            >
+                                                <SuiteTitle 
+                                                    id={`suite-title-${run._id}-${index}`}
+                                                    data-testid={`test-suite-title-${run._id}-${index}`} 
+                                                    $isDark={isDark}
+                                                >
+                                                    {test.suite}
+                                                </SuiteTitle>
+                                                <TestCase 
+                                                    status={test.status} 
+                                                    $isDark={isDark}
+                                                    data-testid={`test-case-${run._id}-${index}`}
+                                                    role="listitem"
+                                                    aria-label={`Test: ${test.title || test.name}. Status: ${test.status}. Browser: ${test.browser || 'chromium'}. Duration: ${test.duration ? `${(test.duration / 1000).toFixed(2)} seconds` : 'N/A'}`}
+                                                >
                                                     <ErrorWrapper>
                                                         <TestInfo>
-                                                            <TestName status={test.status} $isDark={isDark}
+                                                            <TestName 
+                                                                status={test.status} 
+                                                                $isDark={isDark}
                                                                 onMouseEnter={() => test.error && setHoveredError({
                                                                     id: `${run._id}-${index}`,
                                                                     error: getErrorMessage(test.error)
                                                                 })}
                                                                 onMouseLeave={() => setHoveredError(null)}
+                                                                onFocus={() => test.error && setHoveredError({
+                                                                    id: `${run._id}-${index}`,
+                                                                    error: getErrorMessage(test.error)
+                                                                })}
+                                                                onBlur={() => setHoveredError(null)}
+                                                                data-testid={`test-name-${run._id}-${index}`}
+                                                                tabIndex={test.error ? 0 : -1}
+                                                                role={test.error ? "button" : undefined}
+                                                                aria-describedby={test.error ? `error-${run._id}-${index}` : undefined}
                                                             >
                                                                 {test.title || test.name}
                                                             </TestName>
-                                                            <TestMeta>
-                                                                <TestBrowser>
+                                                            <TestMeta data-testid={`test-meta-${run._id}-${index}`}>
+                                                                <TestBrowser data-testid={`test-browser-${run._id}-${index}`}>
                                                                     {test.browser === 'chromium' ? '🌐' : '📱'} {test.browser || 'chromium'}
                                                                 </TestBrowser>
-                                                                <TestDuration>{test.duration ? `${(test.duration / 1000).toFixed(2)}s` : 'N/A'}</TestDuration>
+                                                                <TestDuration data-testid={`test-duration-${run._id}-${index}`}>
+                                                                    {test.duration ? `${(test.duration / 1000).toFixed(2)}s` : 'N/A'}
+                                                                </TestDuration>
                                                             </TestMeta>
                                                         </TestInfo>
                                                         {hoveredError?.id === `${run._id}-${index}` && (
-                                                            <Tooltip>{hoveredError.error}</Tooltip>
+                                                            <Tooltip 
+                                                                id={`error-${run._id}-${index}`}
+                                                                data-testid={`error-tooltip-${run._id}-${index}`}
+                                                                role="tooltip"
+                                                                aria-live="polite"
+                                                            >
+                                                                {hoveredError.error}
+                                                            </Tooltip>
                                                         )}
                                                     </ErrorWrapper>
                                                 </TestCase>
@@ -659,14 +943,26 @@ const LiveTestAutomation: React.FC<LiveTestAutomationProps> = ({ isDark }) => {
                     </TestRunCard>
                 ))}
                 {(canLoadMore || loadingMore) && (
-                    <LoadMoreWrapper>
+                    <LoadMoreWrapper data-testid="load-more-wrapper">
                         <LoadMoreButton
-                            onClick={() => setLimit(l => Math.min(l + PAGE_SIZE, MAX_RESULTS))}
+                            onClick={() => {
+                                setLimit(l => Math.min(l + PAGE_SIZE, MAX_RESULTS));
+                                announceToScreenReader(`Loading ${PAGE_SIZE} more test runs`);
+                            }}
                             disabled={loadingMore}
                             $isDark={isDark}
                             data-testid="load-more-button"
+                            aria-label={loadingMore ? 'Loading more test runs' : `Load ${PAGE_SIZE} more test runs. Currently showing ${testRuns.length} of up to ${MAX_RESULTS} results.`}
+                            aria-live="polite"
                         >
-                            {loadingMore ? <><Spinner />Loading...</> : 'Load more results'}
+                            {loadingMore ? (
+                                <>
+                                    <Spinner data-testid="load-more-spinner" aria-hidden="true" />
+                                    Loading...
+                                </>
+                            ) : (
+                                'Load more results'
+                            )}
                         </LoadMoreButton>
                     </LoadMoreWrapper>
                 )}
@@ -910,6 +1206,18 @@ const Tooltip = styled.div`
 const ErrorWrapper = styled.div`
     position: relative;
     width: 100%;
+`;
+
+const VisuallyHidden = styled.div`
+    position: absolute !important;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
 `;
 
 const LoadMoreWrapper = styled.div`
