@@ -21,14 +21,7 @@ const pulse = keyframes`
     }
 `;
 
-const shimmer = keyframes`
-    0% {
-        background-position: -200px 0;
-    }
-    100% {
-        background-position: calc(200px + 100%) 0;
-    }
-`;
+
 
 const ContactSection = styled.section`
     padding: 3rem 2rem;
@@ -51,27 +44,7 @@ const HeaderSection = styled.div`
     }
 `;
 
-const Title = styled.h1<{ $isDark: boolean }>`
-    font-size: 2.8rem;
-    font-weight: 700;
-    margin-bottom: 1rem;
-    background: ${props => props.$isDark 
-        ? 'linear-gradient(135deg, #74b9ff, #0984e3, #00b894)'
-        : 'linear-gradient(135deg, #3498db, #2c3e50, #27ae60)'
-    };
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    position: relative;
 
-    @media (max-width: 768px) {
-        font-size: 2.2rem;
-    }
-
-    @media (max-width: 480px) {
-        font-size: 1.8rem;
-    }
-`;
 
 const Subtitle = styled.p<{ $isDark: boolean }>`
     font-size: 1.3rem;
