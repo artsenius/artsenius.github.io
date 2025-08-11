@@ -422,13 +422,6 @@ const Contact: React.FC<ContactProps> = React.memo(({ isDark }) => {
                 aria-labelledby="contact-title"
             >
                 <HeaderSection data-testid="contact-header">
-                    <Title 
-                        data-testid="contact-title" 
-                        $isDark={isDark}
-                        id="contact-title"
-                    >
-                        Get In Touch
-                    </Title>
                     <Subtitle 
                         data-testid="contact-subtitle" 
                         $isDark={isDark}
