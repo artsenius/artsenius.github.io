@@ -1,6 +1,6 @@
 import React, { useState, useCallback, useMemo } from 'react';
 import styled from 'styled-components';
-import { useTheme } from './ThemeProvider';
+
 import { fadeInUp, pulseScale } from '../styles/animations';
 
 const ContactSection = styled.section`
@@ -300,7 +300,7 @@ interface CopyState {
 }
 
 const Contact: React.FC<ContactProps> = React.memo(({ isDark }) => {
-    const { theme } = useTheme();
+
     const [copyMessages, setCopyMessages] = useState<CopyState>({
         email: false,
         phone: false,

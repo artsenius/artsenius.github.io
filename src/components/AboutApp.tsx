@@ -1,6 +1,6 @@
 import React from 'react';
-import styled, { css } from 'styled-components';
-import { useTheme } from './ThemeProvider';
+import styled from 'styled-components';
+
 import { fadeInUp, slideInLeft, pulseScale } from '../styles/animations';
 
 const AboutAppSection = styled.section`
@@ -396,8 +396,6 @@ interface AboutAppProps {
 }
 
 const AboutApp: React.FC<AboutAppProps> = ({ isDark, onGoToAutomation }) => {
-    const { theme } = useTheme();
-    
     return (
         <AboutAppSection 
             data-testid="about-app-section" 

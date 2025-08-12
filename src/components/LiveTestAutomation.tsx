@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import styled, { css } from 'styled-components';
 import { API_ENDPOINTS, fetchWithErrorHandling } from '../config/api';
-import { useTheme } from './ThemeProvider';
+
 import { fadeInUp, fadeIn, shimmer, spin } from '../styles/animations';
 
 interface TestRun {
@@ -379,8 +379,6 @@ const LoadingStatValue = styled.div<{ width: string }>`
 `;
 
 const LoadingPlaceholder = () => {
-    const { theme } = useTheme();
-    
     return (
         <TestRunList data-testid="loading-placeholder">
             {[1, 2, 3, 4, 5].map((_, index) => (
@@ -518,7 +516,6 @@ const Spinner = styled.div`
 `;
 
 const LiveTestAutomation: React.FC<LiveTestAutomationProps> = ({ isDark }) => {
-    const { theme } = useTheme();
     const [testRuns, setTestRuns] = useState<TestRun[]>([]);
     const [expandedRuns, setExpandedRuns] = useState<{ [key: string]: TestRunDetail }>({});
     const [loadingDetails, setLoadingDetails] = useState<{ [key: string]: boolean }>({});
