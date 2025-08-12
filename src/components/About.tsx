@@ -1,54 +1,9 @@
 import React from 'react';
-import styled, { keyframes, css } from 'styled-components';
+import styled, { css } from 'styled-components';
 import profilePhoto from '../media/art.jpg';
 import resumePDF from '../media/A_Senko_Lead_SDET.pdf';
 import { useTheme } from './ThemeProvider';
-
-// Animation keyframes
-const fadeInUp = keyframes`
-  from {
-    opacity: 0;
-    transform: translateY(30px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-`;
-
-const slideInLeft = keyframes`
-  from {
-    opacity: 0;
-    transform: translateX(-30px);
-  }
-  to {
-    opacity: 1;
-    transform: translateX(0);
-  }
-`;
-
-const slideInRight = keyframes`
-  from {
-    opacity: 0;
-    transform: translateX(30px);
-  }
-  to {
-    opacity: 1;
-    transform: translateX(0);
-  }
-`;
-
-const pulse = keyframes`
-  0% {
-    box-shadow: 0 0 0 0 rgba(52, 152, 219, 0.4);
-  }
-  70% {
-    box-shadow: 0 0 0 10px rgba(52, 152, 219, 0);
-  }
-  100% {
-    box-shadow: 0 0 0 0 rgba(52, 152, 219, 0);
-  }
-`;
+import { fadeInUp, slideInLeft, slideInRight, pulse } from '../styles/animations';
 
 const AboutSection = styled.section`
     padding: 2rem;
@@ -60,6 +15,33 @@ const AboutSection = styled.section`
 
     @media (max-width: 768px) {
         padding: 1rem;
+    }
+`;
+
+const PageTitle = styled.h1`
+    color: ${props => props.theme.colors.text};
+    font-size: 2.5rem;
+    font-weight: 700;
+    text-align: center;
+    margin-bottom: 2rem;
+    animation: ${fadeInUp} 0.8s ease-out;
+    position: relative;
+    letter-spacing: -0.02em;
+
+    &::after {
+        content: '';
+        position: absolute;
+        bottom: -0.5rem;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 4rem;
+        height: 3px;
+        background: linear-gradient(90deg, ${props => props.theme.colors.accent}, ${props => props.theme.colors.accent}66);
+        border-radius: 2px;
+    }
+
+    @media (max-width: 768px) {
+        font-size: 2rem;
     }
 `;
 
@@ -121,7 +103,7 @@ const ProfileImage = styled.img`
     }
 `;
 
-const Name = styled.h1`
+const Name = styled.h2`
     color: ${props => props.theme.colors.text};
     font-size: 2.2rem;
     margin-bottom: 0.5rem;
@@ -134,7 +116,7 @@ const Name = styled.h1`
     }
 `;
 
-const Position = styled.h2`
+const Position = styled.h3`
     color: ${props => props.theme.colors.textSecondary};
     font-size: 1.3rem;
     margin-bottom: 1.5rem;
@@ -176,8 +158,6 @@ const DocumentLink = styled.a`
         transform: translateY(0);
     }
 `;
-
-
 
 const ExpandableInfoBox = styled.div<{ $isDark: boolean }>`
     position: relative;
@@ -269,7 +249,7 @@ const Section = styled.div<{ $delay?: number }>`
     }
 `;
 
-const SectionTitle = styled.h3<{ $isDark: boolean }>`
+const SectionTitle = styled.h4<{ $isDark: boolean }>`
     color: ${props => props.$isDark ? props.theme.colors.text : '#2c3e50'};
     margin-bottom: 1.5rem;
     font-size: 1.6rem;
@@ -441,7 +421,7 @@ const ExperienceItem = styled.div`
     }
 `;
 
-const CompanyName = styled.h4<{ $isDark: boolean }>`
+const CompanyName = styled.h5<{ $isDark: boolean }>`
     color: ${props => props.$isDark ? props.theme.colors.text : '#2c3e50'};
     font-size: 1.3rem;
     margin-bottom: 0.5rem;
@@ -580,6 +560,10 @@ const About: React.FC<AboutProps> = ({ isDark, setCurrentPage }) => {
 
     return (
         <AboutSection data-testid="about-section" role="main" aria-labelledby="about-heading">
+            <PageTitle id="about-heading" data-testid="about-page-title">
+                About Me
+            </PageTitle>
+            
             <Content data-testid="about-content">
                 <ProfileSection 
                     data-testid="profile-section" 
@@ -644,7 +628,7 @@ const About: React.FC<AboutProps> = ({ isDark, setCurrentPage }) => {
                     </ExpandableInfoBox>
 
                     <Bio data-testid="about-bio" role="article" aria-labelledby="bio-heading">
-                        <h2 id="bio-heading" className="sr-only">Biography</h2>
+                        <h3 id="bio-heading" className="sr-only">Biography</h3>
                         <p>
                             A results-driven Lead QA Engineer, SDET, and Test Automation Architect with expertise in AI testing and modern automation.
                             Proven track record of building and leading high-performing QA teams, implementing
@@ -692,7 +676,7 @@ const About: React.FC<AboutProps> = ({ isDark, setCurrentPage }) => {
                         <SectionTitle data-testid="skills-title" $isDark={isDark} id="skills-heading">Technical Skills</SectionTitle>
                         
                         <SkillsFilterContainer data-testid="skills-filter-container" role="search" aria-labelledby="skills-search-heading">
-                            <h4 id="skills-search-heading" className="sr-only">Search and filter skills</h4>
+                            <h5 id="skills-search-heading" className="sr-only">Search and filter skills</h5>
                             <SearchInput
                                 data-testid="skills-search"
                                 data-has-value={searchTerm.length > 0}
