@@ -475,7 +475,7 @@ const AchievementsList = styled.ul`
         color: ${props => props.theme.colors.text};
 
         &::before {
-            content: '✨';
+            content: '✓';
             position: absolute;
             left: 0;
             top: 0;
