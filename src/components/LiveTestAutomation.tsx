@@ -61,32 +61,7 @@ const TestAutomationSection = styled.section`
     }
 `;
 
-const PageTitle = styled.h1`
-    color: ${props => props.theme.colors.text};
-    font-size: 2.5rem;
-    font-weight: 700;
-    text-align: center;
-    margin-bottom: 2rem;
-    animation: ${fadeInUp} 0.8s ease-out;
-    position: relative;
-    letter-spacing: -0.02em;
 
-    &::after {
-        content: '';
-        position: absolute;
-        bottom: -0.5rem;
-        left: 50%;
-        transform: translateX(-50%);
-        width: 4rem;
-        height: 3px;
-        background: linear-gradient(90deg, ${props => props.theme.colors.accent}, ${props => props.theme.colors.accent}66);
-        border-radius: 2px;
-    }
-
-    @media (max-width: 768px) {
-        font-size: 2rem;
-    }
-`;
 
 const TestRunList = styled.div`
     display: flex;
@@ -670,9 +645,6 @@ const LiveTestAutomation: React.FC<LiveTestAutomationProps> = ({ isDark }) => {
                 aria-label="Loading test automation results"
                 aria-busy="true"
             >
-                <PageTitle data-testid="live-automation-page-title">
-                    Live Test Automation
-                </PageTitle>
                 <VisuallyHidden 
                     data-testid="loading-announcement" 
                     aria-live="polite" 
@@ -692,9 +664,6 @@ const LiveTestAutomation: React.FC<LiveTestAutomationProps> = ({ isDark }) => {
                 role="main"
                 aria-label="Test automation error"
             >
-                <PageTitle data-testid="live-automation-page-title">
-                    Live Test Automation
-                </PageTitle>
                 <ErrorMessage 
                     data-testid="error-message"
                     role="alert"
@@ -715,10 +684,6 @@ const LiveTestAutomation: React.FC<LiveTestAutomationProps> = ({ isDark }) => {
             role="main"
             aria-label="Test Automation Results"
         >
-            <PageTitle data-testid="live-automation-page-title">
-                Live Test Automation
-            </PageTitle>
-            
             {/* Screen reader announcements */}
             <VisuallyHidden
                 ref={announcementRef}

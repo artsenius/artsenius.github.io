@@ -17,32 +17,7 @@ const ContactSection = styled.section`
     }
 `;
 
-const PageTitle = styled.h1`
-    color: ${props => props.theme.colors.text};
-    font-size: 2.5rem;
-    font-weight: 700;
-    text-align: center;
-    margin-bottom: 2rem;
-    animation: ${fadeInUp} 0.8s ease-out;
-    position: relative;
-    letter-spacing: -0.02em;
 
-    &::after {
-        content: '';
-        position: absolute;
-        bottom: -0.5rem;
-        left: 50%;
-        transform: translateX(-50%);
-        width: 4rem;
-        height: 3px;
-        background: linear-gradient(90deg, ${props => props.theme.colors.accent}, ${props => props.theme.colors.accent}66);
-        border-radius: 2px;
-    }
-
-    @media (max-width: 768px) {
-        font-size: 2rem;
-    }
-`;
 
 const HeaderSection = styled.div`
     text-align: center;
@@ -386,16 +361,8 @@ const Contact: React.FC<ContactProps> = React.memo(({ isDark }) => {
             </SkipLink>
             <ContactSection 
                 data-testid="contact-section" 
-                role="main" 
-                aria-labelledby="contact-title"
+                role="main"
             >
-                <PageTitle 
-                    id="contact-title" 
-                    data-testid="contact-page-title"
-                >
-                    Contact
-                </PageTitle>
-                
                 <HeaderSection data-testid="contact-header">
                     <Subtitle 
                         data-testid="contact-subtitle"

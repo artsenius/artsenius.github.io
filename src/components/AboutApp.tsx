@@ -17,32 +17,7 @@ const AboutAppSection = styled.section`
     }
 `;
 
-const PageTitle = styled.h1`
-    color: ${props => props.theme.colors.text};
-    font-size: 2.5rem;
-    font-weight: 700;
-    text-align: center;
-    margin-bottom: 2rem;
-    animation: ${fadeInUp} 0.8s ease-out;
-    position: relative;
-    letter-spacing: -0.02em;
 
-    &::after {
-        content: '';
-        position: absolute;
-        bottom: -0.5rem;
-        left: 50%;
-        transform: translateX(-50%);
-        width: 4rem;
-        height: 3px;
-        background: linear-gradient(90deg, ${props => props.theme.colors.accent}, ${props => props.theme.colors.accent}66);
-        border-radius: 2px;
-    }
-
-    @media (max-width: 768px) {
-        font-size: 2rem;
-    }
-`;
 
 const Content = styled.div`
     font-size: 1.1rem;
@@ -406,12 +381,7 @@ const AboutApp: React.FC<AboutAppProps> = ({ isDark, onGoToAutomation }) => {
                 Skip to main content
             </SkipLink>
             
-            <PageTitle 
-                id="about-app-title" 
-                data-testid="about-app-page-title"
-            >
-                About This App
-            </PageTitle>
+
             
             <Content id="main-content">
                 <Section data-testid="about-app-description" delay={0} role="region" aria-labelledby="description-title">

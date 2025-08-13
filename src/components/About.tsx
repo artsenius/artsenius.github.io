@@ -18,32 +18,7 @@ const AboutSection = styled.section`
     }
 `;
 
-const PageTitle = styled.h1`
-    color: ${props => props.theme.colors.text};
-    font-size: 2.5rem;
-    font-weight: 700;
-    text-align: center;
-    margin-bottom: 2rem;
-    animation: ${fadeInUp} 0.8s ease-out;
-    position: relative;
-    letter-spacing: -0.02em;
 
-    &::after {
-        content: '';
-        position: absolute;
-        bottom: -0.5rem;
-        left: 50%;
-        transform: translateX(-50%);
-        width: 4rem;
-        height: 3px;
-        background: linear-gradient(90deg, ${props => props.theme.colors.accent}, ${props => props.theme.colors.accent}66);
-        border-radius: 2px;
-    }
-
-    @media (max-width: 768px) {
-        font-size: 2rem;
-    }
-`;
 
 const Content = styled.div`
     display: grid;
@@ -559,11 +534,7 @@ const About: React.FC<AboutProps> = ({ isDark, setCurrentPage }) => {
     };
 
     return (
-        <AboutSection data-testid="about-section" role="main" aria-labelledby="about-heading">
-            <PageTitle id="about-heading" data-testid="about-page-title">
-                About Me
-            </PageTitle>
-            
+        <AboutSection data-testid="about-section" role="main">
             <Content data-testid="about-content">
                 <ProfileSection 
                     data-testid="profile-section" 
