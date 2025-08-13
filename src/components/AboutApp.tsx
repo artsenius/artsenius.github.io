@@ -1,45 +1,23 @@
 import React from 'react';
-import styled, { keyframes } from 'styled-components';
+import styled from 'styled-components';
 
-// Animation keyframes
-const fadeInUp = keyframes`
-  from {
-    opacity: 0;
-    transform: translateY(30px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-`;
-
-const slideInLeft = keyframes`
-  from {
-    opacity: 0;
-    transform: translateX(-20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateX(0);
-  }
-`;
-
-const pulse = keyframes`
-  0% { transform: scale(1); opacity: 1; }
-  50% { transform: scale(1.05); opacity: 0.8; }
-  100% { transform: scale(1); opacity: 1; }
-`;
+import { fadeInUp, slideInLeft, pulseScale } from '../styles/animations';
 
 const AboutAppSection = styled.section`
     padding: 2rem;
     max-width: 1200px;
     margin: 0 auto;
+    background-color: ${props => props.theme.colors.background};
+    color: ${props => props.theme.colors.text};
+    transition: background-color 0.3s ease, color 0.3s ease;
     scroll-behavior: smooth;
 
     @media (max-width: 768px) {
         padding: 1rem;
     }
 `;
+
+
 
 const Content = styled.div`
     font-size: 1.1rem;
@@ -60,8 +38,8 @@ const Section = styled.div<{ delay?: number }>`
     }
 `;
 
-const SectionTitle = styled.h2<{ $isDark: boolean }>`
-    color: ${props => props.$isDark ? '#ecf0f1' : '#2c3e50'};
+const SectionTitle = styled.h2`
+    color: ${props => props.theme.colors.text};
     font-size: 2rem;
     font-weight: 600;
     margin-bottom: 1.5rem;
@@ -75,7 +53,7 @@ const SectionTitle = styled.h2<{ $isDark: boolean }>`
         left: 0;
         width: 60px;
         height: 3px;
-        background: linear-gradient(135deg, #3498db, #2ecc71);
+        background: linear-gradient(135deg, ${props => props.theme.colors.accent}, #2ecc71);
         border-radius: 2px;
     }
 
@@ -84,8 +62,8 @@ const SectionTitle = styled.h2<{ $isDark: boolean }>`
     }
 `;
 
-const SubSectionTitle = styled.h3<{ $isDark: boolean }>`
-    color: ${props => props.$isDark ? '#ecf0f1' : '#2c3e50'};
+const SubSectionTitle = styled.h3`
+    color: ${props => props.theme.colors.text};
     font-size: 1.5rem;
     font-weight: 500;
     margin-bottom: 1rem;
@@ -107,26 +85,24 @@ const TechStack = styled.div`
     gap: 1.5rem;
 `;
 
-const TechItem = styled.div<{ $isDark: boolean; category?: string }>`
+const TechItem = styled.div<{ category?: string }>`
     background: ${props => {
-        if (props.category === 'frontend') return props.$isDark ? 'linear-gradient(135deg, #2d2d2d, #1a365d)' : 'linear-gradient(135deg, #f8f9fa, #e3f2fd)';
-        if (props.category === 'backend') return props.$isDark ? 'linear-gradient(135deg, #2d2d2d, #1a4a2e)' : 'linear-gradient(135deg, #f8f9fa, #e8f5e8)';
-        if (props.category === 'automation') return props.$isDark ? 'linear-gradient(135deg, #2d2d2d, #4a1a1a)' : 'linear-gradient(135deg, #f8f9fa, #ffeaa7)';
-        return props.$isDark ? '#2d2d2d' : '#f8f9fa';
+        if (props.category === 'frontend') return props.theme.colors.surface;
+        if (props.category === 'backend') return props.theme.colors.surface;
+        if (props.category === 'automation') return props.theme.colors.surface;
+        return props.theme.colors.surface;
     }};
-    color: ${props => props.$isDark ? '#ecf0f1' : '#2c3e50'};
+    color: ${props => props.theme.colors.text};
     padding: 2rem;
     border-radius: 12px;
     border-left: 4px solid ${props => {
         if (props.category === 'frontend') return '#3498db';
         if (props.category === 'backend') return '#2ecc71';
         if (props.category === 'automation') return '#e67e22';
-        return '#3498db';
+        return props.theme.colors.accent;
     }};
     transition: all 0.3s ease;
-    box-shadow: ${props => props.$isDark 
-        ? '0 4px 6px rgba(0, 0, 0, 0.3)' 
-        : '0 4px 6px rgba(0, 0, 0, 0.1)'};
+    box-shadow: 0 4px 6px ${props => props.theme.colors.shadow};
     position: relative;
     overflow: hidden;
 
@@ -141,19 +117,17 @@ const TechItem = styled.div<{ $isDark: boolean; category?: string }>`
             if (props.category === 'frontend') return 'linear-gradient(90deg, #3498db, #2ecc71)';
             if (props.category === 'backend') return 'linear-gradient(90deg, #2ecc71, #f39c12)';
             if (props.category === 'automation') return 'linear-gradient(90deg, #e67e22, #e74c3c)';
-            return 'linear-gradient(90deg, #3498db, #2ecc71)';
+            return `linear-gradient(90deg, ${props.theme.colors.accent}, #2ecc71)`;
         }};
     }
 
     &:hover {
         transform: translateY(-4px);
-        box-shadow: ${props => props.$isDark 
-            ? '0 8px 25px rgba(0, 0, 0, 0.4)' 
-            : '0 8px 25px rgba(0, 0, 0, 0.15)'};
+        box-shadow: 0 8px 25px ${props => props.theme.colors.shadow};
     }
     
     &:focus-within {
-        outline: 2px solid ${props => props.$isDark ? '#3498db' : '#2980b9'};
+        outline: 2px solid ${props => props.theme.colors.accent};
         outline-offset: 2px;
     }
 `;
@@ -172,6 +146,7 @@ const FeatureItem = styled.li<{ delay?: number }>`
     margin-bottom: 0.8rem;
     position: relative;
     animation: ${slideInLeft} 0.6s ease-out ${props => (props.delay || 0) * 0.1}s both;
+    color: ${props => props.theme.colors.text};
     
     &::before {
         content: '✓';
@@ -197,18 +172,14 @@ const ArchitectureGrid = styled.div`
     }
 `;
 
-const ArchitectureCard = styled.div<{ $isDark: boolean; delay?: number }>`
-    background: ${props => props.$isDark 
-        ? 'linear-gradient(135deg, #2d2d2d, #1e3a8a)' 
-        : 'linear-gradient(135deg, #ffffff, #f0f8ff)'};
-    color: ${props => props.$isDark ? '#ecf0f1' : '#2c3e50'};
+const ArchitectureCard = styled.div<{ delay?: number }>`
+    background: ${props => props.theme.colors.surface};
+    color: ${props => props.theme.colors.text};
     padding: 2rem;
     border-radius: 12px;
-    border-left: 4px solid #3498db;
+    border-left: 4px solid ${props => props.theme.colors.accent};
     transition: all 0.3s ease;
-    box-shadow: ${props => props.$isDark 
-        ? '0 6px 20px rgba(0, 0, 0, 0.3)' 
-        : '0 6px 20px rgba(0, 0, 0, 0.1)'};
+    box-shadow: 0 6px 20px ${props => props.theme.colors.shadow};
     animation: ${fadeInUp} 0.8s ease-out ${props => (props.delay || 0) * 0.3}s both;
     position: relative;
     
@@ -219,19 +190,17 @@ const ArchitectureCard = styled.div<{ $isDark: boolean; delay?: number }>`
         left: 0;
         right: 0;
         height: 3px;
-        background: linear-gradient(90deg, #3498db, #2ecc71, #f39c12);
+        background: linear-gradient(90deg, ${props => props.theme.colors.accent}, #2ecc71, #f39c12);
         border-radius: 12px 12px 0 0;
     }
 
     &:hover {
         transform: translateY(-6px) scale(1.02);
-        box-shadow: ${props => props.$isDark 
-            ? '0 12px 40px rgba(0, 0, 0, 0.4)' 
-            : '0 12px 40px rgba(0, 0, 0, 0.15)'};
+        box-shadow: 0 12px 40px ${props => props.theme.colors.shadow};
     }
 
     h4 {
-        color: ${props => props.$isDark ? '#64b5f6' : '#1976d2'};
+        color: ${props => props.theme.colors.accent};
         font-size: 1.3rem;
         font-weight: 600;
         margin-bottom: 0.8rem;
@@ -282,7 +251,7 @@ const StatusBadge = styled.span<{ status: 'live' | 'stable' | 'active' }>`
         }
     }};
     color: white;
-    animation: ${pulse} 2s infinite;
+    animation: ${pulseScale} 2s infinite;
     
     &::before {
         content: ${props => {
@@ -302,7 +271,7 @@ const StatusBadge = styled.span<{ status: 'live' | 'stable' | 'active' }>`
 `;
 
 const GithubLink = styled.a`
-    color: #3498db;
+    color: ${props => props.theme.colors.accent};
     text-decoration: none;
     font-weight: 500;
     transition: all 0.3s ease;
@@ -319,14 +288,14 @@ const GithubLink = styled.a`
     }
 
     &:hover {
-        color: #2980b9;
-        background-color: rgba(52, 152, 219, 0.1);
-        border-color: #3498db;
+        color: ${props => props.theme.colors.text};
+        background-color: ${props => props.theme.colors.hover};
+        border-color: ${props => props.theme.colors.accent};
         transform: translateX(4px);
     }
 
     &:focus {
-        outline: 2px solid #3498db;
+        outline: 2px solid ${props => props.theme.colors.accent};
         outline-offset: 2px;
     }
 `;
@@ -358,7 +327,7 @@ const LiveButton = styled.button`
 
     &::after {
         content: '🔴';
-        animation: ${pulse} 2s infinite;
+        animation: ${pulseScale} 2s infinite;
     }
     
     @media (prefers-reduced-motion: reduce) {
@@ -372,6 +341,7 @@ const IntroText = styled.p<{ delay?: number }>`
     font-size: 1.2rem;
     line-height: 1.7;
     margin-bottom: 1.5rem;
+    color: ${props => props.theme.colors.text};
     animation: ${fadeInUp} 0.8s ease-out ${props => (props.delay || 0) * 0.2}s both;
     
     @media (prefers-reduced-motion: reduce) {
@@ -383,7 +353,7 @@ const SkipLink = styled.a`
     position: absolute;
     top: -40px;
     left: 6px;
-    background: #3498db;
+    background: ${props => props.theme.colors.accent};
     color: white;
     padding: 8px;
     text-decoration: none;
@@ -411,12 +381,13 @@ const AboutApp: React.FC<AboutAppProps> = ({ isDark, onGoToAutomation }) => {
                 Skip to main content
             </SkipLink>
             
+
+            
             <Content id="main-content">
                 <Section data-testid="about-app-description" delay={0} role="region" aria-labelledby="description-title">
                     <SectionTitle 
                         id="description-title" 
-                        data-testid="about-app-main-title" 
-                        $isDark={isDark}
+                        data-testid="about-app-main-title"
                     >
                         🚀 Full-Stack Solution Architecture
                     </SectionTitle>
@@ -443,8 +414,7 @@ const AboutApp: React.FC<AboutAppProps> = ({ isDark, onGoToAutomation }) => {
                 >
                     <SectionTitle 
                         id="architecture-title" 
-                        data-testid="architecture-title" 
-                        $isDark={isDark}
+                        data-testid="architecture-title"
                     >
                         🏗️ System Architecture & CI/CD Pipeline
                     </SectionTitle>
@@ -461,7 +431,6 @@ const AboutApp: React.FC<AboutAppProps> = ({ isDark, onGoToAutomation }) => {
                     >
                         <ArchitectureCard 
                             data-testid="frontend-deployment-card" 
-                            $isDark={isDark} 
                             delay={0}
                             role="gridcell"
                             tabIndex={0}
@@ -483,7 +452,6 @@ const AboutApp: React.FC<AboutAppProps> = ({ isDark, onGoToAutomation }) => {
                         
                         <ArchitectureCard 
                             data-testid="backend-deployment-card" 
-                            $isDark={isDark} 
                             delay={1}
                             role="gridcell"
                             tabIndex={0}
@@ -513,8 +481,7 @@ const AboutApp: React.FC<AboutAppProps> = ({ isDark, onGoToAutomation }) => {
                 >
                     <SectionTitle 
                         id="components-title" 
-                        data-testid="components-title" 
-                        $isDark={isDark}
+                        data-testid="components-title"
                     >
                         🛠️ Application Components
                     </SectionTitle>
@@ -522,13 +489,12 @@ const AboutApp: React.FC<AboutAppProps> = ({ isDark, onGoToAutomation }) => {
                     <TechStack data-testid="tech-stack-container">
                         <TechItem 
                             data-testid="about-app-frontend" 
-                            $isDark={isDark} 
                             category="frontend"
                             tabIndex={0}
                             role="article"
                             aria-labelledby="frontend-title"
                         >
-                            <SubSectionTitle id="frontend-title" data-testid="frontend-title" $isDark={isDark}>
+                            <SubSectionTitle id="frontend-title" data-testid="frontend-title">
                                 <TechIcon icon="⚛️" />
                                 Frontend Application
                                 <StatusBadge status="live" data-testid="frontend-component-status">Live</StatusBadge>
@@ -565,13 +531,12 @@ const AboutApp: React.FC<AboutAppProps> = ({ isDark, onGoToAutomation }) => {
 
                         <TechItem 
                             data-testid="about-app-backend" 
-                            $isDark={isDark} 
                             category="backend"
                             tabIndex={0}
                             role="article"
                             aria-labelledby="backend-title"
                         >
-                            <SubSectionTitle id="backend-title" data-testid="backend-title" $isDark={isDark}>
+                            <SubSectionTitle id="backend-title" data-testid="backend-title">
                                 <TechIcon icon="🔧" />
                                 Backend Server
                                 <StatusBadge status="stable" data-testid="backend-component-status">Stable</StatusBadge>
@@ -604,13 +569,12 @@ const AboutApp: React.FC<AboutAppProps> = ({ isDark, onGoToAutomation }) => {
 
                         <TechItem 
                             data-testid="about-app-automation-framework" 
-                            $isDark={isDark} 
                             category="automation"
                             tabIndex={0}
                             role="article"
                             aria-labelledby="automation-title"
                         >
-                            <SubSectionTitle id="automation-title" data-testid="automation-title" $isDark={isDark}>
+                            <SubSectionTitle id="automation-title" data-testid="automation-title">
                                 <TechIcon icon="🤖" />
                                 Test Automation Framework & Live Results
                                 <StatusBadge status="active" data-testid="automation-component-status">Active</StatusBadge>
@@ -676,8 +640,7 @@ const AboutApp: React.FC<AboutAppProps> = ({ isDark, onGoToAutomation }) => {
                 >
                     <SectionTitle 
                         id="development-tools-title" 
-                        data-testid="development-tools-title" 
-                        $isDark={isDark}
+                        data-testid="development-tools-title"
                     >
                         🧠 Development Tools & AI Integration
                     </SectionTitle>
