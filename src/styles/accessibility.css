@@ -1,0 +1,156 @@
+/* Accessibility CSS - Progressive Enhancement Support */
+
+/* Respect user preferences for reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Ensure content is visible for progressive enhancement */
+.profile-section {
+  display: block !important;
+  visibility: visible !important;
+}
+
+.basic-structure {
+  display: block !important;
+  visibility: visible !important;
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .profile-section,
+  .basic-structure {
+    border: 2px solid currentColor !important;
+  }
+}
+
+/* Respect user preferences for color scheme */
+@media (prefers-color-scheme: dark) {
+  .basic-content {
+    background-color: #1a1a1a;
+    color: #ffffff;
+  }
+  
+  .basic-header {
+    background-color: #2c3e50;
+  }
+  
+  .basic-nav {
+    background-color: #34495e;
+  }
+}
+
+/* Focus management for keyboard navigation */
+*:focus {
+  outline: 2px solid #3498db;
+  outline-offset: 2px;
+}
+
+/* Screen reader only content */
+.sr-only {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  padding: 0 !important;
+  margin: -1px !important;
+  overflow: hidden !important;
+  clip: rect(0, 0, 0, 0) !important;
+  white-space: nowrap !important;
+  border: 0 !important;
+}
+
+/* Skip links for keyboard navigation */
+.skip-link {
+  position: absolute;
+  top: -40px;
+  left: 6px;
+  background: #3498db;
+  color: white;
+  padding: 8px;
+  text-decoration: none;
+  z-index: 10000;
+}
+
+.skip-link:focus {
+  top: 6px;
+}
+
+/* Progressive enhancement - content that appears without JavaScript */
+.no-js-content {
+  display: block;
+}
+
+/* Enhanced content - hidden until JavaScript loads */
+.js-enhanced {
+  display: none;
+}
+
+/* When JavaScript is available, reverse the visibility */
+.js-available .no-js-content {
+  display: none;
+}
+
+.js-available .js-enhanced {
+  display: block;
+}
+
+/* Fallback styles for browsers that don't support CSS Grid */
+@supports not (display: grid) {
+  .grid-fallback {
+    display: block;
+  }
+  
+  .grid-fallback > * {
+    width: 100%;
+    margin-bottom: 1rem;
+  }
+}
+
+/* Print styles for accessibility */
+@media print {
+  .no-print {
+    display: none !important;
+  }
+  
+  .profile-section,
+  .basic-structure {
+    background: white !important;
+    color: black !important;
+    box-shadow: none !important;
+  }
+}
+
+/* Large text support */
+@media (min-resolution: 1.5dppx) {
+  body {
+    font-size: 18px;
+  }
+}
+
+/* Windows High Contrast Mode */
+@media (prefers-contrast: high) and (-ms-high-contrast: active) {
+  .profile-section {
+    border: 1px solid ButtonText;
+  }
+}
+
+/* Forced colors mode (Windows) */
+@media (forced-colors: active) {
+  .profile-section {
+    border: 1px solid ButtonText;
+    background: ButtonFace;
+    color: ButtonText;
+  }
+  
+  .basic-header {
+    background: Highlight;
+    color: HighlightText;
+  }
+}
