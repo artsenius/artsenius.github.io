@@ -8,6 +8,10 @@
     "start": "cross-env NODE_OPTIONS=--openssl-legacy-provider react-scripts start",
     "build": "cross-env NODE_OPTIONS=--openssl-legacy-provider react-scripts build",
     "test": "react-scripts test",
+    "test:e2e": "playwright test",
+    "test:e2e:ui": "playwright test --ui",
+    "test:e2e:headed": "playwright test --headed",
+    "test:e2e:debug": "playwright test --debug",
     "predeploy": "npm run build",
     "deploy": "gh-pages -d build"
   },
@@ -30,6 +34,7 @@
     "web-vitals": "^2.1.4"
   },
   "devDependencies": {
+    "@playwright/test": "^1.54.2",
     "@types/styled-components": "^5.1.26",
     "cross-env": "^7.0.3",
     "gh-pages": "^5.0.0",
