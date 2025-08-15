@@ -11,11 +11,114 @@
     <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png">
     <link rel="manifest" href="%PUBLIC_URL%/manifest.json">
     <title>About Me | Portfolio Project</title>
+    
+    <!-- Progressive Enhancement Styles -->
+    <style>
+        /* Basic fallback styles */
+        .basic-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+            line-height: 1.6;
+            color: #333;
+        }
+        
+        .basic-header {
+            background: #3498db;
+            color: white;
+            padding: 1rem 2rem;
+            margin-bottom: 2rem;
+        }
+        
+        .basic-nav {
+            background: #2c3e50;
+            color: white;
+            padding: 1rem;
+            text-align: center;
+        }
+        
+        .basic-profile {
+            text-align: center;
+            margin: 2rem 0;
+        }
+        
+        .basic-profile h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+            color: #2c3e50;
+        }
+        
+        .basic-profile h2 {
+            font-size: 1.5rem;
+            color: #7f8c8d;
+            margin-bottom: 1rem;
+        }
+        
+        /* Accessibility - respect user preferences */
+        @media (prefers-reduced-motion: reduce) {
+            * {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+        
+        /* Ensure content is visible */
+        .profile-section {
+            display: block !important;
+            visibility: visible !important;
+        }
+        
+        /* Hide React content until loaded */
+        #root:empty + .basic-fallback {
+            display: block;
+        }
+        
+        .basic-fallback {
+            display: none;
+        }
+    </style>
 </head>
 
 <body>
-    <noscript>You need to enable JavaScript to run this app.</noscript>
+    <noscript>
+        <div class="basic-content">
+            <header class="basic-header">
+                <nav class="basic-nav" data-testid="header-nav">
+                    <h1>About Me - Arthur Senko</h1>
+                </nav>
+            </header>
+            <main>
+                <section class="basic-profile profile-section" data-testid="profile-section">
+                    <h1 data-testid="profile-name">Arthur Senko</h1>
+                    <h2>Lead QA Engineer, SDET, AI Enthusiast</h2>
+                    <p>Welcome to my portfolio. I'm a passionate QA Engineer with expertise in test automation, AI integration, and modern web technologies.</p>
+                    <p>For the best experience, please enable JavaScript in your browser.</p>
+                </section>
+            </main>
+        </div>
+    </noscript>
+    
     <div id="root"></div>
+    
+    <!-- Fallback content shown while React loads -->
+    <div class="basic-fallback">
+        <div class="basic-content">
+            <header class="basic-header">
+                <nav class="basic-nav" data-testid="header-nav">
+                    <h1>About Me - Arthur Senko</h1>
+                </nav>
+            </header>
+            <main>
+                <section class="basic-profile profile-section" data-testid="profile-section">
+                    <h1 data-testid="profile-name">Arthur Senko</h1>
+                    <h2>Lead QA Engineer, SDET, AI Enthusiast</h2>
+                    <p>Loading portfolio...</p>
+                </section>
+            </main>
+        </div>
+    </div>
 </body>
 
 </html>
