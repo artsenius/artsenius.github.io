@@ -18,13 +18,13 @@ const LiveTestAutomation = React.lazy(() => import('./components/LiveTestAutomat
 const AppFallback: React.FC = () => (
   <div className="basic-structure">
     <header>
-      <nav data-testid="header-nav">
+      <nav data-testid="header-nav-fallback">
         <h1>About Me - Arthur Senko</h1>
       </nav>
     </header>
     <main>
-      <section className="profile-section" data-testid="profile-section">
-        <h1 data-testid="profile-name">Arthur Senko</h1>
+      <section className="profile-section" data-testid="profile-section-fallback">
+        <h1 data-testid="profile-name-fallback">Arthur Senko</h1>
         <h2>Lead QA Engineer, SDET, AI Enthusiast</h2>
         <p>Welcome to my portfolio. I'm a passionate QA Engineer with expertise in test automation, AI integration, and modern web technologies.</p>
         <div style={{ textAlign: 'center', marginTop: '2rem', color: '#666' }}>

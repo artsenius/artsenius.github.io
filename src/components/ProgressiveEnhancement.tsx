@@ -63,13 +63,13 @@ const ProgressiveEnhancement: React.FC<ProgressiveEnhancementProps> = ({
       <FallbackContent>
         <div className="basic-structure">
           <header>
-            <nav data-testid="header-nav">
+            <nav data-testid="header-nav-fallback">
               <h1>About Me - Arthur Senko</h1>
             </nav>
           </header>
           <main>
-            <section className="profile-section" data-testid="profile-section">
-              <h1 data-testid="profile-name">Arthur Senko</h1>
+            <section className="profile-section" data-testid="profile-section-fallback">
+              <h1 data-testid="profile-name-fallback">Arthur Senko</h1>
               <h2>Lead QA Engineer, SDET, AI Enthusiast</h2>
               <div className="loading-message">
                 Enhancing your experience...
