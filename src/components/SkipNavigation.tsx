@@ -10,20 +10,13 @@ const SkipNavContainer = styled.div`
 
 const SkipLink = styled.a`
     position: absolute;
-    top: -100px;
-    left: 8px;
-    background: #000;
-    color: #fff;
-    padding: 8px 16px;
-    text-decoration: none;
-    border-radius: 4px;
-    font-weight: bold;
-    transition: top 0.2s ease;
-    
+    left: -999px;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    /* Remain hidden even on focus */
     &:focus {
-        top: 8px;
-        outline: 3px solid #3498db;
-        outline-offset: 2px;
+        left: -999px;
     }
 `;
 

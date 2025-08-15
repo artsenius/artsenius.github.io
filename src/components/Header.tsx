@@ -86,6 +86,12 @@ const NavButton = styled.button<NavButtonProps>`
         color: #3498db;
     }
 
+    &:focus {
+        outline: 2px solid #3498db;
+        outline-offset: 2px;
+        background: rgba(52, 152, 219, 0.1);
+    }
+
     @media (max-width: 768px) {
         padding: 0.5rem 0;
         width: 100%;
