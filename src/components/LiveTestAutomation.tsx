@@ -75,15 +75,19 @@ const TestRunList = styled.div`
 
 const TestRunCard = styled.div`
     background-color: ${props => props.theme.colors.surface};
-    border-radius: 12px;
-    box-shadow: 0 4px 6px ${props => props.theme.colors.shadow};
+    border-radius: 8px;
+    box-shadow: 0 2px 4px ${props => props.theme.colors.shadow};
     border: 1px solid ${props => props.theme.colors.border};
     overflow: hidden;
-    transition: all 0.2s ease-in-out;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+    
+    @media (prefers-reduced-motion: reduce) {
+        transition: none;
+    }
     
     &:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 10px 15px ${props => props.theme.colors.shadow};
+        transform: translateY(-1px);
+        box-shadow: 0 4px 8px ${props => props.theme.colors.shadow};
     }
 `;
 
@@ -275,9 +279,12 @@ const LoadingCard = styled.div<{ index: number }>`
     border-radius: 8px;
     box-shadow: 0 2px 4px ${props => props.theme.colors.shadow};
     overflow: hidden;
-    opacity: 0;
-    animation: ${fadeInAnimation} 0.5s ease forwards;
-    animation-delay: ${props => props.index * 0.1}s;
+    animation: ${fadeInAnimation} 0.3s ease forwards;
+    
+    @media (prefers-reduced-motion: reduce) {
+        animation: none;
+        opacity: 1;
+    }
     
     @media (max-width: 768px) {
         height: auto;

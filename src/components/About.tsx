@@ -3,7 +3,7 @@ import styled, { css } from 'styled-components';
 import profilePhoto from '../media/art.jpg';
 import resumePDF from '../media/A_Senko_Lead_SDET.pdf';
 import { useTheme } from './ThemeProvider';
-import { fadeInUp, slideInLeft, slideInRight, pulse } from '../styles/animations';
+import { fadeInUp, slideInLeft, slideInRight } from '../styles/animations';
 
 const AboutSection = styled.section`
     padding: 2rem;
@@ -54,22 +54,23 @@ const ProfileImage = styled.img`
     border-radius: 50%;
     object-fit: cover;
     margin-bottom: 1.5rem;
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
-    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+    transition: box-shadow 0.2s ease, opacity 0.2s ease;
     cursor: pointer;
-    border: 3px solid transparent;
-    background: linear-gradient(${props => props.theme.colors.surface}, ${props => props.theme.colors.surface}) padding-box,
-                linear-gradient(45deg, ${props => props.theme.colors.accent}, ${props => props.theme.colors.accent}80) border-box;
+    border: 2px solid ${props => props.theme.colors.accent}40;
+
+    @media (prefers-reduced-motion: reduce) {
+        transition: none;
+    }
 
     &:hover {
-        transform: scale(1.05) rotate(2deg);
-        box-shadow: 0 12px 40px rgba(52, 152, 219, 0.3);
-        animation: ${pulse} 2s infinite;
+        box-shadow: 0 6px 24px rgba(0, 0, 0, 0.15);
+        opacity: 0.9;
     }
 
     &:focus {
-        outline: 3px solid ${props => props.theme.colors.accent};
-        outline-offset: 4px;
+        outline: 2px solid ${props => props.theme.colors.accent};
+        outline-offset: 2px;
     }
 
     @media (max-width: 768px) {
@@ -326,32 +327,23 @@ const FilterButton = styled.button<{ $isActive: boolean }>`
 `;
 
 const SkillItem = styled.div<{ $isVisible: boolean; $index?: number }>`
-    background: linear-gradient(135deg, ${props => props.theme.colors.surface}, ${props => props.theme.colors.surface}F0);
+    background-color: ${props => props.theme.colors.surface};
     padding: 1rem;
-    border-radius: 10px;
+    border-radius: 8px;
     font-size: 0.95rem;
     font-weight: 500;
     text-align: center;
-    box-shadow: 0 2px 8px ${props => props.theme.colors.shadow};
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 1px 3px ${props => props.theme.colors.shadow};
+    transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
     border: 1px solid transparent;
     color: ${props => props.theme.colors.text};
     opacity: ${props => props.$isVisible ? 1 : 0};
-    transform: ${props => props.$isVisible ? 'scale(1)' : 'scale(0.8)'};
     display: ${props => props.$isVisible ? 'block' : 'none'};
-    animation: ${props => props.$isVisible ? css`${fadeInUp} 0.6s ease-out ${(props.$index || 0) * 0.05}s both` : 'none'};
-    position: relative;
-    overflow: hidden;
-
-    &::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: -100%;
-        width: 100%;
-        height: 100%;
-        background: linear-gradient(90deg, transparent, ${props => props.theme.colors.accent}20, transparent);
-        transition: left 0.6s;
+    animation: ${props => props.$isVisible ? css`${fadeInUp} 0.4s ease-out both` : 'none'};
+    
+    @media (prefers-reduced-motion: reduce) {
+        animation: none;
+        transition: none;
     }
 
     @media (max-width: 768px) {
@@ -360,14 +352,9 @@ const SkillItem = styled.div<{ $isVisible: boolean; $index?: number }>`
     }
 
     &:hover {
-        transform: translateY(-4px) ${props => props.$isVisible ? 'scale(1.02)' : 'scale(0.8)'};
-        background: linear-gradient(135deg, ${props => props.theme.colors.hover}, ${props => props.theme.colors.hover}F0);
+        transform: translateY(-2px);
         border-color: ${props => props.theme.colors.accent};
-        box-shadow: 0 8px 24px ${props => props.theme.colors.accent}33;
-
-        &::before {
-            left: 100%;
-        }
+        box-shadow: 0 4px 12px ${props => props.theme.colors.shadow};
     }
 `;
 
@@ -382,13 +369,16 @@ const ExperienceItem = styled.div`
     margin-bottom: 2rem;
     padding: 1.5rem;
     background: ${props => props.theme.colors.surface};
-    border-radius: 12px;
-    box-shadow: 0 2px 8px ${props => props.theme.colors.shadow};
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    border-radius: 8px;
+    box-shadow: 0 1px 3px ${props => props.theme.colors.shadow};
+    transition: box-shadow 0.2s ease;
+
+    @media (prefers-reduced-motion: reduce) {
+        transition: none;
+    }
 
     &:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 4px 16px ${props => props.theme.colors.shadow};
+        box-shadow: 0 2px 8px ${props => props.theme.colors.shadow};
     }
 
     &:last-child {

@@ -29,7 +29,7 @@ const FallbackContent = styled.div`
   }
 `;
 
-const ProgressiveEnhancement: React.FC<ProgressiveEnhancementProps> = ({ 
+const ProgressiveEnhancement: React.FC<ProgressiveEnhancementProps> = React.memo(({ 
   children, 
   fallback, 
   delay = 100 
@@ -83,6 +83,8 @@ const ProgressiveEnhancement: React.FC<ProgressiveEnhancementProps> = ({
 
   // Show enhanced React content after hydration
   return <>{children}</>;
-};
+});
+
+ProgressiveEnhancement.displayName = 'ProgressiveEnhancement';
 
 export default ProgressiveEnhancement;

@@ -4,7 +4,7 @@ import styled, { keyframes } from 'styled-components';
 const fadeIn = keyframes`
   from {
     opacity: 0;
-    transform: translateY(20px);
+    transform: translateY(5px);
   }
   to {
     opacity: 1;
@@ -15,11 +15,9 @@ const fadeIn = keyframes`
 const fadeOut = keyframes`
   from {
     opacity: 1;
-    transform: translateY(0);
   }
   to {
     opacity: 0;
-    transform: translateY(-20px);
   }
 `;
 
@@ -39,7 +37,7 @@ interface PageTransitionProps {
   duration?: number;
 }
 
-const PageTransition: React.FC<PageTransitionProps> = ({ 
+const PageTransition: React.FC<PageTransitionProps> = React.memo(({ 
   children, 
   pageKey, 
   duration = 300 
@@ -71,6 +69,8 @@ const PageTransition: React.FC<PageTransitionProps> = ({
       {displayedChildren}
     </TransitionContainer>
   );
-};
+});
+
+PageTransition.displayName = 'PageTransition';
 
 export default PageTransition;
