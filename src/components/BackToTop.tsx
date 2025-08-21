@@ -47,7 +47,7 @@ const BackToTopButton = styled.button<{ $isVisible: boolean }>`
     }
 `;
 
-const BackToTop: React.FC = () => {
+const BackToTop: React.FC = React.memo(() => {
     const [isVisible, setIsVisible] = useState(false);
 
     useEffect(() => {
@@ -83,6 +83,8 @@ const BackToTop: React.FC = () => {
             ↑
         </BackToTopButton>
     );
-};
+});
+
+BackToTop.displayName = 'BackToTop';
 
 export default BackToTop;

@@ -4,7 +4,7 @@ import { keyframes } from 'styled-components';
 export const fadeInUp = keyframes`
   from {
     opacity: 0;
-    transform: translateY(30px);
+    transform: translateY(10px);
   }
   to {
     opacity: 1;
@@ -15,7 +15,7 @@ export const fadeInUp = keyframes`
 export const slideInLeft = keyframes`
   from {
     opacity: 0;
-    transform: translateX(-30px);
+    transform: translateX(-10px);
   }
   to {
     opacity: 1;
@@ -26,7 +26,7 @@ export const slideInLeft = keyframes`
 export const slideInRight = keyframes`
   from {
     opacity: 0;
-    transform: translateX(30px);
+    transform: translateX(10px);
   }
   to {
     opacity: 1;

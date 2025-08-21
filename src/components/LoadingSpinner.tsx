@@ -36,7 +36,7 @@ interface LoadingSpinnerProps {
   text?: string;
 }
 
-const LoadingSpinner: React.FC<LoadingSpinnerProps> = ({ 
+const LoadingSpinner: React.FC<LoadingSpinnerProps> = React.memo(({ 
   isDark = false, 
   text = 'Loading...' 
 }) => {
@@ -46,6 +46,8 @@ const LoadingSpinner: React.FC<LoadingSpinnerProps> = ({
       <LoadingText $isDark={isDark}>{text}</LoadingText>
     </SpinnerContainer>
   );
-};
+});
+
+LoadingSpinner.displayName = 'LoadingSpinner';
 
 export default LoadingSpinner;

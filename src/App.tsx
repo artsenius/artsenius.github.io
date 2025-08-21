@@ -78,10 +78,10 @@ const AppContent: React.FC = () => {
   }
 
   return (
-    <ProgressiveEnhancement fallback={<AppFallback />} delay={200}>
+    <ProgressiveEnhancement fallback={<AppFallback />} delay={50}>
       <StyledThemeProvider theme={theme}>
         <Layout currentPage={currentPage} setCurrentPage={setCurrentPage}>
-          <PageTransition pageKey={currentPage} duration={400}>
+          <PageTransition pageKey={currentPage} duration={200}>
             <Suspense fallback={<LoadingSpinner isDark={isDarkMode} text="Loading page..." />}>
               {PageComponent}
             </Suspense>
