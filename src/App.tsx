@@ -25,8 +25,8 @@ const AppFallback: React.FC = () => (
     <main>
       <section className="profile-section" data-testid="profile-section-fallback">
         <h1 data-testid="profile-name-fallback">Arthur Senko</h1>
-        <h2>Lead QA Engineer, SDET, AI Enthusiast</h2>
-        <p>Welcome to my portfolio. I'm a passionate QA Engineer with expertise in test automation, AI integration, and modern web technologies.</p>
+        <h2>Lead SDET</h2>
+        <p>Welcome to my portfolio. I'm a Lead SDET with expertise in test automation, AI integration, and modern web technologies.</p>
         <div style={{ textAlign: 'center', marginTop: '2rem', color: '#666' }}>
           Loading enhanced experience...
         </div>

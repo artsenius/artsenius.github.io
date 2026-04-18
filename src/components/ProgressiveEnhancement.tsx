@@ -70,7 +70,7 @@ const ProgressiveEnhancement: React.FC<ProgressiveEnhancementProps> = React.memo
           <main>
             <section className="profile-section" data-testid="profile-section-fallback">
               <h1 data-testid="profile-name-fallback">Arthur Senko</h1>
-              <h2>Lead QA Engineer, SDET, AI Enthusiast</h2>
+              <h2>Lead SDET</h2>
               <div className="loading-message">
                 Enhancing your experience...
               </div>

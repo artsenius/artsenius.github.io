@@ -465,12 +465,12 @@ const About: React.FC<AboutProps> = ({ isDark, setCurrentPage }) => {
     const [activeFilter, setActiveFilter] = React.useState<string>('all');
 
     const skills = React.useMemo(() => ({
-        automation: ['WebdriverIO', 'Cypress', 'Playwright', 'Selenium', 'Appium', 'Model Context Protocol', 'Artillery', 'KaneAI', 'SmartUI'],
-        technologies: ['JavaScript/TypeScript', 'React', 'React Native', 'Express.js', 'MongoDB', 'RESTful APIs', 'GraphQL'],
-        cloud: ['BrowserStack', 'LambdaTest', 'SauceLabs', 'AWS'],
-        tools: ['Azure DevOps', 'GitHub Actions', 'Docker', 'Jenkins', 'Visual QA', 'Accessibility Testing'],
-        ai: ['Cursor Agents', 'Playwright MCP'],
-        methodologies: ['DevOps', 'Load Testing']
+        automation: ['WebdriverIO', 'Cypress', 'Playwright', 'Selenium', 'Appium', 'JUnit/TestNG'],
+        technologies: ['JavaScript/TypeScript/Node.js', 'Python', 'Java', 'React', 'React Native', 'Express.js', 'MongoDB Atlas'],
+        cloud: ['BrowserStack', 'LambdaTest', 'SauceLabs'],
+        tools: ['RESTful', 'GraphQL', 'Postman', 'Azure DevOps', 'GitHub Actions', 'Artillery.io', 'Loadster'],
+        ai: ['Claude', 'Cursor', 'GitHub Copilot', 'KaneAI', 'TestSigma'],
+        methodologies: ['DevOps', 'CI/CD Pipelines']
     }), []);
 
     const skillCategories = [
@@ -541,7 +541,7 @@ const About: React.FC<AboutProps> = ({ isDark, setCurrentPage }) => {
                     />
                     <Name data-testid="profile-name" id="profile-name">Arthur Senko</Name>
                     <Position data-testid="profile-position" id="profile-position">
-                        Lead QA Engineer, SDET<br />AI Enthusiast
+                        Lead SDET
                     </Position>
                     <DocumentLink
                         data-testid="resume-link"
@@ -591,12 +591,7 @@ const About: React.FC<AboutProps> = ({ isDark, setCurrentPage }) => {
                     <Bio data-testid="about-bio" role="article" aria-labelledby="bio-heading">
                         <h3 id="bio-heading" className="sr-only">Biography</h3>
                         <p>
-                            A results-driven Lead QA Engineer, SDET, and Test Automation Architect with expertise in AI testing and modern automation.
-                            Proven track record of building and leading high-performing QA teams, implementing
-                            efficient testing processes, and driving quality improvements across organizations.
-                            Experienced in building comprehensive testing solutions and continuous integration pipelines from the ground up,
-                            from initial concept to production deployment. Specialized in architecting scalable automation frameworks
-                            that deliver exceptional results for even the most complex enterprise projects.
+                            Accomplished Lead SDET with a track record of building and scaling QA from the ground up in startup and enterprise environments — often as the first QA hire — with modern automation and AI-driven testing. Expert in Playwright-based automation and quality across the SDLC; strong leader and mentor with hands-on full-stack and cloud experience.
                         </p>
                     </Bio>
 
@@ -604,31 +599,23 @@ const About: React.FC<AboutProps> = ({ isDark, setCurrentPage }) => {
                         <SectionTitle data-testid="current-role-title" $isDark={isDark} id="current-role-heading">Current Role</SectionTitle>
                         <ExperienceItem data-testid="experience-item">
                             <CompanyName data-testid="company-name" $isDark={isDark}>
-                                <span data-testid="position-title">Lead QA Engineer</span> @ <CompanyLink 
-                                    data-testid="allergan-link" 
-                                    href="https://www.allerganaesthetics.com/" 
+                                <span data-testid="position-title">Lead SDET</span> @ <CompanyLink 
+                                    data-testid="healthcasts-link" 
+                                    href="https://healthcasts.com/" 
                                     target="_blank" 
                                     rel="noopener noreferrer"
-                                    aria-label="Allergan Aesthetics website (opens in new tab)"
+                                    aria-label="Healthcasts website (opens in new tab)"
                                 >
-                                    Allergan Aesthetics
-                                </CompanyLink>, an <CompanyLink 
-                                    data-testid="abbvie-link" 
-                                    href="https://www.abbvie.com/" 
-                                    target="_blank" 
-                                    rel="noopener noreferrer"
-                                    aria-label="AbbVie Company website (opens in new tab)"
-                                >
-                                    AbbVie Company
+                                    Healthcasts
                                 </CompanyLink>
                             </CompanyName>
-                            <Duration data-testid="role-duration">June 2022 – Present | Remote</Duration>
+                            <Duration data-testid="role-duration">October 2025 – Present | Remote</Duration>
                             <AchievementsList data-testid="role-achievements" role="list" aria-label="Role achievements">
-                                <li>Helped to enable $20M+ in single-day gift card sales.</li>
-                                <li>Introduced AI tools to improve testing processes and reduce test creation time by 80%.</li>
-                                <li>Built automation frameworks from scratch and scaled cross-browser/device testing.</li>
-                                <li>Established company-wide load and high availability testing strategy.</li>
-                                <li>Launched Slack-integrated Cursor AI agents for to automate many routine tasks.</li>
+                                <li>Established the entire QA function from scratch as the first QA hire: testing strategy, processes, and quality standards org-wide.</li>
+                                <li>End-to-end test strategy: planning, test case development, feature validation, UAT coordination, and release support.</li>
+                                <li>Built a Playwright automation framework: regression, smoke, non-invasive production testing, and reduced manual testing effort.</li>
+                                <li>Introduced AI-driven workflows (Claude, agents) for test generation, exploratory testing, and faster defect detection; integrated automation for faster, reliable releases.</li>
+                                <li>Monitoring with Sentry, Hotjar, and Google Analytics; validated Auth0, Postmark, ActiveCampaign, HubSpot, and Zendesk. QA onboarding, mentorship, and cross-functional collaboration.</li>
                             </AchievementsList>
                         </ExperienceItem>
                     </Section>
