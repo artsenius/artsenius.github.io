@@ -1,0 +1,42 @@
+/* Scroll-snap experience shell for the cinematic single-page layout. */
+
+:root {
+  --font-display: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-mono: 'JetBrains Mono', source-code-pro, Menlo, Monaco, Consolas, monospace;
+}
+
+html {
+  scroll-snap-type: y proximity;
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--font-display);
+}
+
+/* Each <SnapSection> aligns to the top of the viewport as you scroll. */
+#root {
+  min-height: 100svh;
+}
+
+/* Users who opt out of motion get no smooth scroll and no snapping. */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-snap-type: none;
+    scroll-behavior: auto;
+  }
+}
+
+/* Thin custom scrollbar to match the cinematic aesthetic. */
+@media (pointer: fine) {
+  ::-webkit-scrollbar {
+    width: 10px;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: rgba(127, 140, 167, 0.4);
+    border-radius: 999px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: rgba(127, 140, 167, 0.6);
+  }
+}
