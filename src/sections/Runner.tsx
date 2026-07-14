@@ -8,6 +8,14 @@ import { accent, cinematic } from '../styles/tokens';
 
 const fmt = (ms: number) => `${(ms / 1000).toFixed(1)}s`;
 
+const fmtDate = (ms: number) =>
+  new Intl.DateTimeFormat('en-US', {
+    month: 'short',
+    day: 'numeric',
+    hour: 'numeric',
+    minute: '2-digit',
+  }).format(new Date(ms));
+
 const Terminal = styled.div`
   background: ${cinematic.bg};
   border: 1px solid rgba(255, 255, 255, 0.1);
@@ -172,21 +180,79 @@ const Metric = styled.div`
 `;
 
 const History = styled.div`
-  margin-top: 1rem;
-  display: grid;
-  gap: 0.4rem;
+  margin-top: 1.5rem;
 `;
 
-const HistRow = styled.div`
+const HistoryTitle = styled.h3`
+  font-size: 1rem;
+  font-weight: 600;
+  margin: 0 0 0.75rem;
+  color: ${p => p.theme.colors.text};
+`;
+
+const RunRow = styled.div<{ $live?: boolean }>`
   display: flex;
   align-items: center;
-  gap: 0.6rem;
-  font-family: var(--font-mono);
-  font-size: 0.8rem;
-  color: ${p => p.theme.colors.textSecondary};
+  gap: 0.75rem;
+  padding: 0.7rem 1rem;
+  border-radius: 12px;
+  border: 1px solid ${p => (p.$live ? accent.blue : p.theme.colors.border)};
+  background: ${p => p.theme.colors.surface};
+  margin-bottom: 0.5rem;
+  font-size: 0.88rem;
+  color: ${p => p.theme.colors.text};
 
-  .ok { color: ${accent.green}; }
-  .bad { color: ${accent.red}; }
+  .when {
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    color: ${p => p.theme.colors.textSecondary};
+  }
+  .project {
+    font-weight: 600;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .spacer { margin-left: auto; }
+  .counts {
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    white-space: nowrap;
+    .p { color: ${accent.green}; }
+    .f { color: ${accent.red}; }
+  }
+  .dur {
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    color: ${p => p.theme.colors.textSecondary};
+    min-width: 3.5rem;
+    text-align: right;
+  }
+
+  @media (max-width: 640px) {
+    flex-wrap: wrap;
+    .when { width: 100%; order: 3; }
+  }
+`;
+
+const RowDot = styled.span<{ $tone: 'ok' | 'bad' | 'live' | 'queued' }>`
+  flex: none;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: ${p =>
+    p.$tone === 'ok' ? accent.green
+    : p.$tone === 'bad' ? accent.red
+    : p.$tone === 'queued' ? accent.amber
+    : accent.blue};
+  animation: ${p => (p.$tone === 'live' || p.$tone === 'queued' ? phasePulse : 'none')} 1.1s ease-in-out infinite;
+`;
+
+const GhLink = styled.a`
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  color: ${accent.blue};
+  &:hover { text-decoration: underline; }
 `;
 
 const ErrorNote = styled.div`
@@ -199,6 +265,17 @@ const ErrorNote = styled.div`
 const Runner: React.FC = () => {
   const r = useRunner();
   const logRef = useRef<HTMLDivElement>(null);
+
+  const liveRun = r.phase === 'queued' || r.phase === 'in_progress';
+  // The just-finished mock run isn't stored in the backend, so keep it visible
+  // by merging lastSummary in until the backend takes over as the source.
+  const completedRows = React.useMemo(() => {
+    const merged =
+      r.lastSummary && !r.history.some(h => h.runId === r.lastSummary!.runId)
+        ? [r.lastSummary, ...r.history]
+        : r.history;
+    return merged.slice(0, 6);
+  }, [r.lastSummary, r.history]);
 
   useEffect(() => {
     if (logRef.current) logRef.current.scrollTop = logRef.current.scrollHeight;
@@ -256,7 +333,19 @@ const Runner: React.FC = () => {
           <Body>
             <StatusRow>
               <span data-testid="runner-status-text">{statusLeft}</span>
-              <span>{r.estimatedDurationMs ? `est. ${fmt(r.estimatedDurationMs)}` : ''}</span>
+              <span style={{ display: 'flex', gap: '0.9rem' }}>
+                {r.githubRunUrl && (
+                  <GhLink
+                    href={r.githubRunUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    data-testid="runner-github-link"
+                  >
+                    view on GitHub ↗
+                  </GhLink>
+                )}
+                <span>{r.estimatedDurationMs ? `est. ${fmt(r.estimatedDurationMs)}` : ''}</span>
+              </span>
             </StatusRow>
 
             <Track aria-hidden="true">
@@ -324,17 +413,34 @@ const Runner: React.FC = () => {
         </Reveal>
       )}
 
-      {r.history.length > 0 && (
+      {(liveRun || completedRows.length > 0) && (
         <Reveal delay={0.05}>
           <History data-testid="runner-history">
-            {r.history.map(h => (
-              <HistRow key={h.runId}>
-                <span className={h.conclusion === 'failure' ? 'bad' : 'ok'}>
-                  {h.conclusion === 'failure' ? '✗' : '✓'}
+            <HistoryTitle>Recent runs</HistoryTitle>
+            {liveRun && (
+              <RunRow $live data-testid="runner-history-live">
+                <RowDot $tone={r.phase === 'queued' ? 'queued' : 'live'} aria-hidden="true" />
+                <span className="project">Live demo suite</span>
+                <span className="when">
+                  {r.phase === 'queued' ? 'queued…' : `running · ${fmt(r.elapsedMs)} elapsed`}
                 </span>
-                <span>{new Date(h.startedAt).toLocaleString()}</span>
-                <span style={{ marginLeft: 'auto' }}>{h.passed} passed · {fmt(h.durationMs)}</span>
-              </HistRow>
+                <span className="spacer" />
+                <span className="counts">
+                  <span className="p">{r.passed} passed</span> · <span className="f">{r.failed} failed</span>
+                </span>
+              </RunRow>
+            )}
+            {completedRows.map(h => (
+              <RunRow key={h.runId} data-testid={`runner-history-${h.runId}`}>
+                <RowDot $tone={h.conclusion === 'failure' ? 'bad' : 'ok'} aria-hidden="true" />
+                <span className="project">{h.project || 'Live demo suite'}</span>
+                <span className="when">{fmtDate(h.startedAt)}</span>
+                <span className="spacer" />
+                <span className="counts">
+                  <span className="p">{h.passed} passed</span> · <span className="f">{h.failed} failed</span>
+                </span>
+                <span className="dur">{fmt(h.durationMs)}</span>
+              </RunRow>
             ))}
           </History>
         </Reveal>

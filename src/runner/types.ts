@@ -24,6 +24,8 @@ export interface RunStatus {
   estimatedDurationMs: number;
   totalTests: number;
   completedTests: number;
+  // Link to the GitHub Actions run, once the workflow has reported in.
+  githubRunUrl?: string;
   // The test currently executing (not yet in results), for the live ticker.
   currentTest?: { suite: string; name: string } | null;
   // Streamed incrementally as tests finish.
@@ -38,6 +40,7 @@ export interface ActiveRun {
 
 export interface RunSummary {
   runId: string;
+  project?: string;
   startedAt: number;
   durationMs: number;
   conclusion: RunConclusion;

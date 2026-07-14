@@ -58,23 +58,33 @@ export const httpSource: RunnerDataSource = {
       totalTests: d.totalTests ?? 0,
       completedTests: d.completedTests ?? 0,
       currentTest: d.currentTest ?? null,
+      githubRunUrl: d.githubRunUrl,
       results: mapResults(d.runId, d.results),
     };
   },
 
+  // Reads /test-runs/summary, which also contains legacy nightly-run records
+  // (status 'passed'/'failed'/'completed', no phase field) — map both shapes.
   async getHistory(limit: number): Promise<RunSummary[]> {
     const res = await fetch(`${API_ENDPOINTS.RUNNER_SUMMARY}?limit=${limit}`);
     if (!res.ok) throw new Error(`history failed (${res.status})`);
     const rows = await res.json();
     return (Array.isArray(rows) ? rows : [])
-      .filter((r: any) => r.phase === 'completed' || r.status === 'completed')
-      .map((r: any) => ({
-        runId: r.correlationId || r._id,
-        startedAt: new Date(r.startedAt).getTime(),
-        durationMs: r.duration || 0,
-        conclusion: r.conclusion || ((r.results?.failed || 0) > 0 ? 'failure' : 'success'),
-        passed: r.results?.passed || 0,
-        failed: r.results?.failed || 0,
-      }));
+      .filter((r: any) => r.phase !== 'queued' && r.phase !== 'in_progress')
+      .map((r: any) => {
+        const startedAt = new Date(r.startedAt).getTime();
+        const finishedAt = r.finishedAt ? new Date(r.finishedAt).getTime() : startedAt;
+        const failed = r.results?.failed ?? 0;
+        return {
+          runId: r.correlationId || r._id,
+          project: r.project,
+          startedAt,
+          durationMs: r.duration || Math.max(0, finishedAt - startedAt),
+          conclusion:
+            r.conclusion || (failed > 0 || r.status === 'failed' ? 'failure' : 'success'),
+          passed: r.results?.passed ?? 0,
+          failed,
+        };
+      });
   },
 };

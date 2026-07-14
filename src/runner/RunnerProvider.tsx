@@ -7,6 +7,7 @@ import React, {
   useState,
 } from 'react';
 import { runnerSource } from './source';
+import { httpSource } from './httpSource';
 import { RunInProgressError, RunStatus, RunSummary, TestResult } from './types';
 
 type UiPhase = 'idle' | 'queued' | 'in_progress' | 'completed' | 'error';
@@ -24,6 +25,7 @@ interface RunnerContextValue {
   totalTests: number;
   lastSummary: RunSummary | null;
   history: RunSummary[];
+  githubRunUrl: string | null;
   error: string | null;
   /** True while any run is active (server truth) — disables the Run button. */
   locked: boolean;
@@ -56,6 +58,7 @@ export const RunnerProvider: React.FC<{ children: React.ReactNode }> = ({ childr
   const [totalTests, setTotalTests] = useState(0);
   const [lastSummary, setLastSummary] = useState<RunSummary | null>(null);
   const [history, setHistory] = useState<RunSummary[]>([]);
+  const [githubRunUrl, setGithubRunUrl] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [locked, setLocked] = useState(false);
 
@@ -71,11 +74,13 @@ export const RunnerProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     tickRef.current = undefined;
   }, []);
 
+  // History always comes from the real backend: it holds the stored runs
+  // (including legacy nightly ones) even while the run lifecycle is mocked.
   const refreshHistory = useCallback(async () => {
     try {
-      setHistory(await runnerSource.getHistory(5));
+      setHistory(await httpSource.getHistory(8));
     } catch {
-      /* non-fatal */
+      /* non-fatal: backend unreachable just means an empty history list */
     }
   }, []);
 
@@ -92,6 +97,7 @@ export const RunnerProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     setTotalTests(s.totalTests);
     if (s.results.length) setResults(s.results);
     setCurrentTest(s.currentTest ?? null);
+    if (s.githubRunUrl) setGithubRunUrl(s.githubRunUrl);
 
     if (s.phase === 'queued') setPhase('queued');
     else if (s.phase === 'in_progress') setPhase('in_progress');
@@ -157,6 +163,7 @@ export const RunnerProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     setError(null);
     setResults([]);
     setConclusion(null);
+    setGithubRunUrl(null);
     progressRef.current = 0;
     setProgress(0);
     setLocked(true);
@@ -240,6 +247,7 @@ export const RunnerProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     totalTests,
     lastSummary,
     history,
+    githubRunUrl,
     error,
     locked,
     canRun,
