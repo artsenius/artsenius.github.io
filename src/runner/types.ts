@@ -1,10 +1,37 @@
-// Contract shared by the mock data source (now) and the real backend (later).
-// The backend's GET /test-runs/status/:id etc. will return these exact shapes,
-// so swapping the data source is a one-line change in source.ts.
+// Types for the simulated live test runner. The whole run lifecycle is
+// front-end theater: a scheduled "suite" plays out against wall-clock time
+// while the UI renders the section under test in a mini viewport.
 
 export type RunPhase = 'queued' | 'in_progress' | 'completed';
 export type RunConclusion = 'success' | 'failure';
 export type TestStatus = 'passed' | 'failed';
+
+/** Section of the page a test exercises — rendered live in the viewport. */
+export type SectionId = 'hero' | 'contact' | 'skills' | 'experience' | 'personal';
+
+/** Highlight rectangle inside the virtual viewport, in percentages. */
+export interface TargetRect {
+  x: number;
+  y: number;
+  w: number;
+  h: number;
+}
+
+export interface SuiteTestDef {
+  suite: string;
+  name: string;
+  section: SectionId;
+  /** Playwright-style step captions, one per target. */
+  steps: string[];
+  /** Where the highlight box sits during each step. */
+  targets: TargetRect[];
+}
+
+export interface CurrentTest extends SuiteTestDef {
+  index: number;
+  startedAt: number; // epoch ms
+  durationMs: number; // planned duration for this test
+}
 
 export interface TestResult {
   id: string;
@@ -24,11 +51,7 @@ export interface RunStatus {
   estimatedDurationMs: number;
   totalTests: number;
   completedTests: number;
-  // Link to the GitHub Actions run, once the workflow has reported in.
-  githubRunUrl?: string;
-  // The test currently executing (not yet in results), for the live ticker.
-  currentTest?: { suite: string; name: string } | null;
-  // Streamed incrementally as tests finish.
+  currentTest?: CurrentTest | null;
   results: TestResult[];
 }
 
@@ -49,10 +72,7 @@ export interface RunSummary {
 }
 
 export interface RunnerDataSource {
-  // Current in-flight run (server truth) — used to resume + enforce the lock
-  // even on a fresh page load. Null when nothing is running.
   getActive(): Promise<ActiveRun | null>;
-  // Acquire the single-flight lock and fire the run. Rejects if one is active.
   trigger(): Promise<ActiveRun>;
   getStatus(runId: string): Promise<RunStatus>;
   getHistory(limit: number): Promise<RunSummary[]>;

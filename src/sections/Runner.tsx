@@ -4,17 +4,19 @@ import { AnimatePresence, motion } from 'framer-motion';
 import Reveal from '../motion/Reveal';
 import { Kicker, SectionTitle, Lead } from './shared';
 import { useRunner } from '../runner/RunnerProvider';
+import TestViewport from '../runner/TestViewport';
 import { accent, cinematic } from '../styles/tokens';
 
 const fmt = (ms: number) => `${(ms / 1000).toFixed(1)}s`;
 
-const fmtDate = (ms: number) =>
-  new Intl.DateTimeFormat('en-US', {
-    month: 'short',
-    day: 'numeric',
-    hour: 'numeric',
-    minute: '2-digit',
-  }).format(new Date(ms));
+const fmtTime = (ms: number) =>
+  new Intl.DateTimeFormat('en-US', { hour: 'numeric', minute: '2-digit' }).format(new Date(ms));
+
+const fmtRel = (ms: number) => {
+  const mins = Math.max(1, Math.round((Date.now() - ms) / 60_000));
+  if (mins < 60) return `${mins}m ago`;
+  return `${Math.round(mins / 60)}h ago`;
+};
 
 const Terminal = styled.div`
   background: ${cinematic.bg};
@@ -248,47 +250,6 @@ const RowDot = styled.span<{ $tone: 'ok' | 'bad' | 'live' | 'queued' }>`
   animation: ${p => (p.$tone === 'live' || p.$tone === 'queued' ? phasePulse : 'none')} 1.1s ease-in-out infinite;
 `;
 
-const GhLink = styled.a`
-  font-family: var(--font-mono);
-  font-size: 0.78rem;
-  color: ${accent.blue};
-  &:hover { text-decoration: underline; }
-`;
-
-const sweep = keyframes`
-  from { transform: translateX(-100%); }
-  to { transform: translateX(100%); }
-`;
-
-const SkeletonRow = styled.div`
-  height: 46px;
-  border-radius: 12px;
-  border: 1px solid ${p => p.theme.colors.border};
-  background: ${p => p.theme.colors.surface};
-  margin-bottom: 0.5rem;
-  position: relative;
-  overflow: hidden;
-
-  &::after {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(90deg, transparent, ${p => p.theme.colors.hover}, transparent);
-    animation: ${sweep} 1.4s ease-in-out infinite;
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    &::after { animation: none; }
-  }
-`;
-
-const WakingNote = styled.div`
-  font-family: var(--font-mono);
-  font-size: 0.78rem;
-  color: ${p => p.theme.colors.textSecondary};
-  padding: 0.25rem 0.25rem 0;
-`;
-
 const ErrorNote = styled.div`
   margin-top: 0.75rem;
   color: ${accent.red};
@@ -301,8 +262,6 @@ const Runner: React.FC = () => {
   const logRef = useRef<HTMLDivElement>(null);
 
   const liveRun = r.phase === 'queued' || r.phase === 'in_progress';
-  // The just-finished mock run isn't stored in the backend, so keep it visible
-  // by merging lastSummary in until the backend takes over as the source.
   const completedRows = React.useMemo(() => {
     const merged =
       r.lastSummary && !r.history.some(h => h.runId === r.lastSummary!.runId)
@@ -334,8 +293,8 @@ const Runner: React.FC = () => {
   const remaining = Math.max(0, r.estimatedDurationMs - r.elapsedMs);
 
   const statusLeft =
-    r.phase === 'idle' ? 'ready — trigger the Playwright suite'
-    : r.phase === 'queued' ? 'queued on GitHub Actions…'
+    r.phase === 'idle' ? 'ready — trigger the demo suite'
+    : r.phase === 'queued' ? 'launching chromium…'
     : r.phase === 'in_progress' ? `~${fmt(remaining)} remaining (est.)`
     : r.phase === 'completed' ? `${r.passed}/${r.totalTests} passed in ${fmt(r.elapsedMs)}`
     : 'error';
@@ -352,8 +311,9 @@ const Runner: React.FC = () => {
         <Kicker>06 · live</Kicker>
         <SectionTitle data-testid="runner-title">Live test runner</SectionTitle>
         <Lead>
-          This isn't a screenshot. Press run and a real Playwright suite fires against
-          this site on GitHub Actions — progress streams back here while you keep scrolling.
+          Press run and watch a Playwright-style suite sweep this site section by
+          section — the viewport below renders the live page as each check executes.
+          Feel free to keep scrolling; the run continues without you.
         </Lead>
       </Reveal>
 
@@ -367,19 +327,7 @@ const Runner: React.FC = () => {
           <Body>
             <StatusRow>
               <span data-testid="runner-status-text">{statusLeft}</span>
-              <span style={{ display: 'flex', gap: '0.9rem' }}>
-                {r.githubRunUrl && (
-                  <GhLink
-                    href={r.githubRunUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    data-testid="runner-github-link"
-                  >
-                    view on GitHub ↗
-                  </GhLink>
-                )}
-                <span>{r.estimatedDurationMs ? `est. ${fmt(r.estimatedDurationMs)}` : ''}</span>
-              </span>
+              <span>{r.estimatedDurationMs ? `est. ${fmt(r.estimatedDurationMs)}` : ''}</span>
             </StatusRow>
 
             <Track aria-hidden="true">
@@ -389,6 +337,8 @@ const Runner: React.FC = () => {
                 data-testid="runner-progress-fill"
               />
             </Track>
+
+            {liveRun && <TestViewport test={r.currentTest} queued={r.phase === 'queued'} />}
 
             <Ticker data-testid="runner-ticker">
               {r.phase === 'in_progress' && r.currentTest ? (
@@ -447,7 +397,7 @@ const Runner: React.FC = () => {
         </Reveal>
       )}
 
-      {(liveRun || completedRows.length > 0 || r.historyLoading) && (
+      {(liveRun || completedRows.length > 0) && (
         <Reveal delay={0.05}>
           <History data-testid="runner-history">
             <HistoryTitle>Recent runs</HistoryTitle>
@@ -468,7 +418,7 @@ const Runner: React.FC = () => {
               <RunRow key={h.runId} data-testid={`runner-history-${h.runId}`}>
                 <RowDot $tone={h.conclusion === 'failure' ? 'bad' : 'ok'} aria-hidden="true" />
                 <span className="project">{h.project || 'Live demo suite'}</span>
-                <span className="when">{fmtDate(h.startedAt)}</span>
+                <span className="when">{fmtRel(h.startedAt)} · {fmtTime(h.startedAt)}</span>
                 <span className="spacer" />
                 <span className="counts">
                   <span className="p">{h.passed} passed</span> · <span className="f">{h.failed} failed</span>
@@ -476,16 +426,6 @@ const Runner: React.FC = () => {
                 <span className="dur">{fmt(h.durationMs)}</span>
               </RunRow>
             ))}
-            {r.historyLoading && completedRows.length === 0 && (
-              <div data-testid="runner-history-loading" role="status" aria-label="Loading run history">
-                <SkeletonRow />
-                <SkeletonRow />
-                <SkeletonRow />
-                <WakingNote>
-                  waking up the server — it naps when idle, this can take up to a minute
-                </WakingNote>
-              </div>
-            )}
           </History>
         </Reveal>
       )}

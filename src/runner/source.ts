@@ -1,10 +1,7 @@
 import { RunnerDataSource } from './types';
-import { mockSource } from './mockSource';
-import { httpSource } from './httpSource';
+import { simulation } from './simulation';
 
-// Flip to `true` once the backend live-runner endpoints are deployed
-// (GITHUB_TOKEN + RUN_CALLBACK_SECRET configured, automation `live-run.yml` in place).
-// Until then the mock behaves exactly like the real backend so the UI is fully demoable.
-const USE_REAL_BACKEND = false;
-
-export const runnerSource: RunnerDataSource = USE_REAL_BACKEND ? httpSource : mockSource;
+// The runner is a self-contained front-end simulation: the suite mirrors the
+// checks a real Playwright run would make against this site, and the
+// viewport renders the section under test live. No backend required.
+export const runnerSource: RunnerDataSource = simulation;

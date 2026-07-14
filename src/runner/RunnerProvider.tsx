@@ -7,8 +7,7 @@ import React, {
   useState,
 } from 'react';
 import { runnerSource } from './source';
-import { httpSource } from './httpSource';
-import { RunInProgressError, RunStatus, RunSummary, TestResult } from './types';
+import { CurrentTest, RunInProgressError, RunStatus, RunSummary, TestResult } from './types';
 
 type UiPhase = 'idle' | 'queued' | 'in_progress' | 'completed' | 'error';
 
@@ -19,17 +18,14 @@ interface RunnerContextValue {
   elapsedMs: number;
   estimatedDurationMs: number;
   results: TestResult[];
-  currentTest: { suite: string; name: string } | null;
+  currentTest: CurrentTest | null;
   passed: number;
   failed: number;
   totalTests: number;
   lastSummary: RunSummary | null;
   history: RunSummary[];
-  /** True until the backend answers the first history fetch (cold start can take ~1 min). */
-  historyLoading: boolean;
-  githubRunUrl: string | null;
   error: string | null;
-  /** True while any run is active (server truth) — disables the Run button. */
+  /** True while a run is active — disables the Run button. */
   locked: boolean;
   canRun: boolean;
   run: () => void;
@@ -37,8 +33,10 @@ interface RunnerContextValue {
 
 const RunnerContext = createContext<RunnerContextValue | undefined>(undefined);
 
-const POLL_MS = 4000;
-const TICK_MS = 200;
+// The simulation is local and cheap, so poll fast enough that step-level
+// theater (current test, viewport highlights) stays fluid.
+const POLL_MS = 700;
+const TICK_MS = 150;
 
 interface RunMeta {
   runId: string;
@@ -56,12 +54,10 @@ export const RunnerProvider: React.FC<{ children: React.ReactNode }> = ({ childr
   const [elapsedMs, setElapsedMs] = useState(0);
   const [estimatedDurationMs, setEstimatedDurationMs] = useState(0);
   const [results, setResults] = useState<TestResult[]>([]);
-  const [currentTest, setCurrentTest] = useState<{ suite: string; name: string } | null>(null);
+  const [currentTest, setCurrentTest] = useState<CurrentTest | null>(null);
   const [totalTests, setTotalTests] = useState(0);
   const [lastSummary, setLastSummary] = useState<RunSummary | null>(null);
   const [history, setHistory] = useState<RunSummary[]>([]);
-  const [historyLoading, setHistoryLoading] = useState(true);
-  const [githubRunUrl, setGithubRunUrl] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [locked, setLocked] = useState(false);
 
@@ -77,16 +73,11 @@ export const RunnerProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     tickRef.current = undefined;
   }, []);
 
-  // History always comes from the real backend: it holds the stored runs
-  // (including legacy nightly ones) even while the run lifecycle is mocked.
-  const refreshHistory = useCallback(async (): Promise<boolean> => {
+  const refreshHistory = useCallback(async () => {
     try {
-      setHistory(await httpSource.getHistory(8));
-      setHistoryLoading(false);
-      return true;
+      setHistory(await runnerSource.getHistory(6));
     } catch {
-      // Non-fatal: backend unreachable or still waking up.
-      return false;
+      /* non-fatal */
     }
   }, []);
 
@@ -103,7 +94,6 @@ export const RunnerProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     setTotalTests(s.totalTests);
     if (s.results.length) setResults(s.results);
     setCurrentTest(s.currentTest ?? null);
-    if (s.githubRunUrl) setGithubRunUrl(s.githubRunUrl);
 
     if (s.phase === 'queued') setPhase('queued');
     else if (s.phase === 'in_progress') setPhase('in_progress');
@@ -120,6 +110,7 @@ export const RunnerProvider: React.FC<{ children: React.ReactNode }> = ({ childr
       const finishedAt = s.finishedAt ?? Date.now();
       setLastSummary({
         runId: s.runId,
+        project: 'Live demo suite',
         startedAt: s.startedAt,
         durationMs: finishedAt - s.startedAt,
         conclusion: s.conclusion ?? (failed ? 'failure' : 'success'),
@@ -136,7 +127,7 @@ export const RunnerProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     try {
       applyStatus(await runnerSource.getStatus(meta.runId));
     } catch (e: any) {
-      setError(e?.message || 'Lost connection to the test runner.');
+      setError(e?.message || 'The test runner hit a snag.');
     }
   }, [applyStatus]);
 
@@ -169,7 +160,6 @@ export const RunnerProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     setError(null);
     setResults([]);
     setConclusion(null);
-    setGithubRunUrl(null);
     progressRef.current = 0;
     setProgress(0);
     setLocked(true);
@@ -180,7 +170,7 @@ export const RunnerProvider: React.FC<{ children: React.ReactNode }> = ({ childr
         runId: active.runId,
         startedAt: active.startedAt,
         estimatedDurationMs: active.estimatedDurationMs,
-        totalTests: metaRef.current?.totalTests ?? 0,
+        totalTests: 0,
         completedTests: 0,
         phase: 'queued',
       };
@@ -188,7 +178,6 @@ export const RunnerProvider: React.FC<{ children: React.ReactNode }> = ({ childr
       startTimers();
     } catch (e) {
       if (e instanceof RunInProgressError) {
-        // Someone else's run is active — sync to it instead of erroring.
         const active = await runnerSource.getActive().catch(() => null);
         if (active) {
           metaRef.current = {
@@ -209,10 +198,7 @@ export const RunnerProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     }
   }, [locked, phase, startTimers]);
 
-  // On load: resume an in-flight run (and lock) if one exists, and start
-  // warming the backend immediately. The Azure free tier falls asleep when
-  // idle and the first request can take up to a minute, so we fire right at
-  // page load (while the visitor reads the hero) and retry until it answers.
+  // On load: resume an in-flight run if one exists; seed the history list.
   useEffect(() => {
     let alive = true;
     (async () => {
@@ -231,11 +217,7 @@ export const RunnerProvider: React.FC<{ children: React.ReactNode }> = ({ childr
         setPhase('in_progress');
         startTimers();
       }
-      for (let attempt = 0; attempt < 15 && alive; attempt++) {
-        if (await refreshHistory()) break;
-        await new Promise(res => setTimeout(res, 6000));
-      }
-      if (alive) setHistoryLoading(false);
+      if (alive) refreshHistory();
     })();
     return () => {
       alive = false;
@@ -260,8 +242,6 @@ export const RunnerProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     totalTests,
     lastSummary,
     history,
-    historyLoading,
-    githubRunUrl,
     error,
     locked,
     canRun,
