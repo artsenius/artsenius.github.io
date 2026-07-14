@@ -18,5 +18,10 @@ export const fetchWithErrorHandling = async (url: string) => {
 
 export const API_ENDPOINTS = {
     TEST_RUNS_SUMMARY: `${API_BASE_URL}/test-runs/summary`,
-    TEST_RUN_DETAILS: (id: string) => `${API_BASE_URL}/test-runs/${id}`
+    TEST_RUN_DETAILS: (id: string) => `${API_BASE_URL}/test-runs/${id}`,
+    // On-demand live runner
+    RUNNER_TRIGGER: `${API_BASE_URL}/test-runs/trigger`,
+    RUNNER_ACTIVE: `${API_BASE_URL}/test-runs/active`,
+    RUNNER_STATUS: (id: string) => `${API_BASE_URL}/test-runs/status/${id}`,
+    RUNNER_SUMMARY: `${API_BASE_URL}/test-runs/summary`
 };

@@ -1,106 +1,73 @@
-import React, { useState, Suspense } from 'react';
-import Layout from './components/Layout';
-import BackToTop from './components/BackToTop';
-import PageTransition from './components/PageTransition';
-import ErrorBoundary from './components/ErrorBoundary';
-import LoadingSpinner from './components/LoadingSpinner';
-import ProgressiveEnhancement from './components/ProgressiveEnhancement';
-import { ThemeProvider, useTheme } from './components/ThemeProvider';
+import React from 'react';
+import styled from 'styled-components';
 import { ThemeProvider as StyledThemeProvider } from 'styled-components';
+import { ThemeProvider, useTheme } from './components/ThemeProvider';
+import ErrorBoundary from './components/ErrorBoundary';
+import SnapSection from './motion/SnapSection';
+import Hero from './sections/Hero';
+import Skills from './sections/Skills';
+import Experience from './sections/Experience';
+import Personal from './sections/Personal';
+import Runner from './sections/Runner';
+import Contact from './sections/Contact';
+import ScrollNav from './components/ScrollNav';
+import ThemeToggle from './components/ThemeToggle';
+import Footer from './components/Footer';
+import BackToTop from './components/BackToTop';
+import { RunnerProvider } from './runner/RunnerProvider';
 
-// Lazy load page components for better performance
-const About = React.lazy(() => import('./components/About'));
-const Contact = React.lazy(() => import('./components/Contact'));
-const AboutApp = React.lazy(() => import('./components/AboutApp'));
-const LiveTestAutomation = React.lazy(() => import('./components/LiveTestAutomation'));
-
-// Fallback content component for progressive enhancement
-const AppFallback: React.FC = () => (
-  <div className="basic-structure">
-    <header>
-      <nav data-testid="header-nav-fallback">
-        <h1>About Me - Arthur Senko</h1>
-      </nav>
-    </header>
-    <main>
-      <section className="profile-section" data-testid="profile-section-fallback">
-        <h1 data-testid="profile-name-fallback">Arthur Senko</h1>
-        <h2>Lead SDET</h2>
-        <p>Welcome to my portfolio. I'm a Lead SDET with expertise in test automation, AI integration, and modern web technologies.</p>
-        <div style={{ textAlign: 'center', marginTop: '2rem', color: '#666' }}>
-          Loading enhanced experience...
-        </div>
-      </section>
-    </main>
-    <noscript>
-      <div style={{ background: '#f8f9fa', padding: '1rem', marginTop: '1rem', borderRadius: '4px' }}>
-        <p>For the best experience, please enable JavaScript in your browser.</p>
-      </div>
-    </noscript>
-  </div>
-);
+const Page = styled.main`
+  background: ${props => props.theme.colors.background};
+  color: ${props => props.theme.colors.text};
+  transition: background-color 0.3s ease, color 0.3s ease;
+`;
 
 const AppContent: React.FC = () => {
-  const { isDarkMode, theme } = useTheme();
-  const [currentPage, setCurrentPage] = useState<'about' | 'about-app' | 'automation' | 'contact'>('about');
-
-  let PageComponent;
-  switch (currentPage) {
-    case 'about-app':
-      PageComponent = (
-        <ErrorBoundary>
-          <AboutApp isDark={isDarkMode} onGoToAutomation={() => setCurrentPage('automation')} />
-        </ErrorBoundary>
-      );
-      break;
-    case 'automation':
-      PageComponent = (
-        <ErrorBoundary>
-          <LiveTestAutomation isDark={isDarkMode} />
-        </ErrorBoundary>
-      );
-      break;
-    case 'contact':
-      PageComponent = (
-        <ErrorBoundary>
-          <Contact isDark={isDarkMode} />
-        </ErrorBoundary>
-      );
-      break;
-    case 'about':
-    default:
-      PageComponent = (
-        <ErrorBoundary>
-          <About isDark={isDarkMode} setCurrentPage={setCurrentPage} />
-        </ErrorBoundary>
-      );
-      break;
-  }
+  const { theme } = useTheme();
+  const goToRunner = () => document.getElementById('runner')?.scrollIntoView({ behavior: 'smooth' });
 
   return (
-    <ProgressiveEnhancement fallback={<AppFallback />} delay={50}>
-      <StyledThemeProvider theme={theme}>
-        <Layout currentPage={currentPage} setCurrentPage={setCurrentPage}>
-          <PageTransition pageKey={currentPage} duration={200}>
-            <Suspense fallback={<LoadingSpinner isDark={isDarkMode} text="Loading page..." />}>
-              {PageComponent}
-            </Suspense>
-          </PageTransition>
-        </Layout>
+    <StyledThemeProvider theme={theme}>
+      <RunnerProvider>
+        <ThemeToggle />
+        <ScrollNav />
+        <Page>
+          <Hero onViewTests={goToRunner} />
+
+          <SnapSection id="contact" aria-label="Contact">
+            <Contact />
+          </SnapSection>
+
+          <SnapSection id="skills" aria-label="Skills">
+            <Skills />
+          </SnapSection>
+
+          <SnapSection id="experience" aria-label="Experience">
+            <Experience />
+          </SnapSection>
+
+          <SnapSection id="personal" aria-label="Life beyond the terminal">
+            <Personal />
+          </SnapSection>
+
+          <SnapSection id="runner" aria-label="Live test runner">
+            <Runner />
+          </SnapSection>
+
+          <Footer />
+        </Page>
         <BackToTop />
-      </StyledThemeProvider>
-    </ProgressiveEnhancement>
+      </RunnerProvider>
+    </StyledThemeProvider>
   );
 };
 
-const App: React.FC = () => {
-  return (
-    <ErrorBoundary>
-      <ThemeProvider>
-        <AppContent />
-      </ThemeProvider>
-    </ErrorBoundary>
-  );
-};
+const App: React.FC = () => (
+  <ErrorBoundary>
+    <ThemeProvider>
+      <AppContent />
+    </ThemeProvider>
+  </ErrorBoundary>
+);
 
 export default App;

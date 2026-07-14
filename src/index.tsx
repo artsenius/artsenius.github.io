@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom/client';
 import App from './App';
 import './styles/index.css';
 import './styles/accessibility.css';
+import './styles/scroll.css';
 
 // Add class to indicate JavaScript is available for progressive enhancement
 document.documentElement.classList.add('js-available');
