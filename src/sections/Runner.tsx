@@ -255,6 +255,40 @@ const GhLink = styled.a`
   &:hover { text-decoration: underline; }
 `;
 
+const sweep = keyframes`
+  from { transform: translateX(-100%); }
+  to { transform: translateX(100%); }
+`;
+
+const SkeletonRow = styled.div`
+  height: 46px;
+  border-radius: 12px;
+  border: 1px solid ${p => p.theme.colors.border};
+  background: ${p => p.theme.colors.surface};
+  margin-bottom: 0.5rem;
+  position: relative;
+  overflow: hidden;
+
+  &::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg, transparent, ${p => p.theme.colors.hover}, transparent);
+    animation: ${sweep} 1.4s ease-in-out infinite;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    &::after { animation: none; }
+  }
+`;
+
+const WakingNote = styled.div`
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  color: ${p => p.theme.colors.textSecondary};
+  padding: 0.25rem 0.25rem 0;
+`;
+
 const ErrorNote = styled.div`
   margin-top: 0.75rem;
   color: ${accent.red};
@@ -413,7 +447,7 @@ const Runner: React.FC = () => {
         </Reveal>
       )}
 
-      {(liveRun || completedRows.length > 0) && (
+      {(liveRun || completedRows.length > 0 || r.historyLoading) && (
         <Reveal delay={0.05}>
           <History data-testid="runner-history">
             <HistoryTitle>Recent runs</HistoryTitle>
@@ -442,6 +476,16 @@ const Runner: React.FC = () => {
                 <span className="dur">{fmt(h.durationMs)}</span>
               </RunRow>
             ))}
+            {r.historyLoading && completedRows.length === 0 && (
+              <div data-testid="runner-history-loading" role="status" aria-label="Loading run history">
+                <SkeletonRow />
+                <SkeletonRow />
+                <SkeletonRow />
+                <WakingNote>
+                  waking up the server — it naps when idle, this can take up to a minute
+                </WakingNote>
+              </div>
+            )}
           </History>
         </Reveal>
       )}

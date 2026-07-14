@@ -25,6 +25,8 @@ interface RunnerContextValue {
   totalTests: number;
   lastSummary: RunSummary | null;
   history: RunSummary[];
+  /** True until the backend answers the first history fetch (cold start can take ~1 min). */
+  historyLoading: boolean;
   githubRunUrl: string | null;
   error: string | null;
   /** True while any run is active (server truth) — disables the Run button. */
@@ -58,6 +60,7 @@ export const RunnerProvider: React.FC<{ children: React.ReactNode }> = ({ childr
   const [totalTests, setTotalTests] = useState(0);
   const [lastSummary, setLastSummary] = useState<RunSummary | null>(null);
   const [history, setHistory] = useState<RunSummary[]>([]);
+  const [historyLoading, setHistoryLoading] = useState(true);
   const [githubRunUrl, setGithubRunUrl] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [locked, setLocked] = useState(false);
@@ -76,11 +79,14 @@ export const RunnerProvider: React.FC<{ children: React.ReactNode }> = ({ childr
 
   // History always comes from the real backend: it holds the stored runs
   // (including legacy nightly ones) even while the run lifecycle is mocked.
-  const refreshHistory = useCallback(async () => {
+  const refreshHistory = useCallback(async (): Promise<boolean> => {
     try {
       setHistory(await httpSource.getHistory(8));
+      setHistoryLoading(false);
+      return true;
     } catch {
-      /* non-fatal: backend unreachable just means an empty history list */
+      // Non-fatal: backend unreachable or still waking up.
+      return false;
     }
   }, []);
 
@@ -203,7 +209,10 @@ export const RunnerProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     }
   }, [locked, phase, startTimers]);
 
-  // On load: resume an in-flight run (and lock) if one exists; load history.
+  // On load: resume an in-flight run (and lock) if one exists, and start
+  // warming the backend immediately. The Azure free tier falls asleep when
+  // idle and the first request can take up to a minute, so we fire right at
+  // page load (while the visitor reads the hero) and retry until it answers.
   useEffect(() => {
     let alive = true;
     (async () => {
@@ -222,7 +231,11 @@ export const RunnerProvider: React.FC<{ children: React.ReactNode }> = ({ childr
         setPhase('in_progress');
         startTimers();
       }
-      refreshHistory();
+      for (let attempt = 0; attempt < 15 && alive; attempt++) {
+        if (await refreshHistory()) break;
+        await new Promise(res => setTimeout(res, 6000));
+      }
+      if (alive) setHistoryLoading(false);
     })();
     return () => {
       alive = false;
@@ -247,6 +260,7 @@ export const RunnerProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     totalTests,
     lastSummary,
     history,
+    historyLoading,
     githubRunUrl,
     error,
     locked,
